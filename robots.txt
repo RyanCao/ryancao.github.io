@@ -1,0 +1,17 @@
+# hexo robots.txt
+User-agent: *
+Allow: /
+Allow: /archives/
+Allow: /tags/
+Allow: /categories/
+Allow: /topics/
+
+Disallow: /vendors/
+Disallow: /js/
+Disallow: /css/
+Disallow: /fonts/
+Disallow: /vendors/
+Disallow: /fancybox/
+
+Sitemap: http://blog.rcant.com/sitemap.xml
+Sitemap: http://blog.rcant.com/baidusitemap.xml
