@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.2">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <link rel="amphtml" href="./amp/">
+  <meta name="baidu-site-verification" content="code-mUG0UNAPhR">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"blog.rcant.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="起因在 MarkDown 中 使用 Mermaid 画流程图很方便，但是需要有一定规则, 做个记录 配置环境 Node v12.18 Hexo v4.2.1 Mermaid(hexo-filter-mermaid-diagrams) v1.0.5  安装1npm install hexo-filter-mermaid-diagrams 修改配置 site&#x2F;themes&#x2F;next&#x2F;_config.y">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Mermaid 使用指南">
+<meta property="og:url" content="http://blog.rcant.com/2017/03/10/hexo/hexo-mermaid/index.html">
+<meta property="og:site_name" content="Chester.Cao Blog">
+<meta property="og:description" content="起因在 MarkDown 中 使用 Mermaid 画流程图很方便，但是需要有一定规则, 做个记录 配置环境 Node v12.18 Hexo v4.2.1 Mermaid(hexo-filter-mermaid-diagrams) v1.0.5  安装1npm install hexo-filter-mermaid-diagrams 修改配置 site&#x2F;themes&#x2F;next&#x2F;_config.y">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2017-03-10T03:39:17.000Z">
+<meta property="article:modified_time" content="2023-01-06T09:38:06.916Z">
+<meta property="article:author" content="Chester.C">
+<meta property="article:tag" content="markdown">
+<meta property="article:tag" content="mermaid">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://blog.rcant.com/2017/03/10/hexo/hexo-mermaid/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Mermaid 使用指南 | Chester.Cao Blog</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?974592ac4c5733a52af2b871678a5334";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Chester.Cao Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Chester.Cao Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Devlopper in C#</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-topics">
+
+    <a href="/topics/" rel="section"><i class="fa fa-fw fa-pencil"></i>主题</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://blog.rcant.com/2017/03/10/hexo/hexo-mermaid/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Chester.C">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chester.Cao Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Mermaid 使用指南
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2017-03-10 11:39:17" itemprop="dateCreated datePublished" datetime="2017-03-10T11:39:17+08:00">2017-03-10</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-01-06 17:38:06" itemprop="dateModified" datetime="2023-01-06T17:38:06+08:00">2023-01-06</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/hexo/" itemprop="url" rel="index"><span itemprop="name">hexo</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2017/03/10/hexo/hexo-mermaid/" class="post-meta-item leancloud_visitors" data-flag-title="Mermaid 使用指南" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2017/03/10/hexo/hexo-mermaid/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2017/03/10/hexo/hexo-mermaid/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="起因"><a href="#起因" class="headerlink" title="起因"></a>起因</h2><p>在 MarkDown 中 使用 Mermaid 画流程图很方便，但是需要有一定规则, 做个记录</p>
+<h2 id="配置环境"><a href="#配置环境" class="headerlink" title="配置环境"></a>配置环境</h2><ul>
+<li>Node v12.18</li>
+<li>Hexo v4.2.1</li>
+<li>Mermaid(hexo-filter-mermaid-diagrams) v1.0.5</li>
+</ul>
+<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install hexo-filter-mermaid-diagrams</span><br></pre></td></tr></table></figure>
+<p>修改配置 site/themes/next/_config.yml</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="section"># Mermaid tag</span></span><br><span class="line">mermaid:</span><br><span class="line">  enable: true</span><br><span class="line">  # Available themes: default | dark | forest | neutral</span><br><span class="line">  theme: forest</span><br></pre></td></tr></table></figure>
+<span id="more"></span>
+<h2 id="使用声明"><a href="#使用声明" class="headerlink" title="使用声明"></a>使用声明</h2><p>在markdown中使用 需要将代码声明在 <strong>mermaid</strong> 代码块中</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">(<span class="code">```)mermaid</span></span><br><span class="line"><span class="code">code</span></span><br><span class="line"><span class="code">(```</span>)</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>请忽略括号，这里是为了防止转义</p>
+</blockquote>
+<h2 id="流程图"><a href="#流程图" class="headerlink" title="流程图"></a>流程图</h2><h3 id="基础Graph"><a href="#基础Graph" class="headerlink" title="基础Graph"></a>基础Graph</h3><p>graph 需要有声明</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">graph $Ori</span><br></pre></td></tr></table></figure>
+<h4 id="流程图方向"><a href="#流程图方向" class="headerlink" title="流程图方向"></a>流程图方向</h4><div class="table-container">
+<table>
+<thead>
+<tr>
+<th>代码</th>
+<th>方向</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>TB/TD</td>
+<td>top to bottom</td>
+<td></td>
+</tr>
+<tr>
+<td>BT</td>
+<td>bottom to top</td>
+<td></td>
+</tr>
+<tr>
+<td>LR</td>
+<td>left to right</td>
+<td></td>
+</tr>
+<tr>
+<td>RL</td>
+<td>right to left</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h5 id="1-示例-TD"><a href="#1-示例-TD" class="headerlink" title="1. 示例 TD"></a>1. 示例 TD</h5>  <figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">graph TD;</span><br><span class="line"><span class="code">    Start --&gt; Stop</span></span><br></pre></td></tr></table></figure>
+  <pre class="mermaid">  graph TD;
+      Start --> Stop</pre>
+
+<h5 id="2-示例-LR"><a href="#2-示例-LR" class="headerlink" title="2. 示例 LR"></a>2. 示例 LR</h5>  <figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">graph LR;</span><br><span class="line"><span class="code">    Start --&gt; Stop</span></span><br></pre></td></tr></table></figure>
+  <pre class="mermaid">  graph LR;
+      Start --> Stop</pre>
+
+<h4 id="节点-图形"><a href="#节点-图形" class="headerlink" title="节点/图形"></a>节点/图形</h4><h5 id="默认"><a href="#默认" class="headerlink" title="默认"></a>默认</h5><figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">graph LR;</span><br><span class="line"><span class="code">    id;</span></span><br></pre></td></tr></table></figure>
+<pre class="mermaid">graph LR;
+    id;</pre>
+
+<h5 id="带文本的Node"><a href="#带文本的Node" class="headerlink" title="带文本的Node"></a>带文本的Node</h5><figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">graph LR;</span><br><span class="line"><span class="code">    id1[This is the text in the box];</span></span><br></pre></td></tr></table></figure>
+<pre class="mermaid">graph LR;
+    id1[This is the text in the box];</pre>
+
+<h5 id="圆角Node"><a href="#圆角Node" class="headerlink" title="圆角Node"></a>圆角Node</h5><figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">graph LR;</span><br><span class="line"><span class="code">    id1(This is the text in the box);</span></span><br></pre></td></tr></table></figure>
+<pre class="mermaid">graph LR;
+    id1(This is the text in the box);</pre>
+
+<h5 id="体育场式圆角Node"><a href="#体育场式圆角Node" class="headerlink" title="体育场式圆角Node"></a>体育场式圆角Node</h5><figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">graph LR;</span><br><span class="line"><span class="code">    id1([This is the text in the box]);</span></span><br></pre></td></tr></table></figure>
+<pre class="mermaid">graph LR;
+    id1([This is the text in the box]);</pre>
+
+<h5 id="子程序Node"><a href="#子程序Node" class="headerlink" title="子程序Node"></a>子程序Node</h5><figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">graph LR;</span><br><span class="line"><span class="code">    id1[[This is the text in the box]];</span></span><br></pre></td></tr></table></figure>
+<pre class="mermaid">graph LR;
+    id1[[This is the text in the box]];</pre>
+
+<h5 id="圆柱Node"><a href="#圆柱Node" class="headerlink" title="圆柱Node"></a>圆柱Node</h5><figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">graph LR;</span><br><span class="line"><span class="code">    id1[(This is the text in the box)];</span></span><br></pre></td></tr></table></figure>
+<pre class="mermaid">graph LR;
+    id1[(This is the text in the box)];</pre>
+
+<h5 id="圆Node"><a href="#圆Node" class="headerlink" title="圆Node"></a>圆Node</h5><figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">graph LR;</span><br><span class="line"><span class="code">    id1((This is the text in the box));</span></span><br></pre></td></tr></table></figure>
+<pre class="mermaid">graph LR;
+    id1((This is the text in the box));</pre>
+
+<h5 id="不对称Node-现在只有这一种形式"><a href="#不对称Node-现在只有这一种形式" class="headerlink" title="不对称Node (现在只有这一种形式)"></a>不对称Node (现在只有这一种形式)</h5><figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">graph LR;</span><br><span class="line"><span class="code">    id1&gt;This is the text in the box];</span></span><br></pre></td></tr></table></figure>
+<pre class="mermaid">graph LR;
+    id1>This is the text in the box];</pre>
+
+<h5 id="菱形Node"><a href="#菱形Node" class="headerlink" title="菱形Node"></a>菱形Node</h5><figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">graph LR;</span><br><span class="line"><span class="code">    id1&#123;This is the text in the box&#125;;</span></span><br></pre></td></tr></table></figure>
+<pre class="mermaid">graph LR;
+    id1{This is the text in the box};</pre>
+
+<h5 id="六角形Node"><a href="#六角形Node" class="headerlink" title="六角形Node"></a>六角形Node</h5><figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">graph LR;</span><br><span class="line"><span class="code">    id1&#123;&#123;This is the text in the box&#125;&#125;;</span></span><br></pre></td></tr></table></figure>
+<p>我的博客不容许我显示这个效果！</p>
+<h5 id="平行四边形Node"><a href="#平行四边形Node" class="headerlink" title="平行四边形Node"></a>平行四边形Node</h5><figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">graph LR;</span><br><span class="line"><span class="code">    id1[/This is the text in the box/];</span></span><br></pre></td></tr></table></figure>
+<pre class="mermaid">graph LR;
+    id1[/This is the text in the box/];</pre>
+
+<h5 id="梯形Node"><a href="#梯形Node" class="headerlink" title="梯形Node"></a>梯形Node</h5><figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">graph LR;</span><br><span class="line"><span class="code">    id1[/This is the text in the box\];</span></span><br><span class="line"><span class="code">    id2[\This is the text in the box/];</span></span><br></pre></td></tr></table></figure>
+<pre class="mermaid">graph LR;
+    id1[/This is the text in the box\];
+    id2[\This is the text in the box/];</pre>
+
+<h4 id="节点关系（连线）"><a href="#节点关系（连线）" class="headerlink" title="节点关系（连线）"></a>节点关系（连线）</h4><h4 id="线的长度"><a href="#线的长度" class="headerlink" title="线的长度"></a>线的长度</h4><div class="table-container">
+<table>
+<thead>
+<tr>
+<th>Length</th>
+<th>1</th>
+<th>2</th>
+<th>3</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Normal</td>
+<td>—-</td>
+<td>——</td>
+<td>——-</td>
+</tr>
+<tr>
+<td>Normal with arrow</td>
+<td>—&gt;</td>
+<td>—-&gt;</td>
+<td>——&gt;</td>
+</tr>
+<tr>
+<td>Thick</td>
+<td>===</td>
+<td>====</td>
+<td>=====</td>
+</tr>
+<tr>
+<td>Thick with arrow</td>
+<td>==&gt;</td>
+<td>===&gt;</td>
+<td>====&gt;</td>
+</tr>
+<tr>
+<td>Dotted</td>
+<td>-.-</td>
+<td>-..-</td>
+<td>-…-</td>
+</tr>
+<tr>
+<td>Dotted with arrow</td>
+<td>-.-&gt;</td>
+<td>-..-&gt;</td>
+<td>-…-&gt;</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h4 id="线的类型"><a href="#线的类型" class="headerlink" title="线的类型"></a>线的类型</h4><div class="table-container">
+<table>
+<thead>
+<tr>
+<th>代码</th>
+<th>名称</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>—-</td>
+<td>普通线段</td>
+<td></td>
+</tr>
+<tr>
+<td>—&gt;</td>
+<td>带箭头</td>
+<td></td>
+</tr>
+<tr>
+<td>===</td>
+<td>粗线</td>
+<td></td>
+</tr>
+<tr>
+<td>==&gt;</td>
+<td>粗线带箭头</td>
+<td></td>
+</tr>
+<tr>
+<td>-.-</td>
+<td>虚线</td>
+<td></td>
+</tr>
+<tr>
+<td>-.-&gt;</td>
+<td>虚线带箭头</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h5 id="普通箭头"><a href="#普通箭头" class="headerlink" title="普通箭头"></a>普通箭头</h5><figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">graph LR</span><br><span class="line"><span class="code">    A--&gt;B</span></span><br></pre></td></tr></table></figure>
+<pre class="mermaid">graph LR
+    A-->B</pre>
+
+<h5 id="直接连线"><a href="#直接连线" class="headerlink" title="直接连线"></a>直接连线</h5><figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">graph LR</span><br><span class="line"><span class="code">    A --- B</span></span><br></pre></td></tr></table></figure>
+<pre class="mermaid">graph LR
+    A --- B</pre>
+
+<h5 id="带文字的连线"><a href="#带文字的连线" class="headerlink" title="带文字的连线"></a>带文字的连线</h5><figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">graph LR</span><br><span class="line"><span class="code">    A-- This is the text! ---B</span></span><br><span class="line"><span class="code">    C---|This is the text|D</span></span><br></pre></td></tr></table></figure>
+<pre class="mermaid">graph LR
+    A-- This is the text! ---B
+    C---|This is the text|D</pre>
+
+<h5 id="带文字带箭头的连线"><a href="#带文字带箭头的连线" class="headerlink" title="带文字带箭头的连线"></a>带文字带箭头的连线</h5><figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">graph LR</span><br><span class="line"><span class="code">    A -- text --&gt; B</span></span><br><span class="line"><span class="code">    C --&gt;| text |D</span></span><br></pre></td></tr></table></figure>
+<pre class="mermaid">graph LR
+    A -- text --> B
+    C -->| text |D</pre>
+
+<h5 id="虚线"><a href="#虚线" class="headerlink" title="虚线"></a>虚线</h5><figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">graph LR;</span><br><span class="line">   A-.-B;</span><br><span class="line">   C-.-&gt;D;</span><br><span class="line">   E-. text .-&gt; F</span><br><span class="line">   H-.-&gt;|text|G</span><br></pre></td></tr></table></figure>
+<pre class="mermaid">graph LR;
+   A-.-B;
+   C-.->D;
+   E-.text.-> F
+   H-.->|text|G</pre>
+
+<h5 id="厚线"><a href="#厚线" class="headerlink" title="厚线"></a>厚线</h5><figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">graph LR;</span><br><span class="line">   A===B;</span><br><span class="line">   C==&gt;D;</span><br><span class="line">   E==text==&gt; F</span><br><span class="line">   H==&gt;|text|G</span><br></pre></td></tr></table></figure>
+<pre class="mermaid">graph LR;
+   A===B;
+   C==>D;
+   E==text==> F
+   H==>|text|G</pre>
+
+<h5 id="串联"><a href="#串联" class="headerlink" title="串联"></a>串联</h5><figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">graph LR</span><br><span class="line">   A -- text --&gt; B -- text2 --&gt; C</span><br><span class="line">   a --&gt; b &amp; c--&gt; d</span><br></pre></td></tr></table></figure>
+<pre class="mermaid">graph LR
+   A -- text --> B -- text2 --> C
+   a --> b & c--> d</pre>
+
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">graph TB</span><br><span class="line"><span class="code">    A &amp; B--&gt; C &amp; D</span></span><br></pre></td></tr></table></figure>
+<pre class="mermaid">graph TB
+    A & B--> C & D</pre>
+
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">graph TB</span><br><span class="line"><span class="code">    A --&gt; C</span></span><br><span class="line"><span class="code">    A --&gt; D</span></span><br><span class="line"><span class="code">    B --&gt; C</span></span><br><span class="line"><span class="code">    B --&gt; D</span></span><br></pre></td></tr></table></figure>
+<pre class="mermaid">graph TB
+    A --> C
+    A --> D
+    B --> C
+    B --> D</pre>
+
+<h4 id="特殊字符"><a href="#特殊字符" class="headerlink" title="特殊字符"></a>特殊字符</h4><figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">graph LR</span><br><span class="line"><span class="code">    id1[&quot;This is the (text) in the box&quot;]</span></span><br></pre></td></tr></table></figure>
+<pre class="mermaid">graph LR
+    id1["This is the (text) in the box"]</pre>
+
+<h4 id="子图"><a href="#子图" class="headerlink" title="子图"></a>子图</h4><p>定义</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">subgraph title</span><br><span class="line"><span class="code">    graph definition</span></span><br><span class="line"><span class="code">end</span></span><br></pre></td></tr></table></figure>
+<p>示例</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">graph TB</span><br><span class="line"><span class="code">    c1--&gt;a2</span></span><br><span class="line"><span class="code">    subgraph one</span></span><br><span class="line"><span class="code">    a1--&gt;a2</span></span><br><span class="line"><span class="code">    end</span></span><br><span class="line"><span class="code">    subgraph two</span></span><br><span class="line"><span class="code">    b1--&gt;b2</span></span><br><span class="line"><span class="code">    end</span></span><br><span class="line"><span class="code">    subgraph three</span></span><br><span class="line"><span class="code">    c1--&gt;c2</span></span><br><span class="line"><span class="code">    end</span></span><br></pre></td></tr></table></figure>
+<pre class="mermaid">graph TB
+    c1-->a2
+    subgraph one
+    a1-->a2
+    end
+    subgraph two
+    b1-->b2
+    end
+    subgraph three
+    c1-->c2
+    end</pre>
+
+<p>也可以这样</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">graph TB</span><br><span class="line"><span class="code">    c1--&gt;a2</span></span><br><span class="line"><span class="code">    subgraph ide1 [one]</span></span><br><span class="line"><span class="code">    a1--&gt;a2</span></span><br><span class="line"><span class="code">    end</span></span><br></pre></td></tr></table></figure>
+<pre class="mermaid">graph TB
+    c1-->a2
+    subgraph ide1 [one]
+    a1-->a2
+    end</pre>
+
+<h4 id="注释"><a href="#注释" class="headerlink" title="注释"></a>注释</h4><p>注释以%% 开头</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">graph LR</span><br><span class="line">%% this is a comment A -- text --&gt; B&#123;node&#125;</span><br><span class="line">   A -- text --&gt; B -- text2 --&gt; C</span><br></pre></td></tr></table></figure>
+<pre class="mermaid">graph LR
+%% this is a comment A -- text --> B{node}
+   A -- text --> B -- text2 --> C</pre>
+
+<h3 id="最后给个例子"><a href="#最后给个例子" class="headerlink" title="最后给个例子"></a>最后给个例子</h3><figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">graph LR</span><br><span class="line"><span class="code">    A[Hard edge] --&gt;|Link text| B(Round edge)</span></span><br><span class="line"><span class="code">    B --&gt; C&#123;Decision&#125;</span></span><br><span class="line"><span class="code">    C --&gt;|One| D[Result one]</span></span><br><span class="line"><span class="code">    C --&gt;|Two| E[Result two]</span></span><br></pre></td></tr></table></figure>
+<pre class="mermaid">graph LR
+    A[Hard edge] -->|Link text| B(Round edge)
+    B --> C{Decision}
+    C -->|One| D[Result one]
+    C -->|Two| E[Result two]</pre>
+
+<p>换个写法</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">graph TD</span><br><span class="line"><span class="code">    A[Hard edge];</span></span><br><span class="line"><span class="code">    B(Round edge);</span></span><br><span class="line"><span class="code">    C&#123;Decision&#125;;</span></span><br><span class="line"><span class="code">    D[Result one];</span></span><br><span class="line"><span class="code">    E[Result two];</span></span><br><span class="line"><span class="code"></span></span><br><span class="line"><span class="code">    A--&gt;|Link text|B;</span></span><br><span class="line"><span class="code">    B--&gt;C;</span></span><br><span class="line"><span class="code">    C--&gt;|One|D;</span></span><br><span class="line"><span class="code">    C--&gt;|Two|E;</span></span><br></pre></td></tr></table></figure>
+<pre class="mermaid">graph TD
+    A[Hard edge];
+    B(Round edge);
+    C{Decision};
+    D[Result one];
+    E[Result two];
+    A-->|Link text|B;
+    B-->C;
+    C-->|One|D;
+    C-->|Two|E;</pre>
+
+<h2 id="参考网站"><a href="#参考网站" class="headerlink" title="参考网站"></a>参考网站</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://mermaid-js.github.io/mermaid/#/">Mermaid官网</a></li>
+</ul>
+<h2 id="Hexo博客系列"><a href="#Hexo博客系列" class="headerlink" title="Hexo博客系列"></a>Hexo博客系列</h2><ul>
+<li><a href="/2017/03/01/hexo/hexo-firstblog/" title="Hexo博客搭建">Hexo博客搭建</a>  </li>
+<li><a href="/2017/03/01/hexo/hexo-secordblog/" title="Hexo更换博客样式">Hexo更换博客样式</a>  </li>
+<li><a href="/2017/03/03/hexo/hexo-updatenode/" title="Hexo升级Node版本">Hexo升级Node版本</a>  </li>
+<li><a href="/2017/03/04/hexo/hexo-amp-enable/" title="Hexo AMP 支持">Hexo AMP 支持</a>  </li>
+<li><a href="/2017/03/03/others/markdown-first/" title="MarkDown语法">MarkDown语法</a></li>
+<li><a href="/2017/03/06/hexo/hexo-markdown-extends/" title="Hexo-MarkDown扩展">Hexo-MarkDown扩展</a>  </li>
+<li><a href="/2017/03/07/hexo/hexo-flags/" title="Hexo 标签插件的使用">Hexo 标签插件的使用</a>  </li>
+<li><a href="/2017/03/10/hexo/hexo-mermaid/" title="Mermaid 使用指南">Mermaid 使用指南</a>  </li>
+<li><a href="/2017/03/11/hexo/hexo-plugins/" title="Hexo 插件添加">Hexo 插件添加</a> </li>
+</ul>
+
+    </div>
+
+    
+    
+    
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/markdown/" rel="tag"># markdown</a>
+              <a href="/tags/mermaid/" rel="tag"># mermaid</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2017/03/07/hexo/hexo-flags/" rel="prev" title="Hexo 标签插件的使用">
+      <i class="fa fa-chevron-left"></i> Hexo 标签插件的使用
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2017/03/11/hexo/hexo-plugins/" rel="next" title="Hexo 插件添加">
+      Hexo 插件添加 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B5%B7%E5%9B%A0"><span class="nav-number">1.</span> <span class="nav-text">起因</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E7%8E%AF%E5%A2%83"><span class="nav-number">2.</span> <span class="nav-text">配置环境</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85"><span class="nav-number">3.</span> <span class="nav-text">安装</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E5%A3%B0%E6%98%8E"><span class="nav-number">4.</span> <span class="nav-text">使用声明</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B5%81%E7%A8%8B%E5%9B%BE"><span class="nav-number">5.</span> <span class="nav-text">流程图</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%BA%E7%A1%80Graph"><span class="nav-number">5.1.</span> <span class="nav-text">基础Graph</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%B5%81%E7%A8%8B%E5%9B%BE%E6%96%B9%E5%90%91"><span class="nav-number">5.1.1.</span> <span class="nav-text">流程图方向</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-%E7%A4%BA%E4%BE%8B-TD"><span class="nav-number">5.1.1.1.</span> <span class="nav-text">1. 示例 TD</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-%E7%A4%BA%E4%BE%8B-LR"><span class="nav-number">5.1.1.2.</span> <span class="nav-text">2. 示例 LR</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%8A%82%E7%82%B9-%E5%9B%BE%E5%BD%A2"><span class="nav-number">5.1.2.</span> <span class="nav-text">节点&#x2F;图形</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E9%BB%98%E8%AE%A4"><span class="nav-number">5.1.2.1.</span> <span class="nav-text">默认</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%B8%A6%E6%96%87%E6%9C%AC%E7%9A%84Node"><span class="nav-number">5.1.2.2.</span> <span class="nav-text">带文本的Node</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%9C%86%E8%A7%92Node"><span class="nav-number">5.1.2.3.</span> <span class="nav-text">圆角Node</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BD%93%E8%82%B2%E5%9C%BA%E5%BC%8F%E5%9C%86%E8%A7%92Node"><span class="nav-number">5.1.2.4.</span> <span class="nav-text">体育场式圆角Node</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%AD%90%E7%A8%8B%E5%BA%8FNode"><span class="nav-number">5.1.2.5.</span> <span class="nav-text">子程序Node</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%9C%86%E6%9F%B1Node"><span class="nav-number">5.1.2.6.</span> <span class="nav-text">圆柱Node</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%9C%86Node"><span class="nav-number">5.1.2.7.</span> <span class="nav-text">圆Node</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%B8%8D%E5%AF%B9%E7%A7%B0Node-%E7%8E%B0%E5%9C%A8%E5%8F%AA%E6%9C%89%E8%BF%99%E4%B8%80%E7%A7%8D%E5%BD%A2%E5%BC%8F"><span class="nav-number">5.1.2.8.</span> <span class="nav-text">不对称Node (现在只有这一种形式)</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E8%8F%B1%E5%BD%A2Node"><span class="nav-number">5.1.2.9.</span> <span class="nav-text">菱形Node</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%85%AD%E8%A7%92%E5%BD%A2Node"><span class="nav-number">5.1.2.10.</span> <span class="nav-text">六角形Node</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%B9%B3%E8%A1%8C%E5%9B%9B%E8%BE%B9%E5%BD%A2Node"><span class="nav-number">5.1.2.11.</span> <span class="nav-text">平行四边形Node</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%A2%AF%E5%BD%A2Node"><span class="nav-number">5.1.2.12.</span> <span class="nav-text">梯形Node</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%8A%82%E7%82%B9%E5%85%B3%E7%B3%BB%EF%BC%88%E8%BF%9E%E7%BA%BF%EF%BC%89"><span class="nav-number">5.1.3.</span> <span class="nav-text">节点关系（连线）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BA%BF%E7%9A%84%E9%95%BF%E5%BA%A6"><span class="nav-number">5.1.4.</span> <span class="nav-text">线的长度</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BA%BF%E7%9A%84%E7%B1%BB%E5%9E%8B"><span class="nav-number">5.1.5.</span> <span class="nav-text">线的类型</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%99%AE%E9%80%9A%E7%AE%AD%E5%A4%B4"><span class="nav-number">5.1.5.1.</span> <span class="nav-text">普通箭头</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%9B%B4%E6%8E%A5%E8%BF%9E%E7%BA%BF"><span class="nav-number">5.1.5.2.</span> <span class="nav-text">直接连线</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%B8%A6%E6%96%87%E5%AD%97%E7%9A%84%E8%BF%9E%E7%BA%BF"><span class="nav-number">5.1.5.3.</span> <span class="nav-text">带文字的连线</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%B8%A6%E6%96%87%E5%AD%97%E5%B8%A6%E7%AE%AD%E5%A4%B4%E7%9A%84%E8%BF%9E%E7%BA%BF"><span class="nav-number">5.1.5.4.</span> <span class="nav-text">带文字带箭头的连线</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E8%99%9A%E7%BA%BF"><span class="nav-number">5.1.5.5.</span> <span class="nav-text">虚线</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%8E%9A%E7%BA%BF"><span class="nav-number">5.1.5.6.</span> <span class="nav-text">厚线</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%B8%B2%E8%81%94"><span class="nav-number">5.1.5.7.</span> <span class="nav-text">串联</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%89%B9%E6%AE%8A%E5%AD%97%E7%AC%A6"><span class="nav-number">5.1.6.</span> <span class="nav-text">特殊字符</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AD%90%E5%9B%BE"><span class="nav-number">5.1.7.</span> <span class="nav-text">子图</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%B3%A8%E9%87%8A"><span class="nav-number">5.1.8.</span> <span class="nav-text">注释</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%80%E5%90%8E%E7%BB%99%E4%B8%AA%E4%BE%8B%E5%AD%90"><span class="nav-number">5.2.</span> <span class="nav-text">最后给个例子</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E7%BD%91%E7%AB%99"><span class="nav-number">6.</span> <span class="nav-text">参考网站</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Hexo%E5%8D%9A%E5%AE%A2%E7%B3%BB%E5%88%97"><span class="nav-number">7.</span> <span class="nav-text">Hexo博客系列</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Chester.C</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">143</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">32</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">67</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Chester.C</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+if (document.querySelectorAll('pre.mermaid').length) {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mermaid@8/dist/mermaid.min.js', () => {
+    mermaid.initialize({
+      theme    : 'forest',
+      logLevel : 3,
+      flowchart: { curve     : 'linear' },
+      gantt    : { axisFormat: '%m/%d/%Y' },
+      sequence : { actorMargin: 50 }
+    });
+  }, window.mermaid);
+}
+</script>
+
+
+  
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'OQBlgU8H1seTDvVrgC3Dhni0-gzGzoHsz',
+      appKey     : 'wF7D3hVD9WjlV9V52bhlymHO',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : true,
+      lang       : 'zh-cn' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>

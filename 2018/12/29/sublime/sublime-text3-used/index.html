@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.2">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <link rel="amphtml" href="./amp/">
+  <meta name="baidu-site-verification" content="code-mUG0UNAPhR">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"blog.rcant.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="Sublimetext3 使用 一. 设置【Settings】 依次单击菜单栏【Perferences】→【Settings】 把右边的Setting-User中的内容全部删掉， 将左边的Setting-Default里边的内容copy到右边User里， 根据需要修改User的设置1234567891011&#x2F;&#x2F; Settings in here override those in &quot;De">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Sublime Text3 使用">
+<meta property="og:url" content="http://blog.rcant.com/2018/12/29/sublime/sublime-text3-used/index.html">
+<meta property="og:site_name" content="Chester.Cao Blog">
+<meta property="og:description" content="Sublimetext3 使用 一. 设置【Settings】 依次单击菜单栏【Perferences】→【Settings】 把右边的Setting-User中的内容全部删掉， 将左边的Setting-Default里边的内容copy到右边User里， 根据需要修改User的设置1234567891011&#x2F;&#x2F; Settings in here override those in &quot;De">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://blog.rcant.com/2018/12/29/sublime/sublime-text3-used/6_1.jpg">
+<meta property="og:image" content="http://blog.rcant.com/2018/12/29/sublime/sublime-text3-used/6_2.jpg">
+<meta property="og:image" content="http://blog.rcant.com/2018/12/29/sublime/sublime-text3-used/6_3.jpg">
+<meta property="og:image" content="http://blog.rcant.com/2018/12/29/sublime/sublime-text3-used/6_4.jpg">
+<meta property="og:image" content="http://blog.rcant.com/2018/12/29/sublime/sublime-text3-used/u_1.gif">
+<meta property="og:image" content="http://blog.rcant.com/2018/12/29/sublime/sublime-text3-used/u_2.gif">
+<meta property="og:image" content="http://blog.rcant.com/2018/12/29/sublime/sublime-text3-used/u_3.gif">
+<meta property="og:image" content="http://blog.rcant.com/2018/12/29/sublime/sublime-text3-used/u_4.gif">
+<meta property="og:image" content="http://blog.rcant.com/2018/12/29/sublime/sublime-text3-used/u_5.gif">
+<meta property="og:image" content="http://blog.rcant.com/2018/12/29/sublime/sublime-text3-used/u_6.gif">
+<meta property="og:image" content="http://blog.rcant.com/2018/12/29/sublime/sublime-text3-used/u_7.gif">
+<meta property="og:image" content="http://blog.rcant.com/2018/12/29/sublime/sublime-text3-used/u_8.gif">
+<meta property="og:image" content="http://blog.rcant.com/2018/12/29/sublime/sublime-text3-used/u_9.gif">
+<meta property="og:image" content="http://blog.rcant.com/2018/12/29/sublime/sublime-text3-used/u_10.gif">
+<meta property="og:image" content="http://blog.rcant.com/2018/12/29/sublime/sublime-text3-used/u_11.gif">
+<meta property="og:image" content="http://blog.rcant.com/2018/12/29/sublime/sublime-text3-used/u_12.gif">
+<meta property="og:image" content="http://blog.rcant.com/2018/12/29/sublime/sublime-text3-used/u_13.gif">
+<meta property="og:image" content="http://blog.rcant.com/2018/12/29/sublime/sublime-text3-used/u_14.gif">
+<meta property="article:published_time" content="2018-12-29T06:40:07.000Z">
+<meta property="article:modified_time" content="2023-01-06T09:42:10.258Z">
+<meta property="article:author" content="Chester.C">
+<meta property="article:tag" content="sublime text3">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://blog.rcant.com/2018/12/29/sublime/sublime-text3-used/6_1.jpg">
+
+<link rel="canonical" href="http://blog.rcant.com/2018/12/29/sublime/sublime-text3-used/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Sublime Text3 使用 | Chester.Cao Blog</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?974592ac4c5733a52af2b871678a5334";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Chester.Cao Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Chester.Cao Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Devlopper in C#</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-topics">
+
+    <a href="/topics/" rel="section"><i class="fa fa-fw fa-pencil"></i>主题</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://blog.rcant.com/2018/12/29/sublime/sublime-text3-used/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Chester.C">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chester.Cao Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Sublime Text3 使用
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2018-12-29 14:40:07" itemprop="dateCreated datePublished" datetime="2018-12-29T14:40:07+08:00">2018-12-29</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-01-06 17:42:10" itemprop="dateModified" datetime="2023-01-06T17:42:10+08:00">2023-01-06</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/sublime/" itemprop="url" rel="index"><span itemprop="name">sublime</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2018/12/29/sublime/sublime-text3-used/" class="post-meta-item leancloud_visitors" data-flag-title="Sublime Text3 使用" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2018/12/29/sublime/sublime-text3-used/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2018/12/29/sublime/sublime-text3-used/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>Sublimetext3 使用</p>
+<h2 id="一-设置【Settings】"><a href="#一-设置【Settings】" class="headerlink" title="一. 设置【Settings】"></a>一. 设置【Settings】</h2><ul>
+<li>依次单击菜单栏【Perferences】→【Settings】</li>
+<li>把右边的Setting-User中的内容全部删掉，</li>
+<li>将左边的Setting-Default里边的内容copy到右边User里，</li>
+<li>根据需要修改User的设置<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">// Settings in here override those in &quot;Default/Preferences.sublime-settings&quot;,</span><br><span class="line">// and are overridden in turn by file type specific settings.</span><br><span class="line">&#123;</span><br><span class="line">    &quot;update_check&quot;: false,//(不检查更新)</span><br><span class="line">    &quot;tab_size&quot;: 4,</span><br><span class="line">    &quot;translate_tabs_to_spaces&quot;: true,//(tab转空格)</span><br><span class="line">    &quot;draw_white_space&quot;: &quot;all&quot;,//(显示空格，一般不要用，看这难受)</span><br><span class="line">    &quot;trim_trailing_white_space_on_save&quot;: true, //(保存的时候去掉行尾的空格)</span><br><span class="line">    &quot;highlight_line&quot;:true,//(突出显示当前行)</span><br><span class="line">    &quot;font_size&quot;:15,//(根据个人适应程度来调节吧)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li>设置格式化快捷键<blockquote>
+<p>关于sublimeText3 设置格式化代码快捷键的问题<br>sublime中自建的有格式化按钮：<br>Edit  -&gt;  Line  -&gt;  Reindent<br>只是sublime并没有给他赋予快捷键，所以只需加上快捷键即可<br>Preference  -&gt;  Key Bindings -user<br>打开用户快捷键绑定设置添加(比如添加：ctrl + alt + l)</p>
+</blockquote>
+</li>
+</ul>
+<p>注:这里为了和webstorm保持一致就把格式化代码的快捷键设置成ctrl+alt+l<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123; &quot;keys&quot;: [&quot;ctrl+alt+l&quot;], &quot;command&quot;: &quot;reindent&quot; &#125;,  //注意不要忘记加逗号</span><br></pre></td></tr></table></figure><br><span id="more"></span></p>
+<h2 id="二-安装Package-Control"><a href="#二-安装Package-Control" class="headerlink" title="二. 安装Package Control"></a>二. 安装Package Control</h2><blockquote>
+<p>Package Control为插件管理包，所以我们首先要安装它。有了它，我们就可以很方便的浏览、安装和卸载Sublime Text中的插件。<br> 打开<a target="_blank" rel="noopener" href="https://packagecontrol.io/">Package Control</a> 的网页 ，点击右侧的“Install Now”按钮。<br><img src="/2018/12/29/sublime/sublime-text3-used/6_1.jpg" class="" title="Install Now"></p>
+<p>进入<a target="_blank" rel="noopener" href="https://packagecontrol.io/installation#st3">Installation</a> 页面，选择“SUBLIME TEXT 3”选项卡，复制出里面的代码段：</p>
+</blockquote>
+<img src="/2018/12/29/sublime/sublime-text3-used/6_2.jpg" class="" title="“SUBLIME TEXT 3”选项卡">
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">import urllib.request,os,hashlib; h = &#x27;6f4c264a24d933ce70df5dedcf1dcaee&#x27; + &#x27;ebe013ee18cced0ef93d5f746d80ef60&#x27;; pf = &#x27;Package Control.sublime-package&#x27;; ipp = sublime.installed_packages_path(); urllib.request.install_opener( urllib.request.build_opener( urllib.request.ProxyHandler()) ); by = urllib.request.urlopen( &#x27;http://packagecontrol.io/&#x27; + pf.replace(&#x27; &#x27;, &#x27;%20&#x27;)).read(); dh = hashlib.sha256(by).hexdigest(); print(&#x27;Error validating download (got %s instead of %s), please try manual install&#x27; % (dh, h)) if dh != h else open(os.path.join( ipp, pf), &#x27;wb&#x27; ).write(by)</span><br></pre></td></tr></table></figure>
+<p>双击桌面“Sublime Text 3”打开程序，快捷键 Ctrl + ` 打开Sublime Text控制台，将之前复制的代码粘贴到控制台里，按下“Enter”键。</p>
+<img src="/2018/12/29/sublime/sublime-text3-used/6_3.jpg" class="" title="Sublime Text控制台">
+<p>等待其安装完成后关闭程序，重新启动“Sublime Text 3”，点开菜单“Preferences”可见“Package Control”项，说明插件管理包已安装成功。</p>
+<img src="/2018/12/29/sublime/sublime-text3-used/6_4.jpg" class="" title="Package Control">
+<p>网站 packagecontrol.io 经常会挂掉 可以换手动安装</p>
+<p>手动安装：</p>
+<p>可能由于各种原因，无法使用代码安装，那可以通过以下步骤手动安装Package Control：</p>
+<p>1.点击Preferences &gt; Browse Packages菜单</p>
+<p>2.进入打开的目录的上层目录，然后再进入Installed Packages/目录</p>
+<p>3.下载 Package Control.sublime-package 并复制到Installed Packages/目录</p>
+<p>4.重启Sublime Text。</p>
+<p>Package Control <a target="_blank" rel="noopener" href="https://github.com/wbond/sublime_package_control">主文件下载地址</a><br>如果是从github 下载的源码，请解压到Packages下，命名为Package Control就好</p>
+<p>如果需要其他的插件包一样离线安装即可</p>
+<h2 id="快捷键使用"><a href="#快捷键使用" class="headerlink" title="快捷键使用"></a>快捷键使用</h2><h3 id="1-就近选择相同项-ctrl-d"><a href="#1-就近选择相同项-ctrl-d" class="headerlink" title="1. 就近选择相同项: ctrl+d"></a>1. 就近选择相同项: ctrl+d</h3><p>把光标放在一个单词上，按下ctrl+d，将选择这个单词。一直按住ctrl且按D多次，将选择当前选中项的下一个匹配项。通过按住ctrl，再按D三次，将选择三个相同的文本。<br><img src="/2018/12/29/sublime/sublime-text3-used/u_1.gif" class="" title="Image"></p>
+<h3 id="2-选择当前文件所有匹配项-alt-f3"><a href="#2-选择当前文件所有匹配项-alt-f3" class="headerlink" title="2. 选择当前文件所有匹配项: alt+f3"></a>2. 选择当前文件所有匹配项: alt+f3</h3><p>选择文件中的所有匹配项。小心使用这个，因为它能选择一个文件中的所有匹配项. .<br><img src="/2018/12/29/sublime/sublime-text3-used/u_2.gif" class="" title="Image"></p>
+<h3 id="3-选择文本的包裹标签-ctrl-shift-（ESC键下面的那个）"><a href="#3-选择文本的包裹标签-ctrl-shift-（ESC键下面的那个）" class="headerlink" title="3. 选择文本的包裹标签: ctrl+shift+` （ESC键下面的那个）"></a>3. 选择文本的包裹标签: ctrl+shift+` （ESC键下面的那个）</h3><p>这是一个法宝。也许你希望所有属性保持不变，但只是想选择标签。这个快捷键为你这样做，会注意到你可以在一次操作多个标签。ps：需要Emmet插件（可以直接到后面看插件的安装）<br><img src="/2018/12/29/sublime/sublime-text3-used/u_3.gif" class="" title="Image"></p>
+<h3 id="4-向上扩展一层-ctrl-shift-a"><a href="#4-向上扩展一层-ctrl-shift-a" class="headerlink" title="4. 向上扩展一层: ctrl+shift+a"></a>4. 向上扩展一层: ctrl+shift+a</h3><p>如果你把光标放在文本间再按下上面的键将选择文本，就像ctrl+d。但是再次按下它，将选择父容器，再按，将选择父容器的父容器。ps：需要Emmet插件（可以直接到后面看插件的安装）<br><img src="/2018/12/29/sublime/sublime-text3-used/u_4.gif" class="" title="Image"></p>
+<h3 id="5-选择括号内的内容-ctrl-shift-m"><a href="#5-选择括号内的内容-ctrl-shift-m" class="headerlink" title="5. 选择括号内的内容: ctrl+shift+m"></a>5. 选择括号内的内容: ctrl+shift+m</h3><p>这有助于选择括号之间的一切。同样适用于CSS。<br><img src="/2018/12/29/sublime/sublime-text3-used/u_5.gif" class="" title="Image"></p>
+<h3 id="6-整行的上下移动-ctrl-shift-↑或-ctrl-shift-↓"><a href="#6-整行的上下移动-ctrl-shift-↑或-ctrl-shift-↓" class="headerlink" title="6. 整行的上下移动: ctrl+shift+↑或 ctrl+shift+↓"></a>6. 整行的上下移动: ctrl+shift+↑或 ctrl+shift+↓</h3><img src="/2018/12/29/sublime/sublime-text3-used/u_6.gif" class="" title="Image">
+<h3 id="7-复制行或选中项-ctrl-shift-d"><a href="#7-复制行或选中项-ctrl-shift-d" class="headerlink" title="7. 复制行或选中项: ctrl+shift+d"></a>7. 复制行或选中项: ctrl+shift+d</h3><p>如果你已经选中了文本，它会复制你的选中项。否则，把光标放在行上，会复制整行。<br><img src="/2018/12/29/sublime/sublime-text3-used/u_7.gif" class="" title="Image"></p>
+<h3 id="8-增加和减少缩进-ctrl-或"><a href="#8-增加和减少缩进-ctrl-或" class="headerlink" title="8. 增加和减少缩进: ctrl+[ 或 ]"></a>8. 增加和减少缩进: ctrl+[ 或 ]</h3><img src="/2018/12/29/sublime/sublime-text3-used/u_8.gif" class="" title="Image">
+<h3 id="9-单行剪辑或选中项-ctrl-x"><a href="#9-单行剪辑或选中项-ctrl-x" class="headerlink" title="9. 单行剪辑或选中项: ctrl+x"></a>9. 单行剪辑或选中项: ctrl+x</h3><img src="/2018/12/29/sublime/sublime-text3-used/u_9.gif" class="" title="Image">
+<h3 id="10-粘贴并复制格式-ctrl-shift-v"><a href="#10-粘贴并复制格式-ctrl-shift-v" class="headerlink" title="10. 粘贴并复制格式: ctrl+shift+v"></a>10. 粘贴并复制格式: ctrl+shift+v</h3><img src="/2018/12/29/sublime/sublime-text3-used/u_10.gif" class="" title="Image">
+<h3 id="11-用标签包裹行或选中项-alt-shift-w"><a href="#11-用标签包裹行或选中项-alt-shift-w" class="headerlink" title="11. 用标签包裹行或选中项: alt+shift+w"></a>11. 用标签包裹行或选中项: alt+shift+w</h3><img src="/2018/12/29/sublime/sublime-text3-used/u_11.gif" class="" title="Image">
+<h3 id="12-移除未闭合的容器元素-ctrl-shift"><a href="#12-移除未闭合的容器元素-ctrl-shift" class="headerlink" title="12. 移除未闭合的容器元素: ctrl+shift+;"></a>12. 移除未闭合的容器元素: ctrl+shift+;</h3><p>这会移除与你的光标相关的父标签。对清除标记很有帮助。<br><img src="/2018/12/29/sublime/sublime-text3-used/u_12.gif" class="" title="Image"></p>
+<h3 id="13-大写和小写-大写ctrl-k-u、小写ctrl-k-l"><a href="#13-大写和小写-大写ctrl-k-u、小写ctrl-k-l" class="headerlink" title="13. 大写和小写: 大写ctrl+k+u、小写ctrl+k+l"></a>13. 大写和小写: 大写ctrl+k+u、小写ctrl+k+l</h3><img src="/2018/12/29/sublime/sublime-text3-used/u_13.gif" class="" title="Image">
+<h3 id="14-注释选中项-行-ctrl"><a href="#14-注释选中项-行-ctrl" class="headerlink" title="14. 注释选中项/行: ctrl+/"></a>14. 注释选中项/行: ctrl+/</h3><p>这个在所有语言下都可用， 对行和选中项都可用<br><img src="/2018/12/29/sublime/sublime-text3-used/u_14.gif" class="" title="Image"></p>
+<h3 id="15-删除一行-ctrl-shift-k"><a href="#15-删除一行-ctrl-shift-k" class="headerlink" title="15. 删除一行: ctrl+shift+k"></a>15. 删除一行: ctrl+shift+k</h3><blockquote>
+<p>这个就不用图了吧</p>
+</blockquote>
+<h3 id="16-sublime查找替换-ctrl-f-ctrl-h"><a href="#16-sublime查找替换-ctrl-f-ctrl-h" class="headerlink" title="16. sublime查找替换: ctrl+f / ctrl+h"></a>16. sublime查找替换: ctrl+f / ctrl+h</h3><blockquote>
+<p>如果要替换换行符<br> 要先选中正则表达式（regular expression）匹配模式，点中（.*）按钮<br>输入 \n</p>
+</blockquote>
+<p>参考来源于：</p>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/wind128/p/4409422.html">https://www.cnblogs.com/wind128/p/4409422.html</a></p>
+
+    </div>
+
+    
+    
+    
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/sublime-text3/" rel="tag"># sublime text3</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2018/12/26/python/python3-pkg/" rel="prev" title="python3 包介绍">
+      <i class="fa fa-chevron-left"></i> python3 包介绍
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2019/01/05/csharp/csharp-code-rule/" rel="next" title="CSharp 代码和命令规范(Unity)">
+      CSharp 代码和命令规范(Unity) <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80-%E8%AE%BE%E7%BD%AE%E3%80%90Settings%E3%80%91"><span class="nav-number">1.</span> <span class="nav-text">一. 设置【Settings】</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C-%E5%AE%89%E8%A3%85Package-Control"><span class="nav-number">2.</span> <span class="nav-text">二. 安装Package Control</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BF%AB%E6%8D%B7%E9%94%AE%E4%BD%BF%E7%94%A8"><span class="nav-number">3.</span> <span class="nav-text">快捷键使用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E5%B0%B1%E8%BF%91%E9%80%89%E6%8B%A9%E7%9B%B8%E5%90%8C%E9%A1%B9-ctrl-d"><span class="nav-number">3.1.</span> <span class="nav-text">1. 就近选择相同项: ctrl+d</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E9%80%89%E6%8B%A9%E5%BD%93%E5%89%8D%E6%96%87%E4%BB%B6%E6%89%80%E6%9C%89%E5%8C%B9%E9%85%8D%E9%A1%B9-alt-f3"><span class="nav-number">3.2.</span> <span class="nav-text">2. 选择当前文件所有匹配项: alt+f3</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E9%80%89%E6%8B%A9%E6%96%87%E6%9C%AC%E7%9A%84%E5%8C%85%E8%A3%B9%E6%A0%87%E7%AD%BE-ctrl-shift-%EF%BC%88ESC%E9%94%AE%E4%B8%8B%E9%9D%A2%E7%9A%84%E9%82%A3%E4%B8%AA%EF%BC%89"><span class="nav-number">3.3.</span> <span class="nav-text">3. 选择文本的包裹标签: ctrl+shift+&#96; （ESC键下面的那个）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E5%90%91%E4%B8%8A%E6%89%A9%E5%B1%95%E4%B8%80%E5%B1%82-ctrl-shift-a"><span class="nav-number">3.4.</span> <span class="nav-text">4. 向上扩展一层: ctrl+shift+a</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-%E9%80%89%E6%8B%A9%E6%8B%AC%E5%8F%B7%E5%86%85%E7%9A%84%E5%86%85%E5%AE%B9-ctrl-shift-m"><span class="nav-number">3.5.</span> <span class="nav-text">5. 选择括号内的内容: ctrl+shift+m</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-%E6%95%B4%E8%A1%8C%E7%9A%84%E4%B8%8A%E4%B8%8B%E7%A7%BB%E5%8A%A8-ctrl-shift-%E2%86%91%E6%88%96-ctrl-shift-%E2%86%93"><span class="nav-number">3.6.</span> <span class="nav-text">6. 整行的上下移动: ctrl+shift+↑或 ctrl+shift+↓</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-%E5%A4%8D%E5%88%B6%E8%A1%8C%E6%88%96%E9%80%89%E4%B8%AD%E9%A1%B9-ctrl-shift-d"><span class="nav-number">3.7.</span> <span class="nav-text">7. 复制行或选中项: ctrl+shift+d</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-%E5%A2%9E%E5%8A%A0%E5%92%8C%E5%87%8F%E5%B0%91%E7%BC%A9%E8%BF%9B-ctrl-%E6%88%96"><span class="nav-number">3.8.</span> <span class="nav-text">8. 增加和减少缩进: ctrl+[ 或 ]</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#9-%E5%8D%95%E8%A1%8C%E5%89%AA%E8%BE%91%E6%88%96%E9%80%89%E4%B8%AD%E9%A1%B9-ctrl-x"><span class="nav-number">3.9.</span> <span class="nav-text">9. 单行剪辑或选中项: ctrl+x</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#10-%E7%B2%98%E8%B4%B4%E5%B9%B6%E5%A4%8D%E5%88%B6%E6%A0%BC%E5%BC%8F-ctrl-shift-v"><span class="nav-number">3.10.</span> <span class="nav-text">10. 粘贴并复制格式: ctrl+shift+v</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#11-%E7%94%A8%E6%A0%87%E7%AD%BE%E5%8C%85%E8%A3%B9%E8%A1%8C%E6%88%96%E9%80%89%E4%B8%AD%E9%A1%B9-alt-shift-w"><span class="nav-number">3.11.</span> <span class="nav-text">11. 用标签包裹行或选中项: alt+shift+w</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#12-%E7%A7%BB%E9%99%A4%E6%9C%AA%E9%97%AD%E5%90%88%E7%9A%84%E5%AE%B9%E5%99%A8%E5%85%83%E7%B4%A0-ctrl-shift"><span class="nav-number">3.12.</span> <span class="nav-text">12. 移除未闭合的容器元素: ctrl+shift+;</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#13-%E5%A4%A7%E5%86%99%E5%92%8C%E5%B0%8F%E5%86%99-%E5%A4%A7%E5%86%99ctrl-k-u%E3%80%81%E5%B0%8F%E5%86%99ctrl-k-l"><span class="nav-number">3.13.</span> <span class="nav-text">13. 大写和小写: 大写ctrl+k+u、小写ctrl+k+l</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#14-%E6%B3%A8%E9%87%8A%E9%80%89%E4%B8%AD%E9%A1%B9-%E8%A1%8C-ctrl"><span class="nav-number">3.14.</span> <span class="nav-text">14. 注释选中项&#x2F;行: ctrl+&#x2F;</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#15-%E5%88%A0%E9%99%A4%E4%B8%80%E8%A1%8C-ctrl-shift-k"><span class="nav-number">3.15.</span> <span class="nav-text">15. 删除一行: ctrl+shift+k</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#16-sublime%E6%9F%A5%E6%89%BE%E6%9B%BF%E6%8D%A2-ctrl-f-ctrl-h"><span class="nav-number">3.16.</span> <span class="nav-text">16. sublime查找替换: ctrl+f &#x2F; ctrl+h</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Chester.C</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">143</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">32</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">67</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Chester.C</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+if (document.querySelectorAll('pre.mermaid').length) {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mermaid@8/dist/mermaid.min.js', () => {
+    mermaid.initialize({
+      theme    : 'forest',
+      logLevel : 3,
+      flowchart: { curve     : 'linear' },
+      gantt    : { axisFormat: '%m/%d/%Y' },
+      sequence : { actorMargin: 50 }
+    });
+  }, window.mermaid);
+}
+</script>
+
+
+  
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'OQBlgU8H1seTDvVrgC3Dhni0-gzGzoHsz',
+      appKey     : 'wF7D3hVD9WjlV9V52bhlymHO',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : true,
+      lang       : 'zh-cn' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>

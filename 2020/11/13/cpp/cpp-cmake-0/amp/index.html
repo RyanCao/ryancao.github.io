@@ -1,0 +1,2135 @@
+<!DOCTYPE html>
+<html ⚡>
+  <head>
+    <meta charset="utf-8">
+    <link rel="canonical" href="http://blog.rcant.com/2020/11/13/cpp/cpp-cmake-0/" >
+    <title>学习CMake - Chester.Cao Blog</title>
+    <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
+    
+    <meta property="og:title" content="学习CMake">
+	<meta property="og:type" content="article">
+	<meta property="og:url" content="http://blog.rcant.com/2020/11/13/cpp/cpp-cmake-0/">
+	
+		<meta property="og:image" content="\amp-dist\sample\sample-substituteTitleImage.png">
+	
+	<meta property="og:site_name" content="Chester.Cao Blog">
+	
+		<meta property="og:description" content="&lt;p&gt;你或许听过好几种 Make 工具，例如 &lt;a href=&#34;https://www.hahack.com/wiki/tools-makefile.html&#34;&gt;GNU Make&lt;/a&gt; ，QT 的 &lt;a href=&#34;http://qt-project.org/doc/qt-4.8/qmake-manual.html&#34;&gt;qmake&lt;/a&gt; ，微软的 &lt;a href=&#34;http://msdn.microsoft.com/en-us/library/ms930369.aspx&#34;&gt;MS nmake&lt;/a&gt;，BSD Make（&lt;a href=&#34;http://www.freebsd.org/doc/en/books/pmake/&#34;&gt;pmake&lt;/a&gt;），Makepp，等等。这些 Make 工具遵循着不同的规范和标准，所执行的 Makefile 格式也千差万别。这样就带来了一个严峻的问题：如果软件想跨平台，必须要保证能够在不同平台编译。而如果使用上面的 Make 工具，就得为每一种标准写一次 Makefile ，这将是一件让人抓狂的工作。&lt;/p&gt;
+&lt;p&gt;CMake就是针对上面问题所设计的工具：它首先允许开发者编写一种平台无关的 CMakeList.txt 文件来定制整个编译流程，然后再根据目标用户的平台进一步生成所需的本地化 Makefile 和工程文件，如 Unix 的 Makefile 或 Windows 的 Visual Studio 工程。从而做到“Write once, run everywhere”。显然，CMake 是一个比上述几种 make 更高级的编译配置工具。一些使用 CMake 作为项目架构系统的知名开源项目有 VTK、ITK、KDE、OpenCV、OSG 等 [1]。&lt;/p&gt;
+&lt;p&gt;在 linux 平台下使用 CMake 生成 Makefile 并编译的流程如下：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;编写 CMake 配置文件 CMakeLists.txt 。&lt;/li&gt;
+&lt;li&gt;执行命令 &lt;span class=&#34;label warning&#34;&gt;cmake PATH&lt;/span&gt; 或者 &lt;span class=&#34;label warning&#34;&gt;ccmake PATH&lt;/span&gt; 生成 Makefile ( &lt;span class=&#34;label warning&#34;&gt;ccmake&lt;/span&gt; 和 &lt;span class=&#34;label warning&#34;&gt;cmake&lt;/span&gt; 的区别在于前者提供了一个交互式的界面)。其中， &lt;span class=&#34;label warning&#34;&gt;PATH&lt;/span&gt; 是 CMakeLists.txt 所在的目录。&lt;/li&gt;
+&lt;li&gt;使用 &lt;span class=&#34;label warning&#34;&gt;make&lt;/span&gt; 命令进行编译。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;本文将从实例入手，一步步讲解 CMake 的常见用法，文中所有的实例代码可以在这里找到。如果你读完仍觉得意犹未尽，可以继续学习我在文章末尾提供的其他资源。&lt;/p&gt;">
+	
+	<meta name="twitter:card" content="summary_large_image" />
+	<meta name="twitter:site" content="Chester.Cao Blog">
+	<meta name="twitter:url" content="http://blog.rcant.com/2020/11/13/cpp/cpp-cmake-0/">
+	<meta name="twitter:title" content="学习CMake - Chester.Cao Blog">
+	
+		<meta name="twitter:description" content="&lt;p&gt;你或许听过好几种 Make 工具，例如 &lt;a href=&#34;https://www.hahack.com/wiki/tools-makefile.html&#34;&gt;GNU Make&lt;/a&gt; ，QT 的 &lt;a href=&#34;http://qt-project.org/doc/qt-4.8/qmake-manual.html&#34;&gt;qmake&lt;/a&gt; ，微软的 &lt;a href=&#34;http://msdn.microsoft.com/en-us/library/ms930369.aspx&#34;&gt;MS nmake&lt;/a&gt;，BSD Make（&lt;a href=&#34;http://www.freebsd.org/doc/en/books/pmake/&#34;&gt;pmake&lt;/a&gt;），Makepp，等等。这些 Make 工具遵循着不同的规范和标准，所执行的 Makefile 格式也千差万别。这样就带来了一个严峻的问题：如果软件想跨平台，必须要保证能够在不同平台编译。而如果使用上面的 Make 工具，就得为每一种标准写一次 Makefile ，这将是一件让人抓狂的工作。&lt;/p&gt;
+&lt;p&gt;CMake就是针对上面问题所设计的工具：它首先允许开发者编写一种平台无关的 CMakeList.txt 文件来定制整个编译流程，然后再根据目标用户的平台进一步生成所需的本地化 Makefile 和工程文件，如 Unix 的 Makefile 或 Windows 的 Visual Studio 工程。从而做到“Write once, run everywhere”。显然，CMake 是一个比上述几种 make 更高级的编译配置工具。一些使用 CMake 作为项目架构系统的知名开源项目有 VTK、ITK、KDE、OpenCV、OSG 等 [1]。&lt;/p&gt;
+&lt;p&gt;在 linux 平台下使用 CMake 生成 Makefile 并编译的流程如下：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;编写 CMake 配置文件 CMakeLists.txt 。&lt;/li&gt;
+&lt;li&gt;执行命令 &lt;span class=&#34;label warning&#34;&gt;cmake PATH&lt;/span&gt; 或者 &lt;span class=&#34;label warning&#34;&gt;ccmake PATH&lt;/span&gt; 生成 Makefile ( &lt;span class=&#34;label warning&#34;&gt;ccmake&lt;/span&gt; 和 &lt;span class=&#34;label warning&#34;&gt;cmake&lt;/span&gt; 的区别在于前者提供了一个交互式的界面)。其中， &lt;span class=&#34;label warning&#34;&gt;PATH&lt;/span&gt; 是 CMakeLists.txt 所在的目录。&lt;/li&gt;
+&lt;li&gt;使用 &lt;span class=&#34;label warning&#34;&gt;make&lt;/span&gt; 命令进行编译。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;本文将从实例入手，一步步讲解 CMake 的常见用法，文中所有的实例代码可以在这里找到。如果你读完仍觉得意犹未尽，可以继续学习我在文章末尾提供的其他资源。&lt;/p&gt;">
+	
+    
+    	<meta name="twitter:image" content="\amp-dist\sample\sample-substituteTitleImage.png">
+	
+	
+	
+    
+    <style amp-boilerplate>body{-webkit-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-moz-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-ms-animation:-amp-start 8s steps(1,end) 0s 1 normal both;animation:-amp-start 8s steps(1,end) 0s 1 normal both}@-webkit-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-moz-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-ms-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-o-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}</style>
+    <noscript><style amp-boilerplate>body{-webkit-animation:none;-moz-animation:none;-ms-animation:none;animation:none}</style></noscript>
+    <script async custom-element="amp-sidebar" src="https://cdn.ampproject.org/v0/amp-sidebar-0.1.js"></script>
+    <!--
+  	<script async custom-element="amp-social-share" src="https://cdn.ampproject.org/v0/amp-social-share-0.1.js"></script>
+    -->
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <script async src="https://cdn.ampproject.org/v0.js"></script>
+    <script type="application/ld+json">
+		{
+			"@context": "http://schema.org",
+			"@type": "BlogPosting",
+			"headline": "学习CMake",
+			
+			"description": "&lt;p&gt;你或许听过好几种 Make 工具，例如 &lt;a href=&#34;https://www.hahack.com/wiki/tools-makefile.html&#34;&gt;GNU Make&lt;/a&gt; ，QT 的 &lt;a href=&#34;http://qt-project.org/doc/qt-4.8/qmake-manual.html&#34;&gt;qmake&lt;/a&gt; ，微软的 &lt;a href=&#34;http://msdn.microsoft.com/en-us/library/ms930369.aspx&#34;&gt;MS nmake&lt;/a&gt;，BSD Make（&lt;a href=&#34;http://www.freebsd.org/doc/en/books/pmake/&#34;&gt;pmake&lt;/a&gt;），Makepp，等等。这些 Make 工具遵循着不同的规范和标准，所执行的 Makefile 格式也千差万别。这样就带来了一个严峻的问题：如果软件想跨平台，必须要保证能够在不同平台编译。而如果使用上面的 Make 工具，就得为每一种标准写一次 Makefile ，这将是一件让人抓狂的工作。&lt;/p&gt;
+&lt;p&gt;CMake就是针对上面问题所设计的工具：它首先允许开发者编写一种平台无关的 CMakeList.txt 文件来定制整个编译流程，然后再根据目标用户的平台进一步生成所需的本地化 Makefile 和工程文件，如 Unix 的 Makefile 或 Windows 的 Visual Studio 工程。从而做到“Write once, run everywhere”。显然，CMake 是一个比上述几种 make 更高级的编译配置工具。一些使用 CMake 作为项目架构系统的知名开源项目有 VTK、ITK、KDE、OpenCV、OSG 等 [1]。&lt;/p&gt;
+&lt;p&gt;在 linux 平台下使用 CMake 生成 Makefile 并编译的流程如下：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;编写 CMake 配置文件 CMakeLists.txt 。&lt;/li&gt;
+&lt;li&gt;执行命令 &lt;span class=&#34;label warning&#34;&gt;cmake PATH&lt;/span&gt; 或者 &lt;span class=&#34;label warning&#34;&gt;ccmake PATH&lt;/span&gt; 生成 Makefile ( &lt;span class=&#34;label warning&#34;&gt;ccmake&lt;/span&gt; 和 &lt;span class=&#34;label warning&#34;&gt;cmake&lt;/span&gt; 的区别在于前者提供了一个交互式的界面)。其中， &lt;span class=&#34;label warning&#34;&gt;PATH&lt;/span&gt; 是 CMakeLists.txt 所在的目录。&lt;/li&gt;
+&lt;li&gt;使用 &lt;span class=&#34;label warning&#34;&gt;make&lt;/span&gt; 命令进行编译。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;本文将从实例入手，一步步讲解 CMake 的常见用法，文中所有的实例代码可以在这里找到。如果你读完仍觉得意犹未尽，可以继续学习我在文章末尾提供的其他资源。&lt;/p&gt;",
+			
+			"mainEntityOfPage":{
+			    "@type":"WebPage",
+			    "@id":"http://blog.rcant.com/2020/11/13/cpp/cpp-cmake-0/"
+			},
+			"datePublished": "2020-11-13T03:39:17.000Z",
+			"dateModified": "2023-01-06T09:29:02.856Z",
+			
+			"image": {
+				"@type": "ImageObject",
+				"url": "\amp-dist\sample\sample-substituteTitleImage.png",
+				"width" : "1024",
+				"height" : "800"
+			},
+			
+			"author": {
+			    "@type": "Person",
+			    "name": "Chester.C"
+			},
+			"publisher": {
+			    "@type": "Organization",
+			    "name": "Chester.Cao Blog"
+			    
+			    ,
+			    "logo": {
+			      "@type": "ImageObject",
+			      "url": "http://blog.rcant.com\amp-dist\sample\sample-logo.png",
+			      "width": 600,
+			      "height": 60
+			    }
+			    
+			}
+		}
+	</script>
+	<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+	
+	<style amp-custom>
+		
+abbr,
+acronym,
+address,
+applet,
+big,
+blockquote,
+body,
+caption,
+cite,
+code,
+dd,
+del,
+dfn,
+div,
+dl,
+dt,
+em,
+fieldset,
+form,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+html,
+iframe,
+img,
+ins,
+kbd,
+label,
+legend,
+li,
+object,
+ol,
+p,
+pre,
+q,
+s,
+samp,
+small,
+span,
+strike,
+strong,
+sub,
+sup,
+table,
+tbody,
+td,
+tfoot,
+th,
+thead,
+tr,
+tt,
+ul,
+var {
+  border: 0;
+  font-family: inherit;
+  font-size: 1rem;
+  font-style: inherit;
+  font-weight: inherit;
+  margin: 0;
+  outline: 0;
+  padding: 0;
+  vertical-align: baseline;
+}
+abbr {
+  cursor: help;
+  border-bottom: 1px dotted;
+  font-variant: normal;
+}
+acronym {
+  border-bottom: 1px dotted;
+  font-variant: normal;
+}
+body {
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  -webkit-text-size-adjust: 100%;
+  background: #fff;
+  color: #2d3d40;
+  font-family: sans-serif;
+  font-size: 1rem;
+  font-weight: 500;
+  line-height: 2rem;
+  text-rendering: optimizelegibility;
+}
+button::-moz-focus-inner,
+input::-moz-focus-inner,
+figure.highlight td,
+.post .entry-content figure.highlight th {
+  border: 0;
+  padding: 0;
+}
+caption,
+table,
+td,
+th {
+  vertical-align: middle;
+}
+caption,
+td,
+th,
+.table-align-left {
+  text-align: left;
+}
+del {
+  text-decoration: line-through;
+}
+html {
+  font-size: 14px;
+}
+:root sub,
+:root sup {
+  vertical-align: baseline;
+}
+table {
+  border-collapse: separate;
+  border-spacing: 0;
+}
+a {
+  color: #e91e63;
+  text-decoration: none;
+  -webkit-transition: 0.7s;
+  -ms-transition: 0.7s;
+  -moz-transition: 0.7s;
+  -o-transition: 0.7s;
+  -webkit-transition: 0.7s;
+  -moz-transition: 0.7s;
+  -o-transition: 0.7s;
+  -ms-transition: 0.7s;
+  transition: 0.7s;
+  border: 0;
+  font-family: inherit;
+  font-size: 1rem;
+  font-style: inherit;
+  font-weight: inherit;
+  margin: 0;
+  outline: 0;
+  padding: 0;
+  vertical-align: baseline;
+}
+a img {
+  border: none;
+}
+a:hover {
+  -webkit-transition: 0.2s;
+  -ms-transition: 0.2s;
+  -moz-transition: 0.2s;
+  -o-transition: 0.2s;
+  -webkit-transition: 0.2s;
+  -moz-transition: 0.2s;
+  -o-transition: 0.2s;
+  -ms-transition: 0.2s;
+  transition: 0.2s;
+  color: #930e3b;
+}
+@media (min-width: 481px) {
+  html {
+    font-size: 16px;
+  }
+}
+@media (min-width: 0px) and (max-width: 480px) {
+  html {
+    font-size: 14px;
+  }
+}
+.clearfix:after {
+  clear: both;
+  visibility: hidden;
+  content: ".";
+  display: block;
+  height: 0;
+}
+.left {
+  float: left;
+}
+.right {
+  float: right;
+}
+.circle {
+  -webkit-border-radius: 50%;
+  border-radius: 50%;
+}
+.thumbImg-w {
+  width: 100px;
+  height: 100px;
+  display: inline-block;
+  position: relative;
+  overflow: hidden;
+}
+.thumbImg {
+  top: 50%;
+  left: 50%;
+  position: absolute;
+  -webkit-transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  -webkit-transform: translate(-50%, -50%);
+  -moz-transform: translate(-50%, -50%);
+  -o-transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+}
+.__web-inspector-hide-shortcut__ {
+  visibility: hidden ;
+}
+button {
+  -webkit-box-align: start;
+  -moz-box-align: start;
+  -o-box-align: start;
+  -ms-flex-align: start;
+  -webkit-align-items: flex-start;
+  align-items: flex-start;
+  text-align: center;
+  cursor: default;
+  color: buttontext;
+  background-color: buttonface;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  padding: 2px 6px 3px;
+  border-width: 2px;
+  border-style: outset;
+  border-color: buttonface;
+  -webkit-border-image: initial;
+  -moz-border-image: initial;
+  -o-border-image: initial;
+  border-image: initial;
+  text-rendering: auto;
+  color: initial;
+  letter-spacing: normal;
+  word-spacing: normal;
+  text-transform: none;
+  text-indent: 0px;
+  text-shadow: none;
+  display: inline-block;
+  text-align: start;
+  margin: 0em 0em 0em 0em;
+  font: 11px system-ui;
+  -webkit-writing-mode: horizontal-tb;
+  -webkit-appearance: button;
+}
+.hamburger {
+  display: inline-block;
+  background-color: transparent;
+  background-image: url("data:image/svg+xmlutf8,<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"-3 -6 24 24\"><path fill=\"#4A4A4A\" d=\"M0 12h18v-2H0v2M0 7h18V5H0v2M0 0v2h18V0H0\"/></svg>");
+  background-repeat: no-repeat;
+  -webkit-background-size: 30px 24px;
+  -moz-background-size: 30px 24px;
+  background-size: 30px 24px;
+  background-position: center center;
+  border: none;
+  margin: 0;
+  padding: 0;
+  width: 60px;
+  height: 60px;
+  cursor: pointer;
+  -ms-flex-item-align: center;
+  -ms-grid-row-align: center;
+  -webkit-align-self: center;
+  align-self: center;
+  -ms-flex-item-align: center;
+}
+.nav ul:after {
+  clear: both;
+  visibility: hidden;
+}
+.nav,
+.nav-icon {
+  position: relative;
+}
+.nav ul {
+  display: block;
+}
+.nav ul li {
+  display: block;
+}
+.nav ul li a {
+  display: block;
+}
+.tab {
+  position: relative;
+  color: #424242;
+  padding: 6px;
+  margin: 0 4px;
+  text-decoration: none;
+  text-transform: uppercase;
+  font-weight: 400;
+  -webkit-transition: 0.1s ease color;
+  -webkit-transition: 0.1s ease color;
+  -moz-transition: 0.1s ease color;
+  -o-transition: 0.1s ease color;
+  -ms-transition: 0.1s ease color;
+  transition: 0.1s ease color;
+}
+amp-sidebar {
+  width: 200px;
+}
+amp-sidebar ul {
+  padding: 10px 0;
+}
+amp-sidebar li a {
+  display: block;
+  padding: 10px 20px;
+}
+header {
+  height: 60px;
+  background-color: #222f31;
+  -webkit-box-shadow: 0 -1px 0 #3c5155 inset, 0 -3px 0 #1e292b inset;
+  box-shadow: 0 -1px 0 #3c5155 inset, 0 -3px 0 #1e292b inset;
+  -webkit-box-shadow: 0 -1px 0 #3c5155 inset, 0 -3px 0 #1e292b inset;
+}
+header .header-title a {
+  padding: 0 0 0 20px;
+  height: 60px;
+  line-height: 60px;
+  font-size: 20px;
+  color: #fff;
+  letter-spacing: 0.2em;
+}
+header .nav-container {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: -webkit-box;
+  display: -moz-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: box;
+  display: flex;
+  -webkit-box-pack: justify;
+  -ms-flex-pack: justify;
+  -webkit-box-pack: justify;
+  -moz-box-pack: justify;
+  -o-box-pack: justify;
+  -ms-flex-pack: justify;
+  -webkit-justify-content: space-between;
+  justify-content: space-between;
+}
+header .left-nav {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: -webkit-box;
+  display: -moz-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: box;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  -webkit-box-align: center;
+  -moz-box-align: center;
+  -o-box-align: center;
+  -ms-flex-align: center;
+  -webkit-align-items: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -ms-flex-pack: start;
+  -webkit-box-pack: start;
+  -moz-box-pack: start;
+  -o-box-pack: start;
+  -ms-flex-pack: start;
+  -webkit-justify-content: flex-start;
+  justify-content: flex-start;
+  font-size: 20px;
+  margin-left: 0;
+  font-weight: 300;
+  -webkit-box-pack: start;
+  -ms-flex-pack: start;
+  -webkit-box-pack: start;
+  -moz-box-pack: start;
+  -o-box-pack: start;
+  -ms-flex-pack: start;
+  -webkit-justify-content: flex-start;
+  justify-content: flex-start;
+  -webkit-box-flex: 1;
+  -ms-flex: 1 1 auto;
+  -webkit-box-flex: 1;
+  -moz-box-flex: 1;
+  -o-box-flex: 1;
+  box-flex: 1;
+  -webkit-flex: 1 1 auto;
+  -ms-flex: 1 1 auto;
+  flex: 1 1 auto;
+  text-align: left;
+  width: auto;
+  font-size: 15px;
+}
+header .right {
+  font-size: 15px;
+}
+header .alt {
+  padding: 0;
+  text-align: right;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: -webkit-box;
+  display: -moz-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: box;
+  display: flex;
+  -webkit-box-align: stretch;
+  -ms-flex-align: stretch;
+  -webkit-box-align: stretch;
+  -moz-box-align: stretch;
+  -o-box-align: stretch;
+  -ms-flex-align: stretch;
+  -webkit-align-items: stretch;
+  align-items: stretch;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-box-pack: center;
+  -moz-box-pack: center;
+  -o-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+}
+.blog-title a {
+  position: relative;
+}
+button {
+  -webkit-box-align: start;
+  -moz-box-align: start;
+  -o-box-align: start;
+  -ms-flex-align: start;
+  -webkit-align-items: flex-start;
+  align-items: flex-start;
+  text-align: center;
+  cursor: default;
+  color: buttontext;
+  background-color: buttonface;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  padding: 2px 6px 3px;
+  border-width: 2px;
+  border-style: outset;
+  border-color: buttonface;
+  -webkit-border-image: initial;
+  -moz-border-image: initial;
+  -o-border-image: initial;
+  border-image: initial;
+  text-rendering: auto;
+  color: initial;
+  letter-spacing: normal;
+  word-spacing: normal;
+  text-transform: none;
+  text-indent: 0px;
+  text-shadow: none;
+  display: inline-block;
+  text-align: start;
+  margin: 0em 0em 0em 0em;
+  font: 11px system-ui;
+  -webkit-writing-mode: horizontal-tb;
+  -webkit-appearance: button;
+}
+.__web-inspector-hide-shortcut__ {
+  visibility: hidden ;
+}
+.hamburger {
+  display: inline-block;
+  background-color: transparent;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"-3 -6 24 24\"><path fill=\"#FFF\" d=\"M0 12h18v-2H0v2M0 7h18V5H0v2M0 0v2h18V0H0\"/></svg>");
+  background-repeat: no-repeat;
+  -webkit-background-size: 30px 24px;
+  -moz-background-size: 30px 24px;
+  background-size: 30px 24px;
+  background-position: center center;
+  border: none;
+  margin: 0;
+  padding: 0;
+  width: 60px;
+  height: 60px;
+  cursor: pointer;
+  -ms-flex-item-align: center;
+  -ms-grid-row-align: center;
+  -webkit-align-self: center;
+  align-self: center;
+  -ms-flex-item-align: center;
+}
+.tab {
+  position: relative;
+  color: #2d3d40;
+  padding: 6px;
+  margin: 0 4px;
+  text-decoration: none;
+  text-transform: uppercase;
+  font-weight: 400;
+  -webkit-transition: 0.1s ease color;
+  -webkit-transition: 0.1s ease color;
+  -moz-transition: 0.1s ease color;
+  -o-transition: 0.1s ease color;
+  -ms-transition: 0.1s ease color;
+  transition: 0.1s ease color;
+}
+amp-sidebar {
+  width: 250px;
+  background-color: #182022;
+}
+amp-sidebar ul {
+  padding: 10px 0;
+}
+amp-sidebar li {
+  border-top: 1px solid #2f4043;
+}
+amp-sidebar li:last-child {
+  border-bottom: 1px solid #2f4043;
+}
+amp-sidebar li a {
+  color: #fff;
+  font-weight: bold;
+  display: block;
+  padding: 10px 20px;
+}
+amp-sidebar li a:hover {
+  color: #ccc;
+  background-color: #030404;
+}
+.categories-header {
+  background-color: #2d3d40;
+  padding: 0rem 0.8rem;
+}
+.categories-header a {
+  color: #fff;
+}
+.categories-header a:hover {
+  color: #fff;
+}
+.categories-header .breadcrumb ol li {
+  list-style: none;
+  display: inline-block;
+  margin: 0;
+}
+.categories-header .breadcrumb ol li span {
+  font-size: 0.8rem;
+  font-weight: bold;
+}
+.categories-header .breadcrumb ol li:after {
+  content: "/";
+  color: #fff;
+  display: inline-block;
+  margin: 0 0.4rem;
+}
+.categories-header .breadcrumb ol li:last-child:after {
+  content: "";
+  margin: 0;
+}
+.entry-header {
+  display: -webkit-box;
+  display: -moz-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: box;
+  display: flex;
+  -webkit-box-pack: center;
+  -moz-box-pack: center;
+  -o-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -moz-box-align: center;
+  -o-box-align: center;
+  -ms-flex-align: center;
+  -webkit-align-items: center;
+  align-items: center;
+}
+.entry-header .flx:first-child {
+  margin: 0 1rem 0 0;
+}
+.header-cap {
+  -webkit-flex-grow: 3;
+  -webkit-box-flex: 3;
+  -moz-box-flex: 3;
+  -o-box-flex: 3;
+  -ms-box-flex: 3;
+  box-flex: 3;
+  -webkit-flex-grow: 3;
+  flex-grow: 3;
+}
+.title-cover {
+  background-color: #fff;
+  color: #2d3d40;
+  padding: 1.5rem 0.8rem 0 0.8rem;
+}
+.title-cover a {
+  font-size: 1.2rem;
+  color: #2d3d40;
+  text-align: left;
+  font-weight: bold;
+}
+.entry-title {
+  margin: 0;
+}
+.entry-meta-header {
+  font-size: 0.85rem;
+  text-align: center;
+}
+.entry-meta-header .date {
+  font-family: sans-serif;
+}
+h1 a,
+h2 a,
+h3 a,
+h4 a,
+h5 a,
+h6 a {
+  color: #2d3d40;
+  text-decoration: none;
+}
+h1 a:hover,
+h2 a:hover,
+h3 a:hover,
+h4 a:hover,
+h5 a:hover,
+h6 a:hover {
+  color: #e91e63;
+}
+#container {
+  margin-left: auto;
+  margin-right: auto;
+}
+#main {
+  margin-bottom: 3em;
+  padding-left: 0;
+}
+.post {
+  margin-bottom: 3rem;
+  position: relative;
+}
+.entry-content {
+  margin: 0 0.6rem;
+  font-size: 1rem;
+}
+.entry-content h1 {
+  font-size: 1.7rem;
+  line-height: 1.5;
+  margin: 1em 0 0.8em;
+}
+.entry-content h2,
+.entry-content h3,
+.entry-content h4,
+.entry-content h5,
+.entry-content h6,
+.entry-content h2 span,
+.entry-content h3 span,
+.entry-content h4 span,
+.entry-content h5 span,
+.entry-content h6 span {
+  color: #98b8be;
+  font-weight: bold;
+}
+.entry-content h2,
+.entry-content h2 span {
+  font-size: 1.8rem;
+  line-height: 2.6rem;
+  text-align: center;
+}
+.entry-content h2 {
+  border-bottom: 2px solid #cce4e8;
+  margin: 4.5rem 0 0.5em;
+  padding: 0.8em 0;
+}
+.entry-content h3,
+.entry-content h3 span {
+  font-size: 1.6rem;
+  line-height: 2.2rem;
+  text-align: center;
+}
+.entry-content h3 {
+  margin: 3.6rem 0.8rem 3rem 0.8rem;
+  padding: 0;
+}
+.entry-content h4,
+.entry-content h4 span {
+  font-size: 1.4rem;
+  line-height: 2rem;
+  text-align: center;
+}
+.entry-content h4 {
+  margin: 3.6rem 0.8rem 3rem 0.8rem;
+  padding: 0;
+}
+.entry-content h5,
+.entry-content h5 span {
+  font-size: 1.2rem;
+  line-height: 1.8rem;
+  text-align: center;
+}
+.entry-content h5 {
+  margin: 3.6rem 0.8rem 3rem 0.8rem;
+  padding: 0;
+}
+.entry-content h6,
+.entry-content h6 span {
+  font-size: 1.1rem;
+  line-height: 1.6rem;
+  text-align: center;
+}
+.entry-content h6 {
+  margin: 3.6rem 0.8rem 3rem 0.8rem;
+  padding: 0;
+}
+.entry-content p {
+  font-size: 1rem;
+  letter-spacing: 0.05rem;
+  line-height: 2.2rem;
+  margin: 3rem 0.8rem;
+}
+.entry-content p a {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  display: inline;
+  border-bottom: 1px dashed #f1729d;
+  padding-bottom: 0.3rem;
+}
+.entry-content p a:hover {
+  border-bottom: 1px dashed #9c0f3f;
+  padding-bottom: 0.4rem;
+}
+.entry-content em {
+  background-color: #f9f5d1;
+  color: #886d00;
+  font-style: normal;
+  margin: 0 2px;
+  padding: 0.4em;
+}
+.entry-content strong {
+  color: #871c1c;
+  font-style: normal;
+  margin: 0 2px;
+  padding: 0.4em;
+  background-color: #fadcdc;
+}
+.entry-content hr {
+  border: 0;
+  border-top: 3px solid #cce4e8;
+  margin: 3rem auto;
+  width: 20%;
+}
+.entry-content img,
+.entry-content video {
+  display: block;
+  height: auto;
+  margin: auto;
+  max-width: 100%;
+}
+.entry-content iframe {
+  width: 100% ;
+}
+.entry-content blockquote {
+  margin: 3rem 0.8rem;
+  padding: 1rem 1.8rem;
+  position: relative;
+  background-color: none;
+  border-left: 3px solid #98b8be;
+  font-style: italic;
+}
+.entry-content blockquote p {
+  margin: 0.5rem 0;
+}
+.entry-content blockquote blockquote {
+  border-left: none;
+}
+.entry-content .table-wrapper {
+  margin: 3rem 0.8rem;
+}
+.entry-content table {
+  border-collapse: collapse;
+  border-spacing: 0;
+  overflow: auto;
+  display: block;
+  font-size: 0.85rem;
+  margin: 0 auto;
+  width: auto;
+}
+.entry-content td,
+.entry-content th {
+  line-height: 1.8em;
+  padding: 0.8rem 0.8rem;
+  font-size: 0.85rem;
+}
+.entry-content td em,
+.entry-content th em,
+.entry-content td strong,
+.entry-content th strong,
+.entry-content td a,
+.entry-content th a {
+  font-size: 0.85rem;
+}
+.entry-content td {
+  border: 1px solid #c4c4c4;
+}
+.entry-content th {
+  background-color: #ecf5f7;
+  border: 1px solid #c4c4c4;
+}
+.entry-content .table-align-center {
+  text-align: center;
+}
+.entry-content .table-align-right {
+  text-align: right;
+}
+.entry-content ul,
+.entry-content ol,
+.entry-content dl {
+  margin: 3rem 0 3rem 1.6rem;
+  padding: 0;
+  list-style: none;
+  font-size: 1rem;
+}
+.entry-content ul li,
+.entry-content ol li,
+.entry-content dl li {
+  line-height: 2rem;
+  position: relative;
+  padding: 0;
+}
+.entry-content ul li p,
+.entry-content ol li p,
+.entry-content dl li p {
+  line-height: 2rem;
+  margin: 0;
+}
+.entry-content ul li p:not(:first-child),
+.entry-content ol li p:not(:first-child),
+.entry-content dl li p:not(:first-child) {
+  color: #57767c;
+  margin: 0.5rem;
+}
+.entry-content ul li ul,
+.entry-content ol li ul,
+.entry-content dl li ul,
+.entry-content ul li ol,
+.entry-content ol li ol,
+.entry-content dl li ol,
+.entry-content ul li dl,
+.entry-content ol li dl,
+.entry-content dl li dl {
+  margin: 1rem;
+}
+.entry-content ul li {
+  margin: 0.4rem 0 0.4rem 0.8rem;
+}
+.entry-content ul li::after {
+  position: absolute;
+  display: block;
+  content: '';
+  top: 0.75rem;
+  left: -1rem;
+  width: 0.5rem;
+  height: 0.5rem;
+  background-color: #cce4e8;
+  border-radius: 100%;
+}
+.entry-content ol {
+  counter-reset: number;
+}
+.entry-content ol li {
+  margin: 0.4rem 0 0.4rem 2rem;
+}
+.entry-content ol li p:first-child {
+  display: inline-block;
+  line-height: 1.6rem;
+  height: 1.6rem;
+}
+.entry-content ol li:before {
+  position: absolute;
+  display: inline-block;
+  float: left;
+  margin: 0 0.2rem 0 0;
+  padding: 0;
+  counter-increment: number;
+  content: counter(number);
+  left: -2.2rem;
+  top: 0.2rem;
+  background-color: #98b8be;
+  width: 1.6rem;
+  height: 1.6rem;
+  border-radius: 50%;
+  color: #fff;
+  text-align: center;
+  font-weight: bold;
+  font-size: 0.8rem;
+  line-height: 1.6rem;
+}
+kbd {
+  font-family: sans-serif;
+  text-align: center;
+  display: inline-block;
+  color: #425a5e;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-border-radius: 3px;
+  -webkit-box-shadow: 0 0 10px #e8e8e8 inset, 0 1px 0 #c3c3c3, 0 2px 0 #c9c9c9, 0 3px 3px #333;
+  box-shadow: 0 0 10px #e8e8e8 inset, 0 1px 0 #c3c3c3, 0 2px 0 #c9c9c9, 0 3px 3px #333;
+  -webkit-box-shadow: 0 0 10px #e2e2e2 inset, 0 1px 0 #c3c3c3, 0 2px 0 #c9c9c9, 0 3px 3px #333;
+  -webkit-font-smoothing: subpixel-antialiased;
+  background: #fff;
+  border-left: 1px solid #fff;
+  border-radius: 3px;
+  border-right: 1px solid #e6e6e6;
+  border-top: 1px solid #fff;
+  font-size: 0.85rem;
+  line-height: 1rem;
+  margin: 5px;
+  padding: 6px 8px 3px;
+  text-shadow: 0 1px 0 #fff;
+  vertical-align: baseline;
+  
+}
+img.responsive-img {
+  height: auto;
+  max-width: 100%;
+}
+video.responsive-video {
+  height: auto;
+  max-width: 100%;
+}
+amp-instagram,
+amp-vimeo,
+amp-video,
+amp-youtube,
+amp-twitter,
+.soundcloud-wrapper,
+.amp-img-wrapper,
+.googleAdPost,
+.ad-footer {
+  margin: 3rem 0.8rem;
+}
+code,
+figure.highlight .code,
+pre {
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: subpixel-antialiased;
+}
+code,
+pre,
+samp {
+  font-family: Menlo, Consolas, Monaco, Consolas, monospace;
+}
+p code {
+  font-size: 1rem;
+}
+code,
+pre {
+  font-size: 0.85rem;
+  letter-spacing: 0.05rem;
+  background-color: #ecf5f7;
+  color: #007e96;
+}
+code {
+  margin: 0 3px;
+  padding: 0.4em;
+}
+samp {
+  font-size: 0.85rem;
+  letter-spacing: 0.05rem;
+}
+sub,
+sup {
+  font-size: 0.75rem;
+  line-height: 0;
+  position: relative;
+}
+sub {
+  bottom: -0.2em;
+}
+sup {
+  top: -0.5em;
+}
+pre {
+  font-size: 1rem;
+  letter-spacing: 0.05rem;
+  margin: 0 3px;
+  padding: 15px;
+  -webkit-background-clip: padding;
+  -moz-background-clip: padding;
+  background-clip: padding-box;
+  border: 0;
+  line-height: 1.3rem;
+  overflow-x: auto;
+}
+pre .addition,
+pre .css .tag,
+pre .keyword,
+pre .method,
+pre .nginx .title,
+pre .request,
+pre .status,
+pre .winutils {
+  color: #66d9ef;
+}
+pre .attr_selector,
+pre .cdata,
+pre .clojure .title,
+pre .diff .change,
+pre .important {
+  color: #9882eb;
+}
+pre .preprocessor {
+  color: #9882eb;
+}
+pre .preprocessor .keyword {
+  color: #9882eb;
+}
+pre .shebang,
+pre .special,
+pre .subst {
+  color: #9882eb;
+}
+pre .symbol {
+  color: #9882eb;
+}
+pre .symbol .string {
+  color: #9882eb;
+}
+pre .attribute,
+pre .class .title,
+pre .constant,
+pre .haskell .type,
+pre .lisp .body,
+pre .parent,
+pre .smalltalk .number,
+pre .variable {
+  color: #a6e22e;
+}
+pre .built_in,
+pre .chunk,
+pre .decorator,
+pre .id,
+pre .identifier,
+pre .literal,
+pre .localvars,
+pre .title,
+pre .vhdl,
+pre .deletion {
+  color: #f92672;
+}
+pre .command,
+pre .hexcolor,
+pre .number,
+pre .phpdoc,
+pre .regexp,
+pre .string,
+pre .tag .value,
+pre .tex .formula {
+  color: #e6db74;
+}
+pre .comment,
+pre .diff .header,
+pre .doctype,
+pre .javadoc,
+pre .lisp .string,
+pre .pi,
+pre .template_comment {
+  color: #75715e;
+  font-weight: normal;
+}
+.line {
+  font-size: 0.85rem;
+  letter-spacing: 0.05rem;
+  line-height: 2rem;
+  color: #f8f8f2;
+}
+.line span {
+  font-size: 0.85rem;
+  letter-spacing: 0.05rem;
+}
+.gist {
+  background: #fff;
+  border: 1px solid color-gutter;
+  color: #f8f8f2;
+  line-height: 1.6rem;
+  margin-top: 15px;
+  overflow: auto;
+  padding: 7px 15px;
+}
+.gist .gist-file {
+  border: none;
+  font-family: inherit;
+  font-size: 1rem;
+  letter-spacing: 0;
+  margin: 0;
+}
+.gist .gist-file .gist-data {
+  background: 0 0;
+  border-bottom: none;
+}
+.gist .gist-file .gist-data pre {
+  font-family: Menlo, Consolas, Monaco, Consolas, monospace;
+  padding: 0 ;
+}
+.gist .gist-file .gist-meta {
+  background: 0 0;
+  color: #f8f8f2;
+  font-size: 1rem;
+  margin-top: 5px;
+  padding: 0;
+}
+.gist .gist-file .gist-meta a {
+  color: #f8f8f2;
+}
+.gist .gist-file .gist-meta a:visited {
+  color: #f8f8f2;
+}
+figure.highlight {
+  font-size: 0.95rem;
+  margin: 3rem 0.8rem;
+  background: #263338;
+  border: 1px solid color-gutter;
+  line-height: 2rem;
+  overflow: auto;
+  position: relative;
+}
+figure.highlight .code {
+  padding: 0 1em 1em 1em;
+  color: #f8f8f2;
+}
+figure.highlight .gutter {
+  display: none;
+}
+figure.highlight figcaption {
+  font-size: 1rem;
+  font-weight: bold;
+  color: #e9e9d6;
+  background-color: #1e282c;
+  padding: 0.6em 1em;
+}
+figure.highlight figcaption a {
+  position: absolute;
+  right: 1rem;
+}
+figure.highlight figcaption:before {
+  content: "\f121";
+  font-family: "fontawesome";
+  text-align: center;
+  display: inline-block;
+  margin-right: 0.6em;
+}
+figure.highlight pre {
+  background: 0 0;
+  border: none;
+  margin: 0;
+  padding: 0.5rem;
+}
+figure.highlight table {
+  border-spacing: 0;
+  margin: 0;
+}
+figure.highlight th {
+  border: 0;
+  font-weight: 400;
+  padding: 0;
+}
+figure.highlight td {
+  border: 0;
+  font-size: 1.1rem;
+  padding: 0;
+}
+.entry-content .toc {
+  background: #fff;
+  padding: 0.5rem;
+  margin: 3rem 0;
+  border: 1px solid #cce4e8;
+  border-radius: 2px;
+}
+.entry-content .toc ul {
+  margin-bottom: 0;
+  padding: 0;
+  margin: 0;
+  border-top: 1px solid #5d8b93;
+  border-radius: 2px;
+}
+.entry-content .toc ul:first-child {
+  border-top: none;
+}
+.entry-content .toc ul ul,
+.entry-content .toc ul ol {
+  margin-bottom: 0;
+  padding: 0;
+  margin: 0;
+}
+.entry-content .toc ul li {
+  padding: 0;
+  margin: 0;
+  border-top: 1px solid #5d8b93;
+}
+.entry-content .toc ul li:first-child {
+  border-top: none;
+}
+.entry-content .toc ul li::after,
+.entry-content .toc ul li::before {
+  content: normal;
+}
+.entry-content .toc ul li a {
+  font-size: 1.2rem;
+  font-weight: bold;
+  display: block;
+  padding: 1rem;
+  background-color: #3d5b61;
+  color: #fff;
+  -webkit-transition: 0.3s;
+  -ms-transition: 0.3s;
+  -moz-transition: 0.3s;
+  -o-transition: 0.3s;
+  -webkit-transition: 0.3s;
+  -moz-transition: 0.3s;
+  -o-transition: 0.3s;
+  -ms-transition: 0.3s;
+  transition: 0.3s;
+}
+.entry-content .toc ul li a:hover {
+  color: #fff;
+  background-color: #2c4145;
+}
+.entry-content .toc ul li a:before {
+  content: "\f02d";
+  font-family: "fontawesome";
+  display: inline-block;
+  padding: 0;
+  margin: 0;
+  margin-right: 0.8rem;
+}
+.entry-content .toc ul li ul,
+.entry-content .toc ul li ol {
+  margin-bottom: 0;
+  padding: 0;
+  margin: 0;
+}
+.entry-content .toc ul li ul li a,
+.entry-content .toc ul li ol li a {
+  padding: 0.5rem 0.75rem 0.5rem 2rem;
+  font-size: 0.9rem;
+  background-color: #416167;
+}
+.entry-content .toc ul li ul li a:before,
+.entry-content .toc ul li ol li a:before {
+  content: "\f0da";
+  font-family: "fontawesome";
+  display: inline-block;
+  padding: 0;
+  margin: 0;
+  margin-right: 0.6rem;
+}
+.entry-content .toc ul li ul li ul li a,
+.entry-content .toc ul li ol li ul li a {
+  padding: 0.5rem 0.75rem 0.5rem 4rem;
+}
+.entry-content .toc ul li ul li ul li a:before,
+.entry-content .toc ul li ol li ul li a:before {
+  content: none;
+}
+.meta-content {
+  background-color: #fff;
+  margin: 1.5rem 0.8rem;
+  padding: 0;
+  border-top: 1px dotted #cce4e8;
+  letter-spacing: 0.05rem;
+}
+.meta-wrapper {
+  margin: 3rem 0.8rem;
+  padding: 0;
+  background-color: #fff;
+}
+h6.tag,
+h6.categories {
+  color: #2d3d40;
+  font-size: 0.9rem;
+  font-weight: bold;
+}
+.article-tag-list {
+  padding: 0;
+}
+.article-tag,
+.article-tag-list,
+.article-categories,
+.article-categories-list {
+  padding: 0;
+  margin: 0;
+}
+.article-categories {
+  margin-bottom: 1.6em;
+}
+.article-tag-list li,
+.article-categories-list li {
+  list-style: none;
+  display: inline-block;
+  padding: 0;
+  margin: 0.2rem 0.1rem;
+}
+.article-tag-list li a,
+.article-categories-list li a {
+  font-size: 0.8rem;
+  font-weight: bold;
+  padding: 0.4rem 0.8rem;
+  margin: 0;
+  background-color: #ecf5f7;
+  color: #2d3d40;
+  border-radius: 2px;
+  display: block;
+}
+.article-tag-list li a:before,
+.article-categories-list li a:before {
+  content: "#";
+}
+.article-tag-list li a:hover,
+.article-categories-list li a:hover {
+  color: #fff;
+  background-color: #2d3d40;
+}
+.widget {
+  margin: 1.5rem 0.8rem;
+  padding: 0;
+}
+.widget-h {
+  text-align: center;
+  margin: 1.6rem 0;
+}
+.widget-h h6 {
+  color: #fff;
+  background-color: #2d3d40;
+  display: inline-block;
+  padding: 0.4rem 1rem;
+  font-size: 0.9rem;
+  font-weight: bold;
+}
+.posts-list li {
+  list-style: none;
+  margin: 0.8rem 0;
+  display: -webkit-box;
+  display: -moz-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: box;
+  display: flex;
+  -webkit-box-pack: center;
+  -moz-box-pack: center;
+  -o-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -moz-box-align: center;
+  -o-box-align: center;
+  -ms-flex-align: center;
+  -webkit-align-items: center;
+  align-items: center;
+}
+.posts-list li .posts-list-link {
+  -webkit-flex-grow: 3;
+  -webkit-box-flex: 3;
+  -moz-box-flex: 3;
+  -o-box-flex: 3;
+  -ms-box-flex: 3;
+  box-flex: 3;
+  -webkit-flex-grow: 3;
+  flex-grow: 3;
+}
+.posts-list li .posts-list-link a {
+  color: #2d3d40;
+  font-size: 1.1rem;
+  font-weight: bold;
+}
+.posts-list li .posts-list-link a:hover {
+  color: #e91e63;
+}
+.posts-list li .posts-list-meta {
+  font-size: 0.7rem;
+}
+.posts-list li .flx:first-child {
+  margin: 0 1rem 0 0;
+}
+.posts-list li amp-img {
+  border-radius: 2px;
+}
+#footer {
+  background-color: #2d3d40;
+  color: #fff;
+  display: block;
+  font-size: 1rem;
+  letter-spacing: 0.05rem;
+  line-height: 2rem;
+  margin: 3rem 0 0 0;
+  padding: 0;
+}
+.site-author-info {
+  margin: 0;
+  padding: 3rem 1.6rem;
+}
+.site-author-info h6 {
+  font-size: 1rem;
+  color: #fff;
+  font-weight: bold;
+  display: inline-block;
+  background-color: #222f31;
+  padding: 0.4rem 0.8rem;
+}
+.site-author-info-wrapper {
+  display: -webkit-box;
+  display: -moz-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: box;
+  display: flex;
+  -webkit-box-pack: center;
+  -moz-box-pack: center;
+  -o-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -moz-box-align: center;
+  -o-box-align: center;
+  -ms-flex-align: center;
+  -webkit-align-items: center;
+  align-items: center;
+}
+.site-author-info-wrapper .flx:first-child {
+  margin: 0 1rem 0 0;
+}
+.authorCap-wrapper {
+  -webkit-flex-grow: 3;
+  -webkit-box-flex: 3;
+  -moz-box-flex: 3;
+  -o-box-flex: 3;
+  -ms-box-flex: 3;
+  box-flex: 3;
+  -webkit-flex-grow: 3;
+  flex-grow: 3;
+}
+.authorCap {
+  font-size: 1.4rem;
+  font-weight: bold;
+}
+.authorReading {
+  font-size: 0.7rem;
+}
+.site-author-desc {
+  font-size: 0.8rem;
+  line-height: 1.6rem;
+  margin: 1.4rem 0;
+}
+.copyright-tool {
+  margin: 0;
+  padding: 1.5rem 1.6rem;
+  border-top: 1px solid #384b4f;
+}
+.copyright-notice p {
+  font-size: 0.6rem;
+  letter-spacing: 0.05rem;
+  line-height: 1.2rem;
+  color: #8ba8ae;
+}
+.copyright-title {
+  font-size: 1rem;
+  text-align: center;
+  margin: 0.8rem 0 0.4rem 0;
+}
+.copyright-license {
+  margin: 0.4rem 0 0.8rem 0;
+  font-size: 0.7rem;
+  text-align: center;
+}
+.copyright-license a {
+  color: #e6e6e6;
+  font-size: 0.7rem;
+}
+.copyright-license a:hover {
+  color: #b3b3b3;
+}
+.sns-link {
+  margin: 0;
+  text-align: center;
+}
+.sns-link a {
+  display: inline-block;
+  font-size: 1.6rem;
+  text-align: center;
+  width: 2rem;
+  height: 2rem;
+  line-height: 2rem;
+  padding: 0.6rem;
+  margin: 0 0.1rem;
+  background-color: #222f31;
+  color: #fff;
+  border-radius: 4px;
+}
+.sns-link a:hover {
+  color: #ccc;
+  background-color: #030404;
+}
+.footer-menu {
+  padding: 1.5rem 0.8rem;
+  border-top: 1px solid #384b4f;
+}
+.footer-menu ul li {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.footer-menu ul li a {
+  display: block;
+  padding: 0.6rem;
+  margin: 0.2rem 1.6rem;
+  font-size: 1rem;
+  color: #fff;
+  background-color: #222f31;
+  border-radius: 4px;
+  text-align: center;
+  font-weight: bold;
+}
+.footer-menu ul li a:hover {
+  color: #ccc;
+  background-color: #030404;
+}
+.social-share {
+  margin: 1.5rem 0.8rem;
+  display: -webkit-box;
+  display: -moz-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: box;
+  display: flex;
+  -webkit-box-pack: center;
+  -moz-box-pack: center;
+  -o-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+}
+.social-share amp-social-share,
+.social-share .sbtn {
+  margin: 5px;
+}
+.sbtn {
+  padding: 0;
+  width: 4rem;
+  height: 3rem;
+  line-height: 3rem;
+  color: #fff;
+  font-size: 1.2rem;
+  text-align: center;
+  border-radius: 4px;
+}
+.sbtn:hover {
+  color: #fff;
+}
+.tw {
+  background-color: #1cafe8;
+}
+.tw:hover {
+  background-color: #0f6b8f;
+}
+.fb {
+  background-color: #4f677f;
+}
+.fb:hover {
+  background-color: #283440;
+}
+.ht {
+  background-color: #35acda;
+}
+.ht:hover {
+  background-color: #1a6e8f;
+}
+.gp {
+  background-color: #d56153;
+}
+.gp:hover {
+  background-color: #9c3326;
+}
+.tb {
+  background-color: #465f79;
+}
+.tb:hover {
+  background-color: #212c38;
+}
+.icon-hatena:before {
+  content: "B";
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+#totop {
+  position: fixed;
+  bottom: 2rem;
+  right: 1.6rem;
+  font-size: 1.2rem;
+  z-index: 995;
+}
+#totop a {
+  background: rgba(152,184,190,0.6);
+  text-decoration: none;
+  color: #fff;
+  padding: 0.8rem;
+  border-radius: 50%;
+}
+#totop a:before {
+  content: "\f062";
+  font-family: "fontawesome";
+  font-size: 1.2rem;
+}
+#totop a:hover {
+  text-decoration: none;
+  background: #5d8b93;
+  color: #fff;
+  line-height: 2.3em;
+}
+@media (min-width: 800px) {
+  .title-cover,
+  .entry-content,
+  .categories,
+  .meta-content,
+  .site-author-info {
+    width: 780px;
+    margin: 0 auto;
+  }
+  .nav-container {
+    width: 800px;
+    margin: 0 auto;
+  }
+}
+@media (min-width: 0px) and (max-width: 480px) {
+  .site-author-info-wrapper {
+    display: block;
+  }
+  .gravatar-area {
+    text-align: center;
+  }
+  .gravatar-area amp-img {
+    display: inline-block;
+  }
+  .entry-content td,
+  .entry-content th {
+    line-height: 1.8em;
+    padding: 0.6rem 0.6rem;
+    font-size: 0.5rem;
+  }
+  .entry-content td em,
+  .entry-content th em,
+  .entry-content td strong,
+  .entry-content th strong,
+  .entry-content td a,
+  .entry-content th a {
+    font-size: 0.5rem;
+  }
+}
+
+	</style>
+	
+  </head>
+  <body>
+  	
+  	
+  	<!-- google analytics -->
+  	
+  	
+  	
+  	<!-- menu -->
+  	<header>
+  		<div class="nav-container">
+	  		<div class="left-nav">
+	  			<div class="header-title">
+	  				<a href="/">Chester.Cao Blog</a>
+	  			</div>
+	  		</div>
+	  		
+	  	</div>
+    </header>
+  	
+  	
+  	<!-- sidebar -->
+  	
+  	
+  	<!-- container -->
+  	<div id="container">
+	  	<div id="main">
+		    <article id="post-cpp/cpp-cmake-0" class="post">
+		    
+		   		<!-- categories and bread crumb -->
+		    	
+				<div class="categories-header">
+					<div class="categories">
+						<div class="breadcrumb inline-icon">
+							<ol itemscope itemtype="http://schema.org/BreadcrumbList">
+							  <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+							    <a itemprop="item" href="/">
+							    	<span class="sns-icon home-icon"></span>
+							        <span itemprop="name"><span class="fa fa-fw fa-home"></span></span>
+							    </a>
+							    <meta itemprop="position" content="1" />
+							  </li>
+
+								
+						    		<li itemprop="itemListElement" itemscope
+									      itemtype="http://schema.org/ListItem">
+									    <a itemprop="item" href="/categories/C/">
+									      
+									      	<span class="sns-icon folder-icon"></span>
+									      
+									      <span itemprop="name">C</span>
+									    </a>
+									    <meta itemprop="position" content="2" />
+									</li>
+								
+							</ol>
+						</div>
+					</div>
+				</div>
+				
+		    
+		    	<!-- entry title -->
+				<div class="title-cover">
+					<div class="entry-header">
+						
+						
+						
+			          	<div class="header-thumb flx">
+			          		<div class="thumbImg-w circle">
+			          			<amp-img class="thumbImg" layout="fixed" width="128" height="100" src="\amp-dist\sample\sample-substituteTitleImage.png">
+			          			</amp-img>
+			          		</div>
+			          	</div>
+			            
+			            
+			            <div class="header-cap flx">
+							
+							  <h1 class="article-title entry-title" itemprop="name">
+							    <a href="http://blog.rcant.com/2020/11/13/cpp/cpp-cmake-0/" target="_blank" itemprop="url">学习CMake</a>
+							  </h1>
+							
+						</div>
+					</div>
+					
+					<!-- datePublished -->
+					<div class="entry-meta-header">
+						<span class="meta-elements date">
+							<span class="fa fa-fw fa-clock-o"></span>
+							<time datetime="2020-11-13" itemprop="datePublished">2020.11.13</time>
+						</span>
+					</div>
+				</div>
+				
+				
+				
+				<!-- entry content -->
+			    <div class="entry-content ecp">
+			    	<!-- social share button -->
+			    	
+			    	
+			    	
+                    <!-- google Adsense Matched content -->
+                    
+                    
+			    	<!-- content -->
+			  		<p>你或许听过好几种 Make 工具，例如 <a href="https://www.hahack.com/wiki/tools-makefile.html">GNU Make</a> ，QT 的 <a href="http://qt-project.org/doc/qt-4.8/qmake-manual.html">qmake</a> ，微软的 <a href="http://msdn.microsoft.com/en-us/library/ms930369.aspx">MS nmake</a>，BSD Make（<a href="http://www.freebsd.org/doc/en/books/pmake/">pmake</a>），Makepp，等等。这些 Make 工具遵循着不同的规范和标准，所执行的 Makefile 格式也千差万别。这样就带来了一个严峻的问题：如果软件想跨平台，必须要保证能够在不同平台编译。而如果使用上面的 Make 工具，就得为每一种标准写一次 Makefile ，这将是一件让人抓狂的工作。</p>
+<p>CMake就是针对上面问题所设计的工具：它首先允许开发者编写一种平台无关的 CMakeList.txt 文件来定制整个编译流程，然后再根据目标用户的平台进一步生成所需的本地化 Makefile 和工程文件，如 Unix 的 Makefile 或 Windows 的 Visual Studio 工程。从而做到“Write once, run everywhere”。显然，CMake 是一个比上述几种 make 更高级的编译配置工具。一些使用 CMake 作为项目架构系统的知名开源项目有 VTK、ITK、KDE、OpenCV、OSG 等 [1]。</p>
+<p>在 linux 平台下使用 CMake 生成 Makefile 并编译的流程如下：</p>
+<ol>
+<li>编写 CMake 配置文件 CMakeLists.txt 。</li>
+<li>执行命令 <span class="label warning">cmake PATH</span> 或者 <span class="label warning">ccmake PATH</span> 生成 Makefile ( <span class="label warning">ccmake</span> 和 <span class="label warning">cmake</span> 的区别在于前者提供了一个交互式的界面)。其中， <span class="label warning">PATH</span> 是 CMakeLists.txt 所在的目录。</li>
+<li>使用 <span class="label warning">make</span> 命令进行编译。</li>
+</ol>
+<p>本文将从实例入手，一步步讲解 CMake 的常见用法，文中所有的实例代码可以在这里找到。如果你读完仍觉得意犹未尽，可以继续学习我在文章末尾提供的其他资源。</p>
+<span id="more"></span>
+<h2 id="入门案例-单个源文件"><a href="#入门案例-单个源文件" class="headerlink" title="入门案例: 单个源文件"></a>入门案例: 单个源文件</h2><div class="note info">
+            <p>本节对应的源代码所在目录：<a href="Demo1.zip" title="源码下载">Demo1</a>。</p>
+          </div>
+<p>假设项目中只有一个文件 main.cc</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line">#include &lt;stdlib.h&gt;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line">* power - Calculate the power of number.</span><br><span class="line">* @param base: Base value.</span><br><span class="line">* @param exponent: Exponent value.</span><br><span class="line">*</span><br><span class="line">* @return base raised to the power exponent.</span><br><span class="line">*/</span><br><span class="line">double power(double base, int exponent)</span><br><span class="line">{</span><br><span class="line">    int result = base;</span><br><span class="line">    int i;</span><br><span class="line">    if (exponent == 0) {</span><br><span class="line">        return 1;</span><br><span class="line">    }</span><br><span class="line">    for(i = 1; i &lt; exponent; ++i){</span><br><span class="line">        result = result * base;</span><br><span class="line">    }</span><br><span class="line">    return result;</span><br><span class="line">}</span><br><span class="line">int main(int argc, char *argv[])</span><br><span class="line">{</span><br><span class="line">    if (argc &lt; 3){</span><br><span class="line">        printf("Usage: %s base exponent \n", argv[0]);</span><br><span class="line">        return 1;</span><br><span class="line">    }</span><br><span class="line">    double base = atof(argv[1]);</span><br><span class="line">    int exponent = atoi(argv[2]);</span><br><span class="line">    double result = power(base, exponent);</span><br><span class="line">    printf("%g ^ %d is %g\n", base, exponent, result);</span><br><span class="line">    return 0;</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+<h3 id="编写-CMakeLists-txt"><a href="#编写-CMakeLists-txt" class="headerlink" title="编写 CMakeLists.txt"></a>编写 CMakeLists.txt</h3><p>首先编写 CMakeLists.txt 文件，并保存在与 main.cc 源文件同个目录下：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># CMake 最低版本号要求</span><br><span class="line">cmake_minimum_required (VERSION 2.8)</span><br><span class="line"># 项目信息</span><br><span class="line">project (Demo1)</span><br><span class="line"># 指定生成目标</span><br><span class="line">add_executable(Demo main.cc)</span><br></pre></td></tr></tbody></table></figure>
+<p>CMakeLists.txt 的语法比较简单，由命令、注释和空格组成，其中命令是不区分大小写的。符号 <span class="label danger">#</span> 后面的内容被认为是注释。命令由命令名称、小括号和参数组成，参数之间使用空格进行间隔。</p>
+<p>对于上面的 CMakeLists.txt 文件，依次出现了几个命令：</p>
+<ol>
+<li><span class="label danger">cmake_minimum_required</span> ：指定运行此配置文件所需的 CMake 的最低版本；</li>
+<li><span class="label danger">project</span> ：参数值是 Demo1，该命令表示项目的名称是 Demo1 。</li>
+<li><span class="label danger">add_executable</span>： 将名为 main.cc 的源文件编译成一个名称为 Demo 的可执行文件。</li>
+</ol>
+<h3 id="编译项目"><a href="#编译项目" class="headerlink" title="编译项目"></a>编译项目</h3><p>之后，在当前目录执行 <span class="label danger">cmake .</span> ，得到 Makefile 后再使用 <span class="label danger">make</span> 命令编译得到 Demo1 可执行文件。<br></p><figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">[ehome@xman Demo1]$ cmake .</span><br><span class="line">-- The C compiler identification is GNU 4.8.2</span><br><span class="line">-- The CXX compiler identification is GNU 4.8.2</span><br><span class="line">-- Check for working C compiler: /usr/sbin/cc</span><br><span class="line">-- Check for working C compiler: /usr/sbin/cc -- works</span><br><span class="line">-- Detecting C compiler ABI info</span><br><span class="line">-- Detecting C compiler ABI info - done</span><br><span class="line">-- Check for working CXX compiler: /usr/sbin/c++</span><br><span class="line">-- Check for working CXX compiler: /usr/sbin/c++ -- works</span><br><span class="line">-- Detecting CXX compiler ABI info</span><br><span class="line">-- Detecting CXX compiler ABI info - done</span><br><span class="line">-- Configuring done</span><br><span class="line">-- Generating done</span><br><span class="line">-- Build files have been written to: /home/ehome/Documents/programming/C/power/Demo1</span><br><span class="line">[ehome@xman Demo1]$ make</span><br><span class="line">Scanning dependencies of target Demo</span><br><span class="line">[100%] Building C object CMakeFiles/Demo.dir/main.cc.o</span><br><span class="line">Linking C executable Demo</span><br><span class="line">[100%] Built target Demo</span><br><span class="line">[ehome@xman Demo1]$ ./Demo 5 4</span><br><span class="line">5 ^ 4 is 625</span><br><span class="line">[ehome@xman Demo1]$ ./Demo 7 3</span><br><span class="line">7 ^ 3 is 343</span><br><span class="line">[ehome@xman Demo1]$ ./Demo 2 10</span><br><span class="line">2 ^ 10 is 1024</span><br></pre></td></tr></tbody></table></figure>
+<h2 id="多个源文件"><a href="#多个源文件" class="headerlink" title="多个源文件"></a>多个源文件</h2><h3 id="同一目录，多个源文件"><a href="#同一目录，多个源文件" class="headerlink" title="同一目录，多个源文件"></a>同一目录，多个源文件</h3><div class="note info">
+            <p>本节对应的源代码所在目录：<a href="Demo2.zip" title="源码下载">Demo2</a>。</p>
+          </div>
+<p>现在假如把 <span class="label danger">power</span> 函数单独写进一个名为 <span class="label danger">MathFunctions.cc</span> 的源文件里<br>将上述工程修改下</p>
+<p>MathFunctions.h</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line">* power - Calculate the power of number.</span><br><span class="line">* @param base: Base value.</span><br><span class="line">* @param exponent: Exponent value.</span><br><span class="line">*</span><br><span class="line">* @return base raised to the power exponent.</span><br><span class="line">*/</span><br><span class="line">double power(double base, int exponent);</span><br></pre></td></tr></tbody></table></figure>
+<p>MathFunctions.cc</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line">* power - Calculate the power of number.</span><br><span class="line">* @param base: Base value.</span><br><span class="line">* @param exponent: Exponent value.</span><br><span class="line">*</span><br><span class="line">* @return base raised to the power exponent.</span><br><span class="line">*/</span><br><span class="line">double power(double base, int exponent)</span><br><span class="line">{</span><br><span class="line">    int result = base;</span><br><span class="line">    int i;</span><br><span class="line">    if (exponent == 0) {</span><br><span class="line">        return 1;</span><br><span class="line">    }</span><br><span class="line">    for(i = 1; i &lt; exponent; ++i){</span><br><span class="line">        result = result * base;</span><br><span class="line">    }</span><br><span class="line">    return result;</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+<p>main.cc</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line">#include &lt;stdlib.h&gt;</span><br><span class="line">#include "MathFunctions.h"</span><br><span class="line"></span><br><span class="line">int main(int argc, char *argv[])</span><br><span class="line">{</span><br><span class="line">    if (argc &lt; 3){</span><br><span class="line">        printf("Usage: %s base exponent \n", argv[0]);</span><br><span class="line">        return 1;</span><br><span class="line">    }</span><br><span class="line">    double base = atof(argv[1]);</span><br><span class="line">    int exponent = atoi(argv[2]);</span><br><span class="line">    double result = power(base, exponent);</span><br><span class="line">    printf("%g ^ %d is %g\n", base, exponent, result);</span><br><span class="line">    return 0;</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+<p>这个时候，CMakeLists.txt 可以改成如下的形式：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># CMake 最低版本号要求</span><br><span class="line">cmake_minimum_required (VERSION 2.8)</span><br><span class="line"># 项目信息</span><br><span class="line">project (Demo2)</span><br><span class="line"># 指定生成目标</span><br><span class="line">add_executable(Demo main.cc MathFunctions.cc)</span><br></pre></td></tr></tbody></table></figure>
+<p>文件目录结构如下<br></p><figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">iddddeMac-mini:Demo2 iddd$ tree -L 2</span><br><span class="line">.</span><br><span class="line">|-- CMakeLists.txt</span><br><span class="line">|-- MathFunctions.cc</span><br><span class="line">|-- MathFunctions.h</span><br><span class="line">`-- main.cc</span><br></pre></td></tr></tbody></table></figure>
+<p>唯一的改动只是在 <span class="label danger">add_executable</span> 命令中增加了一个 <span class="label danger">MathFunctions.cc</span> 源文件。</p>
+<p>存在问题：</p>
+<pre><code>- 如果源文件很多，把所有源文件的名字都加进去将是一件烦人的工作。
+</code></pre><p>更省事的方法是使用 <span class="label danger">aux_source_directory</span> 命令，该命令会查找指定目录下的所有源文件，然后将结果存进指定变量名。其语法如下：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">aux_source_directory(&lt;dir&gt; &lt;variable&gt;)</span><br></pre></td></tr></tbody></table></figure>
+<p>因此，可以修改 CMakeLists.txt 如下：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"># CMake 最低版本号要求</span><br><span class="line">cmake_minimum_required (VERSION 2.8)</span><br><span class="line"># 项目信息</span><br><span class="line">project (Demo2)</span><br><span class="line"># 查找当前目录下的所有源文件</span><br><span class="line"># 并将名称保存到 DIR_SRCS 变量</span><br><span class="line">aux_source_directory(. DIR_SRCS)</span><br><span class="line"># 指定生成目标</span><br><span class="line">add_executable(Demo <!--figure9-->#123;DIR_SRCS})</span><br></pre></td></tr></tbody></table></figure>
+<p>这样，CMake 会将当前目录所有源文件的文件名赋值给变量 <span class="label danger">DIR_SRCS</span>  ，再指示变量 <span class="label danger">DIR_SRCS</span> 中的源文件需要编译成一个名称为 Demo 的可执行文件。</p>
+<h3 id="多个目录，多个源文件"><a href="#多个目录，多个源文件" class="headerlink" title="多个目录，多个源文件"></a>多个目录，多个源文件</h3><div class="note info">
+            <p>本节对应的源代码所在目录：<a href="Demo3.zip" title="源码下载">Demo3</a>。</p>
+          </div>
+<p>现在进一步将 MathFunctions.h 和 MathFunctions.cc 文件移动到 math 目录下。</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">iddddeMac-mini:Demo3 iddd$ tree -L 2</span><br><span class="line">.</span><br><span class="line">|-- CMakeLists.txt</span><br><span class="line">|-- main.cc</span><br><span class="line">`-- math</span><br><span class="line">    |-- CMakeLists.txt</span><br><span class="line">    |-- MathFunctions.cc</span><br><span class="line">    |-- MathFunctions.h</span><br></pre></td></tr></tbody></table></figure>
+<p>修改main.cc<br></p><figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line">#include &lt;stdlib.h&gt;</span><br><span class="line">#include "math/MathFunctions.h"</span><br><span class="line"></span><br><span class="line">int main(int argc, char *argv[])</span><br><span class="line">{</span><br><span class="line">    if (argc &lt; 3){</span><br><span class="line">        printf("Usage: %s base exponent \n", argv[0]);</span><br><span class="line">        return 1;</span><br><span class="line">    }</span><br><span class="line">    double base = atof(argv[1]);</span><br><span class="line">    int exponent = atoi(argv[2]);</span><br><span class="line">    double result = power(base, exponent);</span><br><span class="line">    printf("%g ^ %d is %g\n", base, exponent, result);</span><br><span class="line">    return 0;</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+<p>对于这种情况，需要分别在项目根目录 Demo3 和 math 目录里各编写一个 CMakeLists.txt 文件。为了方便，我们可以先将 math 目录里的文件编译成静态库再由 main 函数调用。</p>
+<p>根目录中的 CMakeLists.txt ：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"># CMake 最低版本号要求</span><br><span class="line">cmake_minimum_required (VERSION 2.8)</span><br><span class="line"># 项目信息</span><br><span class="line">project (Demo3)</span><br><span class="line"># 查找当前目录下的所有源文件</span><br><span class="line"># 并将名称保存到 DIR_SRCS 变量</span><br><span class="line">aux_source_directory(. DIR_SRCS)</span><br><span class="line"># 添加 math 子目录</span><br><span class="line">add_subdirectory(math)</span><br><span class="line"># 指定生成目标</span><br><span class="line">add_executable(Demo main.cc)</span><br><span class="line"># 添加链接库</span><br><span class="line">target_link_libraries(Demo MathFunctions)</span><br></pre></td></tr></tbody></table></figure>
+<p>该文件添加了下面的内容: 第3行，使用命令 <span class="label danger">add_subdirectory</span> 指明本项目包含一个子目录 math，这样 math 目录下的 CMakeLists.txt 文件和源代码也会被处理 。第6行，使用命令 <span class="label danger">target_link_libraries</span> 指明可执行文件 main 需要连接一个名为 MathFunctions 的链接库 。</p>
+<p>子目录中的 CMakeLists.txt：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># 查找当前目录下的所有源文件</span><br><span class="line"># 并将名称保存到 DIR_LIB_SRCS 变量</span><br><span class="line">aux_source_directory(. DIR_LIB_SRCS)</span><br><span class="line"># 生成链接库</span><br><span class="line">add_library (MathFunctions <!--figure13-->#123;DIR_LIB_SRCS})</span><br></pre></td></tr></tbody></table></figure>
+<p>在该文件中使用命令 <span class="label danger">add_library</span> 将 src 目录中的源文件编译为静态链接库。</p>
+<h2 id="自定义编译选项"><a href="#自定义编译选项" class="headerlink" title="自定义编译选项"></a>自定义编译选项</h2><div class="note info">
+            <p>本节对应的源代码所在目录：<a href="Demo4.zip" title="源码下载">Demo4</a>。</p>
+          </div>
+<p>CMake 允许为项目增加编译选项，从而可以根据用户的环境和需求选择最合适的编译方案。<br>例如，可以将 MathFunctions 库设为一个可选的库，如果该选项为 <span class="label danger">ON</span> ，就使用该库定义的数学函数来进行运算。否则就调用标准库中的数学函数库。</p>
+<h3 id="修改-CMakeLists-文件"><a href="#修改-CMakeLists-文件" class="headerlink" title="修改 CMakeLists 文件"></a>修改 CMakeLists 文件</h3><p>我们要做的第一步是在顶层的 CMakeLists.txt 文件中添加该选项：<br></p><figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"># CMake 最低版本号要求</span><br><span class="line">cmake_minimum_required (VERSION 2.8)</span><br><span class="line"># 项目信息</span><br><span class="line">project (Demo4)</span><br><span class="line"># 加入一个配置头文件，用于处理 CMake 对源码的设置</span><br><span class="line">configure_file (</span><br><span class="line">"<!--figure14-->#123;PROJECT_SOURCE_DIR}/config.h.in"</span><br><span class="line">"<!--figure14-->#123;PROJECT_BINARY_DIR}/config.h"</span><br><span class="line">)</span><br><span class="line"># 是否使用自己的 MathFunctions 库</span><br><span class="line">option (USE_MYMATH</span><br><span class="line">"Use provided math implementation" ON)</span><br><span class="line"># 是否加入 MathFunctions 库</span><br><span class="line">if (USE_MYMATH)</span><br><span class="line">include_directories ("<!--figure14-->#123;PROJECT_SOURCE_DIR}/math")</span><br><span class="line">add_subdirectory (math)</span><br><span class="line">set (EXTRA_LIBS <!--figure14-->#123;EXTRA_LIBS} MathFunctions)</span><br><span class="line">endif (USE_MYMATH)</span><br><span class="line"># 查找当前目录下的所有源文件</span><br><span class="line"># 并将名称保存到 DIR_SRCS 变量</span><br><span class="line">aux_source_directory(. DIR_SRCS)</span><br><span class="line"># 指定生成目标</span><br><span class="line">add_executable(Demo <!--figure14-->#123;DIR_SRCS})</span><br><span class="line">target_link_libraries (Demo <!--figure14-->#123;EXTRA_LIBS})</span><br></pre></td></tr></tbody></table></figure>
+<p>其中：</p>
+<ol>
+<li>第7行的 <span class="label danger">configure_file</span>  命令用于加入一个配置头文件 config.h ，这个文件由 CMake 从 <span class="label info">config.h.in</span> 生成，通过这样的机制，将可以通过预定义一些参数和变量来控制代码的生成。</li>
+<li>第13行的 <span class="label danger">option</span> 命令添加了一个 <span class="label danger">USE_MYMATH</span> 选项，并且默认值为 <span class="label danger">ON</span> 。</li>
+<li>第17行根据 <span class="label danger">USE_MYMATH</span> 变量的值来决定是否使用我们自己编写的 MathFunctions 库。</li>
+</ol>
+<h3 id="修改-main-cc-文件"><a href="#修改-main-cc-文件" class="headerlink" title="修改 main.cc 文件"></a>修改 main.cc 文件</h3><p>代码中添加编译选项 宏定义 <span class="label danger">USE_MYMATH</span></p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line">#include &lt;stdlib.h&gt;</span><br><span class="line">#include "config.h"</span><br><span class="line"></span><br><span class="line">#ifdef USE_MYMATH</span><br><span class="line">#include "math/MathFunctions.h"</span><br><span class="line">#else</span><br><span class="line">#include &lt;math.h&gt;</span><br><span class="line">#endif</span><br><span class="line"></span><br><span class="line">int main(int argc, char *argv[])</span><br><span class="line">{</span><br><span class="line">    if (argc &lt; 3){</span><br><span class="line">        printf("Usage: %s base exponent \n", argv[0]);</span><br><span class="line">        return 1;</span><br><span class="line">    }</span><br><span class="line">    double base = atof(argv[1]);</span><br><span class="line">    int exponent = atoi(argv[2]);</span><br><span class="line"></span><br><span class="line">#ifdef USE_MYMATH</span><br><span class="line">    printf("Now we use our own Math library. \n");</span><br><span class="line">    double result = power(base, exponent);</span><br><span class="line">#else</span><br><span class="line">    printf("Now we use the standard library. \n");</span><br><span class="line">    double result = pow(base, exponent);</span><br><span class="line">#endif</span><br><span class="line"></span><br><span class="line">    printf("%g ^ %d is %g\n", base, exponent, result);</span><br><span class="line">    return 0;</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+<h3 id="编写-文件"><a href="#编写-文件" class="headerlink" title="编写   文件"></a>编写 <span class="label info">config.h.in</span>  文件</h3><p>上面的程序值得注意的是第2行，这里引用了一个 config.h 文件，这个文件预定义了 <span class="label danger">USE_MYMATH</span> 的值。但我们并不直接编写这个文件，为了方便从 CMakeLists.txt 中导入配置，我们编写一个 <span class="label info">config.h.in</span> 文件，内容如下：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">#cmakedefine USE_MYMATH</span><br></pre></td></tr></tbody></table></figure>
+<p>这样 CMake 会自动根据 CMakeLists 配置文件中的设置自动生成 config.h 文件。</p>
+<h3 id="编译项目-1"><a href="#编译项目-1" class="headerlink" title="编译项目"></a>编译项目</h3><p>现在编译一下这个项目，为了便于交互式的选择该变量的值，可以使用 <span class="label danger">ccmake</span> 命令, 该命令会提供一个会话式的交互式配置界面。：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ccmake .</span><br></pre></td></tr></tbody></table></figure>
+<div class="amp-img-wrapper"><amp-img src="/2020/11/13/cpp/cpp-cmake-0/ccmake-0.png" width="675" height="425" layout="responsive"></amp-img></div>
+<p>从中可以找到刚刚定义的 <span class="label danger">USE_MYMATH</span> 选项，按键盘的方向键可以在不同的选项窗口间跳转，按下 <span class="label danger">enter</span>  键可以修改该选项。修改完成后可以按下 <span class="label danger">c</span>  选项完成配置，之后再按 <span class="label danger">g</span> 键确认生成 Makefile 。</p>
+<p>ccmake 的其他操作可以参考窗口下方给出的指令提示。</p>
+<p>我们可以试试分别将 <span class="label danger">USE_MYMATH</span> 设为 <span class="label danger">ON</span> 和 <span class="label danger">OFF</span> 得到的结果：</p>
+<h3 id="为"><a href="#为" class="headerlink" title=" 为 "></a><span class="label danger">USE_MYMATH</span> 为 <span class="label danger">ON</span></h3><p>config.h</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">#define USE_MYMATH</span><br></pre></td></tr></tbody></table></figure>
+<p>运行结果<br></p><figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">iddddeMac-mini:Demo4 iddd$ ./Demo 4 8</span><br><span class="line">Now we use our own Math library.</span><br><span class="line">4 ^ 8 is 65536</span><br></pre></td></tr></tbody></table></figure>
+<h3 id="为-1"><a href="#为-1" class="headerlink" title=" 为 "></a><span class="label danger">USE_MYMATH</span> 为 <span class="label danger">OFF</span></h3><p>config.h</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/* #undef USE_MYMATH */</span><br></pre></td></tr></tbody></table></figure>
+<p>运行结果<br></p><figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">iddddeMac-mini:Demo4 iddd$ ./Demo 4 8</span><br><span class="line">Now we use the standard library.</span><br><span class="line">4 ^ 8 is 65536</span><br></pre></td></tr></tbody></table></figure>
+<h2 id="安装和测试"><a href="#安装和测试" class="headerlink" title="安装和测试"></a>安装和测试</h2><div class="note info">
+            <p>本节对应的源代码所在目录：<a href="Demo5.zip" title="源码下载">Demo5</a>。</p>
+          </div>
+<p>CMake 也可以指定安装规则，以及添加测试。这两个功能分别可以通过在产生 Makefile 后使用 <span class="label danger">make install</span> 和 <span class="label danger">make test</span> 来执行。在以前的 GNU Makefile 里，你可能需要为此编写 <span class="label danger">install</span> 和 <span class="label danger">test</span> 两个伪目标和相应的规则，但在 CMake 里，这样的工作同样只需要简单的调用几条命令。</p>
+<h3 id="定制安装规则"><a href="#定制安装规则" class="headerlink" title="定制安装规则"></a>定制安装规则</h3><p>首先先在 math/CMakeLists.txt 文件里添加下面两行：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># 指定 MathFunctions 库的安装路径</span><br><span class="line">install (TARGETS MathFunctions DESTINATION bin)</span><br><span class="line">install (FILES MathFunctions.h DESTINATION include)</span><br></pre></td></tr></tbody></table></figure>
+<p>指明 MathFunctions 库的安装路径。之后同样修改根目录的 CMakeLists 文件，在末尾添加下面几行：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># 指定安装路径</span><br><span class="line"></span><br><span class="line">install (TARGETS Demo DESTINATION bin)</span><br><span class="line">install (FILES "<!--figure23-->#123;PROJECT_BINARY_DIR}/config.h"</span><br><span class="line">DESTINATION include)</span><br></pre></td></tr></tbody></table></figure>
+<p>通过上面的定制，生成的 Demo 文件和 MathFunctions 函数库 libMathFunctions.o 文件将会被复制到 <span class="label danger">/usr/local/bin</span> 中，而 MathFunctions.h 和生成的 config.h 文件则会被复制到 <span class="label danger">/usr/local/include</span> 中。</p>
+<h3 id="我们可以验证一下"><a href="#我们可以验证一下" class="headerlink" title="我们可以验证一下"></a>我们可以验证一下</h3><figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">iddddeMac-mini:Demo5 iddd$ make install</span><br><span class="line">[ 50%] Built target MathFunctions</span><br><span class="line">[100%] Built target Demo</span><br><span class="line">Install the project...</span><br><span class="line">-- Install configuration: ""</span><br><span class="line">-- Installing: /usr/local/bin/Demo</span><br><span class="line">-- Installing: /usr/local/include/config.h</span><br><span class="line">-- Installing: /usr/local/bin/libMathFunctions.a</span><br><span class="line">-- Installing: /usr/local/include/MathFunctions.h</span><br><span class="line">iddddeMac-mini:Demo5 iddd$ ls /usr/local/bin/Demo</span><br><span class="line">/usr/local/bin/Demo</span><br><span class="line">iddddeMac-mini:Demo5 iddd$ ls /usr/local/bin/libMathFunctions.a</span><br><span class="line">/usr/local/bin/libMathFunctions.a</span><br><span class="line">iddddeMac-mini:Demo5 iddd$ ls /usr/local/include/config.h</span><br><span class="line">/usr/local/include/config.h</span><br><span class="line">iddddeMac-mini:Demo5 iddd$ ls /usr/local/include/MathFunctions.h</span><br><span class="line">/usr/local/include/MathFunctions.h</span><br></pre></td></tr></tbody></table></figure>
+<p>顺带一提的是，这里的 <span class="label danger">/usr/local/</span> 是默认安装到的根目录，可以通过修改 <span class="label danger">CMAKE_INSTALL_PREFIX</span> 变量的值来指定这些文件应该拷贝到哪个根目录。</p>
+<h3 id="卸载安装的软件"><a href="#卸载安装的软件" class="headerlink" title="卸载安装的软件"></a>卸载安装的软件</h3><p>通过CMake 安装的软件都会有一个安装文件列表</p>
+<p>install_manifest.txt 内容</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">/usr/local/bin/Demo</span><br><span class="line">/usr/local/include/config.h</span><br><span class="line">/usr/local/bin/libMathFunctions.a</span><br><span class="line">/usr/local/include/MathFunctions.h</span><br></pre></td></tr></tbody></table></figure>
+<p>只要删除就好<br></p><figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat install_manifest.txt |xargs rm</span><br></pre></td></tr></tbody></table></figure>
+<h3 id="为工程添加测试"><a href="#为工程添加测试" class="headerlink" title="为工程添加测试"></a>为工程添加测试</h3><p>添加测试同样很简单。CMake 提供了一个称为 CTest 的测试工具。我们要做的只是在项目根目录的 CMakeLists 文件中调用一系列的 add_test 命令。</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"># 启用测试</span><br><span class="line">enable_testing()</span><br><span class="line"></span><br><span class="line"># 测试程序是否成功运行</span><br><span class="line">add_test (test_run Demo 5 2)</span><br><span class="line"></span><br><span class="line"># 测试帮助信息是否可以正常提示</span><br><span class="line">add_test (test_usage Demo)</span><br><span class="line">set_tests_properties (test_usage</span><br><span class="line">  PROPERTIES PASS_REGULAR_EXPRESSION "Usage: .* base exponent")</span><br><span class="line"></span><br><span class="line"># 测试 5 的平方</span><br><span class="line">add_test (test_5_2 Demo 5 2)</span><br><span class="line"></span><br><span class="line">set_tests_properties (test_5_2</span><br><span class="line"> PROPERTIES PASS_REGULAR_EXPRESSION "is 25")</span><br><span class="line"></span><br><span class="line"># 测试 10 的 5 次方</span><br><span class="line">add_test (test_10_5 Demo 10 5)</span><br><span class="line"></span><br><span class="line">set_tests_properties (test_10_5</span><br><span class="line"> PROPERTIES PASS_REGULAR_EXPRESSION "is 100000")</span><br><span class="line"></span><br><span class="line"># 测试 2 的 10 次方</span><br><span class="line">add_test (test_2_10 Demo 2 10)</span><br><span class="line"></span><br><span class="line">set_tests_properties (test_2_10</span><br><span class="line"> PROPERTIES PASS_REGULAR_EXPRESSION "is 1024")</span><br></pre></td></tr></tbody></table></figure>
+<p>上面的代码包含了四个测试。第一个测试 <span class="label danger">test_run</span>  用来测试程序是否成功运行并返回 0 值。剩下的三个测试分别用来测试 5 的 平方、10 的 5 次方、2 的 10 次方是否都能得到正确的结果。其中 <span class="label danger">PASS_REGULAR_EXPRESSION</span>   用来测试输出是否包含后面跟着的字符串。</p>
+<p>让我们看看测试的结果：<br></p><figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">iddddeMac-mini:Demo5 iddd$ cmake .</span><br><span class="line">-- Configuring done</span><br><span class="line">-- Generating done</span><br><span class="line">-- Build files have been written to: /Users/iddd/Test/Demo5</span><br><span class="line">iddddeMac-mini:Demo5 iddd$ make test</span><br><span class="line">Running tests...</span><br><span class="line">Test project /Users/iddd/Test/Demo5</span><br><span class="line">    Start 1: test_run</span><br><span class="line">1/5 Test #1: test_run .........................   Passed    0.62 sec</span><br><span class="line">    Start 2: test_usage</span><br><span class="line">2/5 Test #2: test_usage .......................   Passed    0.00 sec</span><br><span class="line">    Start 3: test_5_2</span><br><span class="line">3/5 Test #3: test_5_2 .........................   Passed    0.00 sec</span><br><span class="line">    Start 4: test_10_5</span><br><span class="line">4/5 Test #4: test_10_5 ........................   Passed    0.00 sec</span><br><span class="line">    Start 5: test_2_10</span><br><span class="line">5/5 Test #5: test_2_10 ........................   Passed    0.00 sec</span><br><span class="line"></span><br><span class="line">100% tests passed, 0 tests failed out of 5</span><br><span class="line"></span><br><span class="line">Total Test time (real) =   0.63 sec</span><br><span class="line">iddddeMac-mini:Demo5 iddd$</span><br></pre></td></tr></tbody></table></figure>
+<p>如果要测试更多的输入数据，像上面那样一个个写测试用例未免太繁琐。这时可以通过编写宏来实现：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"># 定义一个宏，用来简化测试工作</span><br><span class="line">macro (do_test arg1 arg2 result)</span><br><span class="line">  add_test (test_<!--figure29-->#123;arg1}_<!--figure29-->#123;arg2} Demo <!--figure29-->#123;arg1} <!--figure29-->#123;arg2})</span><br><span class="line">  set_tests_properties (test_<!--figure29-->#123;arg1}_<!--figure29-->#123;arg2}</span><br><span class="line">    PROPERTIES PASS_REGULAR_EXPRESSION <!--figure29-->#123;result})</span><br><span class="line">endmacro (do_test)</span><br><span class="line"> </span><br><span class="line"># 使用该宏进行一系列的数据测试</span><br><span class="line">do_test (5 2 "is 25")</span><br><span class="line">do_test (10 5 "is 100000")</span><br><span class="line">do_test (2 10 "is 1024")</span><br></pre></td></tr></tbody></table></figure>
+<p>关于 CTest 的更详细的用法可以通过 <span class="label danger">man 1 ctest</span>   参考 CTest 的文档。</p>
+<h2 id="支持-gdb"><a href="#支持-gdb" class="headerlink" title="支持 gdb"></a>支持 gdb</h2><p>让 CMake 支持 gdb 的设置也很容易，只需要指定 <span class="label danger">Debug</span> 模式下开启 <span class="label danger">-g</span> 选项：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">set(CMAKE_BUILD_TYPE "Debug")</span><br><span class="line">set(CMAKE_CXX_FLAGS_DEBUG "$ENV{CXXFLAGS} -O0 -Wall -g -ggdb")</span><br><span class="line">set(CMAKE_CXX_FLAGS_RELEASE "$ENV{CXXFLAGS} -O3 -Wall")</span><br></pre></td></tr></tbody></table></figure>
+<p>之后可以直接对生成的程序使用 gdb 来调试。</p>
+<h2 id="添加环境检查"><a href="#添加环境检查" class="headerlink" title="添加环境检查"></a>添加环境检查</h2><div class="note info">
+            <p>本节对应的源代码所在目录：<a href="Demo6.zip" title="源码下载">Demo6</a>。</p>
+          </div>
+<p>有时候可能要对系统环境做点检查，例如要使用一个平台相关的特性的时候。在这个例子中，我们检查系统是否自带 pow 函数。如果带有 pow 函数，就使用它；否则使用我们定义的 power 函数。</p>
+<h3 id="添加-CheckFunctionExists-宏"><a href="#添加-CheckFunctionExists-宏" class="headerlink" title="添加 CheckFunctionExists 宏"></a>添加 CheckFunctionExists 宏</h3><p>首先在顶层 CMakeLists 文件中添加 CheckFunctionExists.cmake 宏，并调用 <span class="label danger">check_function_exists</span> 命令测试链接器是否能够在链接阶段找到 <span class="label danger">pow</span> 函数。</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"># Project Info</span><br><span class="line">project (Demo6)</span><br><span class="line"></span><br><span class="line">set (CMAKE_INCLUDE_CURRENT_DIR ON)</span><br><span class="line"></span><br><span class="line"># 检查系统是否支持 pow 函数</span><br><span class="line">include (<!--figure31-->#123;CMAKE_ROOT}/Modules/CheckFunctionExists.cmake)</span><br><span class="line">check_function_exists (pow HAVE_POW)</span><br><span class="line"></span><br><span class="line"># Add Configure</span><br><span class="line">configure_file (</span><br><span class="line">    "<!--figure31-->#123;PROJECT_SOURCE_DIR}/config.h.in"</span><br><span class="line">    "<!--figure31-->#123;PROJECT_BINARY_DIR}/config.h"</span><br><span class="line">    )</span><br><span class="line"></span><br><span class="line"># Use Option USE_MYMATH</span><br><span class="line">if (NOT HAVE_POW)</span><br><span class="line">    include_directories ("<!--figure31-->#123;PROJECT_SOURCE_DIR}/math")</span><br><span class="line">    add_subdirectory (math)</span><br><span class="line">    set (EXTRA_LIBS <!--figure31-->#123;EXTRA_LIBS} MathFunctions)</span><br><span class="line">endif (NOT HAVE_POW)</span><br></pre></td></tr></tbody></table></figure>
+<p>将上面这段代码放在 <span class="label danger">configure_file</span>  命令前。</p>
+<h3 id="预定义相关宏变量"><a href="#预定义相关宏变量" class="headerlink" title="预定义相关宏变量"></a>预定义相关宏变量</h3><p>接下来修改 config.h.in 文件，预定义相关的宏变量。</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">// does the platform provide pow function?</span><br><span class="line">#cmakedefine HAVE_POW</span><br></pre></td></tr></tbody></table></figure>
+<h3 id="在代码中使用宏和函数"><a href="#在代码中使用宏和函数" class="headerlink" title="在代码中使用宏和函数"></a>在代码中使用宏和函数</h3><p>最后一步是修改 main.cc ，在代码中使用宏和函数：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">#ifdef HAVE_POW</span><br><span class="line">  #include &lt;math.h&gt;</span><br><span class="line">#else</span><br><span class="line">  #include &lt;math/MathFunctions.h&gt;</span><br><span class="line">#endif</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#ifdef HAVE_POW</span><br><span class="line">    printf("Now we use the standard library. \n");</span><br><span class="line">    double result = pow(base, exponent);</span><br><span class="line">#else</span><br><span class="line">    printf("Now we use our own Math library. \n");</span><br><span class="line">    double result = power(base, exponent);</span><br><span class="line">#endif</span><br></pre></td></tr></tbody></table></figure>
+<h2 id="添加版本号"><a href="#添加版本号" class="headerlink" title="添加版本号"></a>添加版本号</h2><div class="note info">
+            <p>本节对应的源代码所在目录：<a href="Demo7.zip" title="源码下载">Demo7</a>。</p>
+          </div>
+<p>给项目添加和维护版本号是一个好习惯，这样有利于用户了解每个版本的维护情况，并及时了解当前所用的版本是否过时，或是否可能出现不兼容的情况。</p>
+<p>首先修改顶层 CMakeLists 文件，在 <span class="label danger">project</span> 命令之后加入如下两行：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">set (Demo_VERSION_MAJOR 1)</span><br><span class="line">set (Demo_VERSION_MINOR 0)</span><br></pre></td></tr></tbody></table></figure>
+<p>分别指定当前的项目的主版本号和副版本号。</p>
+<p>之后，为了在代码中获取版本信息，我们可以修改 <span class="label info">config.h.in</span>  文件，添加两个预定义变量：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">// the configured options and settings for Tutorial</span><br><span class="line">#define Demo_VERSION_MAJOR @Demo_VERSION_MAJOR@</span><br><span class="line">#define Demo_VERSION_MINOR @Demo_VERSION_MINOR@</span><br></pre></td></tr></tbody></table></figure>
+<p>这样就可以直接在代码中打印版本信息了：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line">#include &lt;stdlib.h&gt;</span><br><span class="line">#include &lt;math.h&gt;</span><br><span class="line">#include "config.h"</span><br><span class="line">#include "math/MathFunctions.h"</span><br><span class="line"></span><br><span class="line">int main(int argc, char *argv[])</span><br><span class="line">{</span><br><span class="line">    if (argc &lt; 3){</span><br><span class="line">        // print version info</span><br><span class="line">        printf("%s Version %d.%d\n",</span><br><span class="line">            argv[0],</span><br><span class="line">            Demo_VERSION_MAJOR,</span><br><span class="line">            Demo_VERSION_MINOR);</span><br><span class="line">        printf("Usage: %s base exponent \n", argv[0]);</span><br><span class="line">        return 1;</span><br><span class="line">    }</span><br><span class="line">    double base = atof(argv[1]);</span><br><span class="line">    int exponent = atoi(argv[2]);</span><br><span class="line">    double result = power(base, exponent);</span><br><span class="line">    printf("%g ^ %d is %g\n", base, exponent, result);</span><br><span class="line">    return 0;</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+<p>测试</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">iddddeMac-mini:Demo7 iddd$ ./Demo</span><br><span class="line">./Demo Version 1.0</span><br><span class="line">Usage: ./Demo base exponent</span><br></pre></td></tr></tbody></table></figure>
+<h2 id="生成安装包"><a href="#生成安装包" class="headerlink" title="生成安装包"></a>生成安装包</h2><div class="note info">
+            <p>本节对应的源代码所在目录：<a href="Demo8.zip" title="源码下载">Demo8</a>。</p>
+          </div>
+<p>本节将学习如何配置生成各种平台上的安装包，包括二进制安装包和源码安装包。为了完成这个任务，我们需要用到 CPack ，它同样也是由 CMake 提供的一个工具，专门用于打包。</p>
+<p>首先在顶层的 CMakeLists.txt 文件尾部添加下面几行：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"># 构建一个 CPack 安装包</span><br><span class="line">include (InstallRequiredSystemLibraries)</span><br><span class="line">set (CPACK_RESOURCE_FILE_LICENSE</span><br><span class="line">  "<!--figure38-->#123;CMAKE_CURRENT_SOURCE_DIR}/License.txt")</span><br><span class="line">set (CPACK_PACKAGE_VERSION_MAJOR "<!--figure38-->#123;Demo_VERSION_MAJOR}")</span><br><span class="line">set (CPACK_PACKAGE_VERSION_MINOR "<!--figure38-->#123;Demo_VERSION_MINOR}")</span><br><span class="line">include (CPack)</span><br></pre></td></tr></tbody></table></figure>
+<p>上面的代码做了以下几个工作：</p>
+<ol>
+<li>导入 <span class="label danger">InstallRequiredSystemLibraries</span> 模块，以便之后导入 <span class="label danger">CPack</span> 模块；</li>
+<li>设置一些 <span class="label danger">CPack</span> 相关变量，包括版权信息和版本信息，其中版本信息用了上一节定义的版本号；</li>
+<li>导入 <span class="label danger">CPack</span> 模块。</li>
+</ol>
+<p>添加 License.txt 文件,内容无所谓</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">BSD 2</span><br></pre></td></tr></tbody></table></figure>
+<p>文件结构<br></p><figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">iddddeMac-mini:Demo8 iddd$ tree -L 2</span><br><span class="line">.</span><br><span class="line">|-- CMakeLists.txt</span><br><span class="line">|-- License.txt</span><br><span class="line">|-- config.h.in</span><br><span class="line">|-- main.cc</span><br><span class="line">`-- math</span><br><span class="line">    |-- CMakeLists.txt</span><br><span class="line">    |-- MathFunctions.cc</span><br><span class="line">    `-- MathFunctions.h</span><br></pre></td></tr></tbody></table></figure><br>接下来的工作是像往常一样构建工程，并执行 <span class="label danger">cpack</span> 命令。
+<p>生成二进制安装包：<br></p><figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cpack -C CPackConfig.cmake</span><br></pre></td></tr></tbody></table></figure><br>生成源码安装包<br><figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cpack -C CPackSourceConfig.cmake</span><br></pre></td></tr></tbody></table></figure><br>我们可以试一下。在生成项目后，执行 <span class="label danger">cpack -C CPackConfig.cmake</span> 命令：
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">iddddeMac-mini:Demo8 iddd$ cpack -C CPackConfig.cmake</span><br><span class="line">CPack: Create package using STGZ</span><br><span class="line">CPack: Install projects</span><br><span class="line">CPack: - Run preinstall target for: Demo8</span><br><span class="line">CPack: - Install project: Demo8 [CPackConfig.cmake]</span><br><span class="line">CPack: Create package</span><br><span class="line">CPack: - package: /Users/iddd/Test/Demo8/Demo8-1.0.1-Darwin.sh generated.</span><br><span class="line">CPack: Create package using TGZ</span><br><span class="line">CPack: Install projects</span><br><span class="line">CPack: - Run preinstall target for: Demo8</span><br><span class="line">CPack: - Install project: Demo8 [CPackConfig.cmake]</span><br><span class="line">CPack: Create package</span><br><span class="line">CPack: - package: /Users/iddd/Test/Demo8/Demo8-1.0.1-Darwin.tar.gz generated.</span><br></pre></td></tr></tbody></table></figure>
+<p>我们可以执行其中一个。此时会出现一个由 CPack 自动生成的交互式安装界面：<br></p><figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">iddddeMac-mini:Demo8 iddd$ sh Demo8-1.0.1-Darwin.sh</span><br><span class="line">Demo8 Installer Version: 1.0.1, Copyright (c) Humanity</span><br><span class="line">This is a self-extracting archive.</span><br><span class="line">The archive will be extracted to: /Users/iddd/Test/Demo8</span><br><span class="line"></span><br><span class="line">If you want to stop extracting, please press &lt;ctrl-C&gt;.</span><br><span class="line">BSD 2</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Do you accept the license? [yn]:</span><br><span class="line">y</span><br><span class="line">By default the Demo8 will be installed in:</span><br><span class="line">  "/Users/iddd/Test/Demo8/Demo8-1.0.1-Darwin"</span><br><span class="line">Do you want to include the subdirectory Demo8-1.0.1-Darwin?</span><br><span class="line">Saying no will install in: "/Users/iddd/Test/Demo8" [Yn]:</span><br><span class="line">y</span><br><span class="line"></span><br><span class="line">Using target directory: /Users/iddd/Test/Demo8/Demo8-1.0.1-Darwin</span><br><span class="line">Extracting, please wait...</span><br><span class="line"></span><br><span class="line">Unpacking finished successfully</span><br></pre></td></tr></tbody></table></figure><br>完成后提示安装到了 Demo8-1.0.1-Darwin 子目录中，我们可以进去执行该程序：
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">iddddeMac-mini:Demo8 iddd$ ./Demo8-1.0.1-Darwin/bin/Demo 6 7</span><br><span class="line">6 ^ 7 is 279936</span><br></pre></td></tr></tbody></table></figure>
+<p>关于 CPack 的更详细的用法可以通过 <span class="label danger">man 1 cpack</span> 参考 CPack 的文档。</p>
+<h2 id="将其他平台项目迁移到CMake"><a href="#将其他平台项目迁移到CMake" class="headerlink" title="将其他平台项目迁移到CMake"></a>将其他平台项目迁移到CMake</h2><p>CMake 可以很轻松地构建出在适合各个平台执行的工程环境。而如果当前的工程环境不是 CMake ，而是基于某个特定的平台，是否可以迁移到 CMake 呢？答案是可能的。下面针对几个常用的平台，列出了它们对应的迁移方案。</p>
+<h3 id="autotools"><a href="#autotools" class="headerlink" title="autotools"></a>autotools</h3><ul>
+<li><a href="https://projects.kde.org/projects/kde/kdesdk/kde-dev-scripts/repository/revisions/master/changes/cmake-utils/scripts/am2cmake">am2cmake</a> 可以将 autotools 系的项目转换到 CMake，这个工具的一个成功案例是 KDE 。</li>
+<li><a href="http://emanuelgreisen.dk/stuff/kdevelop_am2cmake.php.tgz">Alternative Automake2CMake</a> 可以转换使用 automake 的 KDevelop 工程项目。</li>
+<li><a href="http://www.cmake.org/Wiki/GccXmlAutoConfHints">Converting autoconf tests</a></li>
+</ul>
+<h3 id="qmake"><a href="#qmake" class="headerlink" title="qmake"></a>qmake</h3><p><a href="http://www.cmake.org/Wiki/CMake:ConvertFromQmake">qmake converter</a> 可以转换使用 QT 的 qmake 的工程。</p>
+<h3 id="Visual-Studio"><a href="#Visual-Studio" class="headerlink" title="Visual Studio"></a>Visual Studio</h3><ul>
+<li><a href="http://vcproj2cmake.sf.net/">vcproj2cmake.rb</a> 可以根据 Visual Studio 的工程文件（后缀名是 .vcproj 或 .vcxproj）生成 CMakeLists.txt 文件。</li>
+<li><a href="http://nberserk.blogspot.com/2010/11/converting-vc-projectsvcproj-to.html">vcproj2cmake.ps1</a> vcproj2cmake 的 PowerShell 版本。</li>
+<li><a href="http://sourceforge.net/projects/folders4cmake/">folders4cmake</a> 根据 Visual Studio 项目文件生成相应的 “source_group” 信息，这些信息可以很方便的在 CMake 脚本中使用。支持 Visual Studio 9/10 工程文件。</li>
+</ul>
+<h3 id="CMakeLists-txt-自动推导"><a href="#CMakeLists-txt-自动推导" class="headerlink" title="CMakeLists.txt 自动推导"></a>CMakeLists.txt 自动推导</h3><ul>
+<li><a href="http://websvn.kde.org/trunk/KDE/kdesdk/cmake/scripts/">gencmake</a> 根据现有文件推导 CMakeLists.txt 文件。</li>
+<li><a href="http://www.vanvelzensoftware.com/postnuke/index.php?name=Downloads&amp;req=viewdownload&amp;cid=7">CMakeListGenerator</a> 应用一套文件和目录分析创建出完整的 CMakeLists.txt 文件。仅支持 Win32 平台。</li>
+</ul>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a href="https://www.hahack.com/codes/cmake/">CMake 入门实战</a></li>
+<li><a href="https://blog.csdn.net/zhuiyunzhugang/article/details/88142908">超详细的cmake教程</a></li>
+</ul>
+
+			  		
+			  		<!-- google Adsense -->
+			  		
+					
+					
+					
+					
+			    	
+					
+					<!-- google Adsense Matched content -->
+			  		
+			  	</div>
+				
+		  	</article>
+		  	
+		  	
+		  	<!-- TAGS -->
+		  	
+		  	<div class="meta-content">
+				
+				<div class="widget">
+				  	<h6 class="tag"><span class="fa fa-fw fa-tag"></span>TAGS</h6>
+				  	<div class="article-tag">
+						<ul class="article-tag-list">
+							
+					    		<li class="article-tag-list-item">
+					    			<a class="article-tag-list-link" href="/tags/c/">
+					    				c
+					    			</a>
+					    		</li>
+							
+						</ul>
+					</div>
+				</div>
+				
+			</div>
+		  	
+		  	
+		  	<!-- Categories posts -->
+		  	
+		  	
+		  	
+		  	<!-- Detailed categories  posts -->
+		  	
+		  	
+		  	
+		  	<!-- Latests -->
+		  	
+			
+		</div>
+		
+		
+		<footer id="footer">
+		
+			
+			
+			
+			
+			<div class="copyright-tool">
+				
+				
+				
+				<div class="copyright-title">
+					<span>
+					&copy; 2023&nbsp;Chester.Cao Blog
+					</span>
+				</div>
+				
+				<div class="copyright-license">
+					<aside>
+						Powered by <a href="https://hexo.io/">Hexo</a>. <a href="https://github.com/tea3/hexo-generator-amp">AMP-Theme</a> designed by <a href="https://github.com/tea3/">tea</a>.
+					</aside>
+				</div>
+			</div>
+			
+		</footer>
+
+
+  	<div id="totop"><a href="#"></a></div>
+
+
+  </body>
+</html>

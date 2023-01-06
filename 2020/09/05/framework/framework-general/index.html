@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.2">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <link rel="amphtml" href="./amp/">
+  <meta name="baidu-site-verification" content="code-mUG0UNAPhR">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"blog.rcant.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="引子架构风格 引问1. 设计词汇表是什么 2. 构件和连接件的类型是什么？ 3. 可容许的结构模式是什么？ 4. 基本的计算模型是什么？ 5. 风格的基本不变性是什么？ 6. 其使用的常见例子是什么？ 7. 使用此风格的优缺点是什么？ 8. 其常见的特例是什么？ 以上问题包括了 架构风格的最关键的四要素内容： - 提供一个词汇表 - 定义一套配置规则 - 定义一套语义解释原则 - 定义对基于这种风">
+<meta property="og:type" content="article">
+<meta property="og:title" content="通用架构风格">
+<meta property="og:url" content="http://blog.rcant.com/2020/09/05/framework/framework-general/index.html">
+<meta property="og:site_name" content="Chester.Cao Blog">
+<meta property="og:description" content="引子架构风格 引问1. 设计词汇表是什么 2. 构件和连接件的类型是什么？ 3. 可容许的结构模式是什么？ 4. 基本的计算模型是什么？ 5. 风格的基本不变性是什么？ 6. 其使用的常见例子是什么？ 7. 使用此风格的优缺点是什么？ 8. 其常见的特例是什么？ 以上问题包括了 架构风格的最关键的四要素内容： - 提供一个词汇表 - 定义一套配置规则 - 定义一套语义解释原则 - 定义对基于这种风">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-09-05T03:39:17.000Z">
+<meta property="article:modified_time" content="2023-01-06T09:36:20.539Z">
+<meta property="article:author" content="Chester.C">
+<meta property="article:tag" content="架构">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://blog.rcant.com/2020/09/05/framework/framework-general/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>通用架构风格 | Chester.Cao Blog</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?974592ac4c5733a52af2b871678a5334";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Chester.Cao Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Chester.Cao Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Devlopper in C#</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-topics">
+
+    <a href="/topics/" rel="section"><i class="fa fa-fw fa-pencil"></i>主题</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://blog.rcant.com/2020/09/05/framework/framework-general/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Chester.C">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chester.Cao Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          通用架构风格
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-09-05 11:39:17" itemprop="dateCreated datePublished" datetime="2020-09-05T11:39:17+08:00">2020-09-05</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-01-06 17:36:20" itemprop="dateModified" datetime="2023-01-06T17:36:20+08:00">2023-01-06</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%9E%B6%E6%9E%84/" itemprop="url" rel="index"><span itemprop="name">架构</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2020/09/05/framework/framework-general/" class="post-meta-item leancloud_visitors" data-flag-title="通用架构风格" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2020/09/05/framework/framework-general/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/09/05/framework/framework-general/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h2><p>架构风格</p>
+<h2 id="引问"><a href="#引问" class="headerlink" title="引问"></a>引问</h2><pre><code>1. 设计词汇表是什么
+2. 构件和连接件的类型是什么？
+3. 可容许的结构模式是什么？
+4. 基本的计算模型是什么？
+5. 风格的基本不变性是什么？
+6. 其使用的常见例子是什么？
+7. 使用此风格的优缺点是什么？
+8. 其常见的特例是什么？
+</code></pre><p>以上问题包括了 架构风格的最关键的四要素内容：</p>
+<pre><code>- 提供一个词汇表
+- 定义一套配置规则
+- 定义一套语义解释原则
+- 定义对基于这种风格的系统所进行的分析
+</code></pre><p>根据此框架给出了通用架构风格的分类：</p>
+<pre><code>1. 数据流风格：批处理序列；管道 /过滤 器。
+2. 调用 /返回风格：主程序 /子程序；面向对象风格；层次结构。
+3. 独立构件风格：进程通信；事件系统。
+4. 虚拟机风格：解释器；基于规则的系统。
+5. 仓库风格：数据库系统；超文本系统；黑板系统。
+</code></pre><span id="more"></span>
+<h2 id="数据流风格"><a href="#数据流风格" class="headerlink" title="数据流风格"></a>数据流风格</h2><p>数据流风格的软件架构是最常见，结构最简单的软件架构。 在这样的架构下，所有的数据按照流的形式在执行过程中前进，不存在结构的反复和重构，就像工厂中的汽车流水线一样，数据就像汽车零部件一样在流水线的各个节点上被加工，最终输出所需要的结果。在流动过程中，数据经过序列间的数据处理组件进行处理，然后将处理结果向后传送，最后进行输出。</p>
+<p>数据流风格架构主要包括：批处理序列和管道-过滤器</p>
+<h3 id="1-批处理序列"><a href="#1-批处理序列" class="headerlink" title="1.批处理序列"></a>1.批处理序列</h3><p>批处理风格的每一步处理都是独立的，并且每一步都是顺序执行的。只有前一步处理完，后一步才能开始。数据传送在步与步之间最为一个整体。</p>
+<p>组件为一系列固定顺序的计算单元，组件之间只通过数据传递交互。每个处理步骤都是一个独立的程序，每一步必须在前一步结束后才能开始，数据必须是完整的，以整体的方式传递。</p>
+<p>典型应用：</p>
+<pre><code>1. 经典数据处理；
+2. 程序开发
+3. Windows下的Bat程序
+</code></pre><h3 id="2-管道-过滤器"><a href="#2-管道-过滤器" class="headerlink" title="2. 管道-过滤器"></a>2. 管道-过滤器</h3><p>在管道-过滤器风格的软件架构中，每个构件都有一组输入/输出，构件读输入的数据流，经过内部处理，产生输出数据流。这个过程通常通过对输入流的变换及增量计算来完成，所以在输入被完全消费之前，输出便产生了。因此这里的构件被称为过滤器，这种风格的连接件就像是数据流传输的管道，将一个过滤器的输出传到另一个过滤器的输入。</p>
+<p>此风格特别重要的过滤器 必须是独立的实体 ，不能与其他的过滤器共享数据，而且一个过滤器不知道它上下游的标识。一个管道-过滤器网络输出的正确性并不依赖于过滤器进行增量计算过程的顺序。</p>
+<p>典型的例子：</p>
+<pre><code>1. Unix Shell 编写的程序
+</code></pre><p>此风格的优点：</p>
+<pre><code>1. 使得软构件具有良好的隐蔽性和高内聚、低耦合的特点
+2. 允许设计者将整个系统的输入/输出看成是多个过滤器的行为的简单合成
+3. 支持软件重用。只要提供适合在两个过滤器之间传送的数据，任何两个过滤器都可被连接起来
+4. 系统维护和增强系统性能简单。新的过滤器可以添加到现有系统中来；旧的可以被改进的过滤器替换掉
+5. 允许对一些如吞吐量、死锁等属性的分析
+6. 支持并行执行。
+</code></pre><p>此风格的缺点：</p>
+<pre><code>1. 通常导致进程成为批处理的结构。这是因为虽然过滤器可增量处理数据，但它们是独立的，所以设计者必须将每个过滤器看成一个完整的从输入到输出的转换。
+2. 不适合处理交互的应用。当需要增量的显示改变时，这个问题尤为严重
+3. 由于在数据传输上没有通用的标准，每个过滤器都增加了解析和合成数据的工作。这导致系统性能下降，增加了编写过滤器的复杂性
+</code></pre><h3 id="3-批处理序列风格和管道过滤器风格对比"><a href="#3-批处理序列风格和管道过滤器风格对比" class="headerlink" title="3. 批处理序列风格和管道过滤器风格对比"></a>3. 批处理序列风格和管道过滤器风格对比</h3><p>共同点： 把任务分成一系列固定顺序的计算单元（组件）。组件只通过数据传递交互。</p>
+<p>区别: </p>
+<p>批处理是全部的，高潜伏性的，输入时可随机存取，无合作性，无交互性。<br>管道-过滤器是递增的，数据结果延迟小，输入时处理局部化，有反馈、可交互。</p>
+<p>批处理强调数据传送在步与步之间作为一个整体，而管道过滤器无此要求。</p>
+<h2 id="调用-返回风格"><a href="#调用-返回风格" class="headerlink" title="调用/返回风格"></a>调用/返回风格</h2><p>调用返回风格是指在系统中采用调用与返回机制。采用调用-返回实际上是分治策略，将一个复杂的大系统分解为一些子系统，以便于降低复杂度，并且增加可修改性。程序从其执行起点开始执行构件代码，执行结束，将控制返回给程序调用构件。</p>
+<p>调用/返回风格架构主要包括：主程序/子程序、面向对象风格、层次结构</p>
+<h3 id="1-主程序-子程序"><a href="#1-主程序-子程序" class="headerlink" title="1. 主程序/子程序"></a>1. 主程序/子程序</h3><p>此风格是结构化开发时期的经典架构风格。这种风格一般采用单线程控制，把问题划分为若干处理步骤，构件为主程序和子程序。子程序通常可合成为模块。过程调用作为交互机制，即充当连接件。调用关系具有层次性，语义逻辑表现为子程序的正确性取决于它调用的子程序的正确性</p>
+<h3 id="2-面向对象风格"><a href="#2-面向对象风格" class="headerlink" title="2. 面向对象风格"></a>2. 面向对象风格</h3><p>抽象数据类型对软件系统有着很重要的作用，目前软件界已经普遍使用面向对象系统</p>
+<p>这种风格建立在数据抽象和面向对象的基础上，数据的表示方法和它们的相应操作封装在一个抽象数据类型或对象中。</p>
+<p>这种风格的构件是对象，对象是一种被称作管理者的构件，因为它负责保持资源的完整性。对象是通过函数和过程的调用来交互的</p>
+<p>这种风格的两个重要特征为：</p>
+<pre><code>1. 对象负责维护其表示的完整性
+2. 对象的表示对其他对象而言是隐蔽的。因为一个对象对它的客户对象隐藏了自己的表示，索引这些对象可以不影响它的客户就能改变其实现方法。
+</code></pre><p>面向对象的系统的优点</p>
+<pre><code>1. 因为对象对其他对象隐藏它的表示，所以可以改变一个对象的表示，而不影响其他的对象
+2. 设计者可以将一些数据存取操作问题分解为一些交互的代理程序的集合
+</code></pre><p>面向对象的缺点</p>
+<pre><code>1. 一个对象为了和另一个对象进行交互，必须知道对象的标识。只要一个对象的标识改变了，旧必须修改所有其他明确调用它的对象。
+2. 必须修改所有显示调用它的其他对象，并消除由此带来的一些副作用。例如，如果A使用了对象B，C也使用了对象B，那么C对B的使用所造成的对A的影响可能也是料想不到的
+</code></pre><h3 id="3-层次结构风格"><a href="#3-层次结构风格" class="headerlink" title="3. 层次结构风格"></a>3. 层次结构风格</h3>
+    </div>
+
+    
+    
+    
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%9E%B6%E6%9E%84/" rel="tag"># 架构</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/09/05/csharp/csharp-async/" rel="prev" title="CSharp 异步处理的几种形式">
+      <i class="fa fa-chevron-left"></i> CSharp 异步处理的几种形式
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/09/05/framework/designpattern-visitor/" rel="next" title="访问者模式（Visitor）">
+      访问者模式（Visitor） <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%95%E5%AD%90"><span class="nav-number">1.</span> <span class="nav-text">引子</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%95%E9%97%AE"><span class="nav-number">2.</span> <span class="nav-text">引问</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E6%B5%81%E9%A3%8E%E6%A0%BC"><span class="nav-number">3.</span> <span class="nav-text">数据流风格</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E6%89%B9%E5%A4%84%E7%90%86%E5%BA%8F%E5%88%97"><span class="nav-number">3.1.</span> <span class="nav-text">1.批处理序列</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E7%AE%A1%E9%81%93-%E8%BF%87%E6%BB%A4%E5%99%A8"><span class="nav-number">3.2.</span> <span class="nav-text">2. 管道-过滤器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E6%89%B9%E5%A4%84%E7%90%86%E5%BA%8F%E5%88%97%E9%A3%8E%E6%A0%BC%E5%92%8C%E7%AE%A1%E9%81%93%E8%BF%87%E6%BB%A4%E5%99%A8%E9%A3%8E%E6%A0%BC%E5%AF%B9%E6%AF%94"><span class="nav-number">3.3.</span> <span class="nav-text">3. 批处理序列风格和管道过滤器风格对比</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B0%83%E7%94%A8-%E8%BF%94%E5%9B%9E%E9%A3%8E%E6%A0%BC"><span class="nav-number">4.</span> <span class="nav-text">调用&#x2F;返回风格</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E4%B8%BB%E7%A8%8B%E5%BA%8F-%E5%AD%90%E7%A8%8B%E5%BA%8F"><span class="nav-number">4.1.</span> <span class="nav-text">1. 主程序&#x2F;子程序</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E9%A3%8E%E6%A0%BC"><span class="nav-number">4.2.</span> <span class="nav-text">2. 面向对象风格</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E5%B1%82%E6%AC%A1%E7%BB%93%E6%9E%84%E9%A3%8E%E6%A0%BC"><span class="nav-number">4.3.</span> <span class="nav-text">3. 层次结构风格</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Chester.C</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">143</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">32</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">67</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Chester.C</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+if (document.querySelectorAll('pre.mermaid').length) {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mermaid@8/dist/mermaid.min.js', () => {
+    mermaid.initialize({
+      theme    : 'forest',
+      logLevel : 3,
+      flowchart: { curve     : 'linear' },
+      gantt    : { axisFormat: '%m/%d/%Y' },
+      sequence : { actorMargin: 50 }
+    });
+  }, window.mermaid);
+}
+</script>
+
+
+  
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'OQBlgU8H1seTDvVrgC3Dhni0-gzGzoHsz',
+      appKey     : 'wF7D3hVD9WjlV9V52bhlymHO',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : true,
+      lang       : 'zh-cn' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>

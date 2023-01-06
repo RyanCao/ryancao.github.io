@@ -1,0 +1,2163 @@
+<!DOCTYPE html>
+<html ⚡>
+  <head>
+    <meta charset="utf-8">
+    <link rel="canonical" href="http://blog.rcant.com/2017/05/28/git/git-submodule/" >
+    <title>Git Submodule使用教程 - Chester.Cao Blog</title>
+    <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
+    
+    <meta property="og:title" content="Git Submodule使用教程">
+	<meta property="og:type" content="article">
+	<meta property="og:url" content="http://blog.rcant.com/2017/05/28/git/git-submodule/">
+	
+		<meta property="og:image" content="\amp-dist\sample\sample-substituteTitleImage.png">
+	
+	<meta property="og:site_name" content="Chester.Cao Blog">
+	
+		<meta property="og:description" content="&lt;h2 id=&#34;引子&#34;&gt;&lt;a href=&#34;#引子&#34; class=&#34;headerlink&#34; title=&#34;引子&#34;&gt;&lt;/a&gt;引子&lt;/h2&gt;&lt;p&gt;Git Submodule使用教程&lt;/p&gt;
+&lt;h2 id=&#34;Submodule-是什么？&#34;&gt;&lt;a href=&#34;#Submodule-是什么？&#34; class=&#34;headerlink&#34; title=&#34;Submodule 是什么？&#34;&gt;&lt;/a&gt;Submodule 是什么？&lt;/h2&gt;&lt;p&gt;项目的版本库在某些情况下需要引用其他版本库的文件，例如公司积累了一套常用的函数库，被多个项目调用. 显然这个函数库的代码不能直接放到某个项目的代码中，而是要独立为一个代码库。这个时候就需要使用Submodule。&lt;/p&gt;
+&lt;p&gt;1.对于公共资源各种程序员的处理方式&lt;br&gt;每个公司的系统都会有一套统一的系统风格，或者针对某一个大客户的多个系统风格保持统一，而且如果风格改动后要同步到多个系统中；这样的需求几乎每个开发人员都遇到，下面看看各个层次的程序员怎么处理：&lt;/p&gt;
+&lt;p&gt;假如对于系统的风格需要几个目录：css、images、js。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;普通程序员，把最新版本的代码逐个复制到每个项目中，如果有N个项目，那就是要复制N x 3次；如果漏掉了某个文件夹没有复制…&lt;/li&gt;
+&lt;li&gt;文艺程序员，使用Git Submodule功能，执行：&lt;span class=&#34;label danger&#34;&gt;git submodule update&lt;/span&gt;，然后冲一杯咖啡悠哉的享受着。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;类似于SVN的svn:externals.&lt;/p&gt;
+&lt;div class=&#34;table-container&#34;&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;功能&lt;/th&gt;
+&lt;th&gt;svn:externals&lt;/th&gt;
+&lt;th&gt;git submodule&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;如何记录外部版本库的地址&lt;/td&gt;
+&lt;td&gt;目录 svn:externals 属性&lt;/td&gt;
+&lt;td&gt;项目根目录下的 .gitmodules 文件&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;默认是否自动检出外部版本库&lt;/td&gt;
+&lt;td&gt;是\n在使用svn checkout 检出时若使用 —ignore-externals可以忽略对外部版本库的引用，不检出&lt;/td&gt;
+&lt;td&gt;否\n默认不克隆外部版本库。若要克隆则需要使用git submodule init及git submodule update命令&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;是否能部分引用外部版本库内容&lt;/td&gt;
+&lt;td&gt;是\n因为svn支持部分检出&lt;/td&gt;
+&lt;td&gt;否\n必须克隆整个外部版本库&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;是否可以指向分支而随之改变&lt;/td&gt;
+&lt;td&gt;是&lt;/td&gt;
+&lt;td&gt;否\n固定于外部版本库的某个提交&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;">
+	
+	<meta name="twitter:card" content="summary_large_image" />
+	<meta name="twitter:site" content="Chester.Cao Blog">
+	<meta name="twitter:url" content="http://blog.rcant.com/2017/05/28/git/git-submodule/">
+	<meta name="twitter:title" content="Git Submodule使用教程 - Chester.Cao Blog">
+	
+		<meta name="twitter:description" content="&lt;h2 id=&#34;引子&#34;&gt;&lt;a href=&#34;#引子&#34; class=&#34;headerlink&#34; title=&#34;引子&#34;&gt;&lt;/a&gt;引子&lt;/h2&gt;&lt;p&gt;Git Submodule使用教程&lt;/p&gt;
+&lt;h2 id=&#34;Submodule-是什么？&#34;&gt;&lt;a href=&#34;#Submodule-是什么？&#34; class=&#34;headerlink&#34; title=&#34;Submodule 是什么？&#34;&gt;&lt;/a&gt;Submodule 是什么？&lt;/h2&gt;&lt;p&gt;项目的版本库在某些情况下需要引用其他版本库的文件，例如公司积累了一套常用的函数库，被多个项目调用. 显然这个函数库的代码不能直接放到某个项目的代码中，而是要独立为一个代码库。这个时候就需要使用Submodule。&lt;/p&gt;
+&lt;p&gt;1.对于公共资源各种程序员的处理方式&lt;br&gt;每个公司的系统都会有一套统一的系统风格，或者针对某一个大客户的多个系统风格保持统一，而且如果风格改动后要同步到多个系统中；这样的需求几乎每个开发人员都遇到，下面看看各个层次的程序员怎么处理：&lt;/p&gt;
+&lt;p&gt;假如对于系统的风格需要几个目录：css、images、js。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;普通程序员，把最新版本的代码逐个复制到每个项目中，如果有N个项目，那就是要复制N x 3次；如果漏掉了某个文件夹没有复制…&lt;/li&gt;
+&lt;li&gt;文艺程序员，使用Git Submodule功能，执行：&lt;span class=&#34;label danger&#34;&gt;git submodule update&lt;/span&gt;，然后冲一杯咖啡悠哉的享受着。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;类似于SVN的svn:externals.&lt;/p&gt;
+&lt;div class=&#34;table-container&#34;&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;功能&lt;/th&gt;
+&lt;th&gt;svn:externals&lt;/th&gt;
+&lt;th&gt;git submodule&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;如何记录外部版本库的地址&lt;/td&gt;
+&lt;td&gt;目录 svn:externals 属性&lt;/td&gt;
+&lt;td&gt;项目根目录下的 .gitmodules 文件&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;默认是否自动检出外部版本库&lt;/td&gt;
+&lt;td&gt;是\n在使用svn checkout 检出时若使用 —ignore-externals可以忽略对外部版本库的引用，不检出&lt;/td&gt;
+&lt;td&gt;否\n默认不克隆外部版本库。若要克隆则需要使用git submodule init及git submodule update命令&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;是否能部分引用外部版本库内容&lt;/td&gt;
+&lt;td&gt;是\n因为svn支持部分检出&lt;/td&gt;
+&lt;td&gt;否\n必须克隆整个外部版本库&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;是否可以指向分支而随之改变&lt;/td&gt;
+&lt;td&gt;是&lt;/td&gt;
+&lt;td&gt;否\n固定于外部版本库的某个提交&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;">
+	
+    
+    	<meta name="twitter:image" content="\amp-dist\sample\sample-substituteTitleImage.png">
+	
+	
+	
+    
+    <style amp-boilerplate>body{-webkit-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-moz-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-ms-animation:-amp-start 8s steps(1,end) 0s 1 normal both;animation:-amp-start 8s steps(1,end) 0s 1 normal both}@-webkit-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-moz-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-ms-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-o-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}</style>
+    <noscript><style amp-boilerplate>body{-webkit-animation:none;-moz-animation:none;-ms-animation:none;animation:none}</style></noscript>
+    <script async custom-element="amp-sidebar" src="https://cdn.ampproject.org/v0/amp-sidebar-0.1.js"></script>
+    <!--
+  	<script async custom-element="amp-social-share" src="https://cdn.ampproject.org/v0/amp-social-share-0.1.js"></script>
+    -->
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <script async src="https://cdn.ampproject.org/v0.js"></script>
+    <script type="application/ld+json">
+		{
+			"@context": "http://schema.org",
+			"@type": "BlogPosting",
+			"headline": "Git Submodule使用教程",
+			
+			"description": "&lt;h2 id=&#34;引子&#34;&gt;&lt;a href=&#34;#引子&#34; class=&#34;headerlink&#34; title=&#34;引子&#34;&gt;&lt;/a&gt;引子&lt;/h2&gt;&lt;p&gt;Git Submodule使用教程&lt;/p&gt;
+&lt;h2 id=&#34;Submodule-是什么？&#34;&gt;&lt;a href=&#34;#Submodule-是什么？&#34; class=&#34;headerlink&#34; title=&#34;Submodule 是什么？&#34;&gt;&lt;/a&gt;Submodule 是什么？&lt;/h2&gt;&lt;p&gt;项目的版本库在某些情况下需要引用其他版本库的文件，例如公司积累了一套常用的函数库，被多个项目调用. 显然这个函数库的代码不能直接放到某个项目的代码中，而是要独立为一个代码库。这个时候就需要使用Submodule。&lt;/p&gt;
+&lt;p&gt;1.对于公共资源各种程序员的处理方式&lt;br&gt;每个公司的系统都会有一套统一的系统风格，或者针对某一个大客户的多个系统风格保持统一，而且如果风格改动后要同步到多个系统中；这样的需求几乎每个开发人员都遇到，下面看看各个层次的程序员怎么处理：&lt;/p&gt;
+&lt;p&gt;假如对于系统的风格需要几个目录：css、images、js。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;普通程序员，把最新版本的代码逐个复制到每个项目中，如果有N个项目，那就是要复制N x 3次；如果漏掉了某个文件夹没有复制…&lt;/li&gt;
+&lt;li&gt;文艺程序员，使用Git Submodule功能，执行：&lt;span class=&#34;label danger&#34;&gt;git submodule update&lt;/span&gt;，然后冲一杯咖啡悠哉的享受着。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;类似于SVN的svn:externals.&lt;/p&gt;
+&lt;div class=&#34;table-container&#34;&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;功能&lt;/th&gt;
+&lt;th&gt;svn:externals&lt;/th&gt;
+&lt;th&gt;git submodule&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;如何记录外部版本库的地址&lt;/td&gt;
+&lt;td&gt;目录 svn:externals 属性&lt;/td&gt;
+&lt;td&gt;项目根目录下的 .gitmodules 文件&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;默认是否自动检出外部版本库&lt;/td&gt;
+&lt;td&gt;是\n在使用svn checkout 检出时若使用 —ignore-externals可以忽略对外部版本库的引用，不检出&lt;/td&gt;
+&lt;td&gt;否\n默认不克隆外部版本库。若要克隆则需要使用git submodule init及git submodule update命令&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;是否能部分引用外部版本库内容&lt;/td&gt;
+&lt;td&gt;是\n因为svn支持部分检出&lt;/td&gt;
+&lt;td&gt;否\n必须克隆整个外部版本库&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;是否可以指向分支而随之改变&lt;/td&gt;
+&lt;td&gt;是&lt;/td&gt;
+&lt;td&gt;否\n固定于外部版本库的某个提交&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;",
+			
+			"mainEntityOfPage":{
+			    "@type":"WebPage",
+			    "@id":"http://blog.rcant.com/2017/05/28/git/git-submodule/"
+			},
+			"datePublished": "2017-05-28T03:39:17.000Z",
+			"dateModified": "2023-01-06T09:36:55.322Z",
+			
+			"image": {
+				"@type": "ImageObject",
+				"url": "\amp-dist\sample\sample-substituteTitleImage.png",
+				"width" : "1024",
+				"height" : "800"
+			},
+			
+			"author": {
+			    "@type": "Person",
+			    "name": "Chester.C"
+			},
+			"publisher": {
+			    "@type": "Organization",
+			    "name": "Chester.Cao Blog"
+			    
+			    ,
+			    "logo": {
+			      "@type": "ImageObject",
+			      "url": "http://blog.rcant.com\amp-dist\sample\sample-logo.png",
+			      "width": 600,
+			      "height": 60
+			    }
+			    
+			}
+		}
+	</script>
+	<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+	
+	<style amp-custom>
+		
+abbr,
+acronym,
+address,
+applet,
+big,
+blockquote,
+body,
+caption,
+cite,
+code,
+dd,
+del,
+dfn,
+div,
+dl,
+dt,
+em,
+fieldset,
+form,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+html,
+iframe,
+img,
+ins,
+kbd,
+label,
+legend,
+li,
+object,
+ol,
+p,
+pre,
+q,
+s,
+samp,
+small,
+span,
+strike,
+strong,
+sub,
+sup,
+table,
+tbody,
+td,
+tfoot,
+th,
+thead,
+tr,
+tt,
+ul,
+var {
+  border: 0;
+  font-family: inherit;
+  font-size: 1rem;
+  font-style: inherit;
+  font-weight: inherit;
+  margin: 0;
+  outline: 0;
+  padding: 0;
+  vertical-align: baseline;
+}
+abbr {
+  cursor: help;
+  border-bottom: 1px dotted;
+  font-variant: normal;
+}
+acronym {
+  border-bottom: 1px dotted;
+  font-variant: normal;
+}
+body {
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  -webkit-text-size-adjust: 100%;
+  background: #fff;
+  color: #2d3d40;
+  font-family: sans-serif;
+  font-size: 1rem;
+  font-weight: 500;
+  line-height: 2rem;
+  text-rendering: optimizelegibility;
+}
+button::-moz-focus-inner,
+input::-moz-focus-inner,
+figure.highlight td,
+.post .entry-content figure.highlight th {
+  border: 0;
+  padding: 0;
+}
+caption,
+table,
+td,
+th {
+  vertical-align: middle;
+}
+caption,
+td,
+th,
+.table-align-left {
+  text-align: left;
+}
+del {
+  text-decoration: line-through;
+}
+html {
+  font-size: 14px;
+}
+:root sub,
+:root sup {
+  vertical-align: baseline;
+}
+table {
+  border-collapse: separate;
+  border-spacing: 0;
+}
+a {
+  color: #e91e63;
+  text-decoration: none;
+  -webkit-transition: 0.7s;
+  -ms-transition: 0.7s;
+  -moz-transition: 0.7s;
+  -o-transition: 0.7s;
+  -webkit-transition: 0.7s;
+  -moz-transition: 0.7s;
+  -o-transition: 0.7s;
+  -ms-transition: 0.7s;
+  transition: 0.7s;
+  border: 0;
+  font-family: inherit;
+  font-size: 1rem;
+  font-style: inherit;
+  font-weight: inherit;
+  margin: 0;
+  outline: 0;
+  padding: 0;
+  vertical-align: baseline;
+}
+a img {
+  border: none;
+}
+a:hover {
+  -webkit-transition: 0.2s;
+  -ms-transition: 0.2s;
+  -moz-transition: 0.2s;
+  -o-transition: 0.2s;
+  -webkit-transition: 0.2s;
+  -moz-transition: 0.2s;
+  -o-transition: 0.2s;
+  -ms-transition: 0.2s;
+  transition: 0.2s;
+  color: #930e3b;
+}
+@media (min-width: 481px) {
+  html {
+    font-size: 16px;
+  }
+}
+@media (min-width: 0px) and (max-width: 480px) {
+  html {
+    font-size: 14px;
+  }
+}
+.clearfix:after {
+  clear: both;
+  visibility: hidden;
+  content: ".";
+  display: block;
+  height: 0;
+}
+.left {
+  float: left;
+}
+.right {
+  float: right;
+}
+.circle {
+  -webkit-border-radius: 50%;
+  border-radius: 50%;
+}
+.thumbImg-w {
+  width: 100px;
+  height: 100px;
+  display: inline-block;
+  position: relative;
+  overflow: hidden;
+}
+.thumbImg {
+  top: 50%;
+  left: 50%;
+  position: absolute;
+  -webkit-transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  -webkit-transform: translate(-50%, -50%);
+  -moz-transform: translate(-50%, -50%);
+  -o-transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+}
+.__web-inspector-hide-shortcut__ {
+  visibility: hidden ;
+}
+button {
+  -webkit-box-align: start;
+  -moz-box-align: start;
+  -o-box-align: start;
+  -ms-flex-align: start;
+  -webkit-align-items: flex-start;
+  align-items: flex-start;
+  text-align: center;
+  cursor: default;
+  color: buttontext;
+  background-color: buttonface;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  padding: 2px 6px 3px;
+  border-width: 2px;
+  border-style: outset;
+  border-color: buttonface;
+  -webkit-border-image: initial;
+  -moz-border-image: initial;
+  -o-border-image: initial;
+  border-image: initial;
+  text-rendering: auto;
+  color: initial;
+  letter-spacing: normal;
+  word-spacing: normal;
+  text-transform: none;
+  text-indent: 0px;
+  text-shadow: none;
+  display: inline-block;
+  text-align: start;
+  margin: 0em 0em 0em 0em;
+  font: 11px system-ui;
+  -webkit-writing-mode: horizontal-tb;
+  -webkit-appearance: button;
+}
+.hamburger {
+  display: inline-block;
+  background-color: transparent;
+  background-image: url("data:image/svg+xmlutf8,<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"-3 -6 24 24\"><path fill=\"#4A4A4A\" d=\"M0 12h18v-2H0v2M0 7h18V5H0v2M0 0v2h18V0H0\"/></svg>");
+  background-repeat: no-repeat;
+  -webkit-background-size: 30px 24px;
+  -moz-background-size: 30px 24px;
+  background-size: 30px 24px;
+  background-position: center center;
+  border: none;
+  margin: 0;
+  padding: 0;
+  width: 60px;
+  height: 60px;
+  cursor: pointer;
+  -ms-flex-item-align: center;
+  -ms-grid-row-align: center;
+  -webkit-align-self: center;
+  align-self: center;
+  -ms-flex-item-align: center;
+}
+.nav ul:after {
+  clear: both;
+  visibility: hidden;
+}
+.nav,
+.nav-icon {
+  position: relative;
+}
+.nav ul {
+  display: block;
+}
+.nav ul li {
+  display: block;
+}
+.nav ul li a {
+  display: block;
+}
+.tab {
+  position: relative;
+  color: #424242;
+  padding: 6px;
+  margin: 0 4px;
+  text-decoration: none;
+  text-transform: uppercase;
+  font-weight: 400;
+  -webkit-transition: 0.1s ease color;
+  -webkit-transition: 0.1s ease color;
+  -moz-transition: 0.1s ease color;
+  -o-transition: 0.1s ease color;
+  -ms-transition: 0.1s ease color;
+  transition: 0.1s ease color;
+}
+amp-sidebar {
+  width: 200px;
+}
+amp-sidebar ul {
+  padding: 10px 0;
+}
+amp-sidebar li a {
+  display: block;
+  padding: 10px 20px;
+}
+header {
+  height: 60px;
+  background-color: #222f31;
+  -webkit-box-shadow: 0 -1px 0 #3c5155 inset, 0 -3px 0 #1e292b inset;
+  box-shadow: 0 -1px 0 #3c5155 inset, 0 -3px 0 #1e292b inset;
+  -webkit-box-shadow: 0 -1px 0 #3c5155 inset, 0 -3px 0 #1e292b inset;
+}
+header .header-title a {
+  padding: 0 0 0 20px;
+  height: 60px;
+  line-height: 60px;
+  font-size: 20px;
+  color: #fff;
+  letter-spacing: 0.2em;
+}
+header .nav-container {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: -webkit-box;
+  display: -moz-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: box;
+  display: flex;
+  -webkit-box-pack: justify;
+  -ms-flex-pack: justify;
+  -webkit-box-pack: justify;
+  -moz-box-pack: justify;
+  -o-box-pack: justify;
+  -ms-flex-pack: justify;
+  -webkit-justify-content: space-between;
+  justify-content: space-between;
+}
+header .left-nav {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: -webkit-box;
+  display: -moz-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: box;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  -webkit-box-align: center;
+  -moz-box-align: center;
+  -o-box-align: center;
+  -ms-flex-align: center;
+  -webkit-align-items: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -ms-flex-pack: start;
+  -webkit-box-pack: start;
+  -moz-box-pack: start;
+  -o-box-pack: start;
+  -ms-flex-pack: start;
+  -webkit-justify-content: flex-start;
+  justify-content: flex-start;
+  font-size: 20px;
+  margin-left: 0;
+  font-weight: 300;
+  -webkit-box-pack: start;
+  -ms-flex-pack: start;
+  -webkit-box-pack: start;
+  -moz-box-pack: start;
+  -o-box-pack: start;
+  -ms-flex-pack: start;
+  -webkit-justify-content: flex-start;
+  justify-content: flex-start;
+  -webkit-box-flex: 1;
+  -ms-flex: 1 1 auto;
+  -webkit-box-flex: 1;
+  -moz-box-flex: 1;
+  -o-box-flex: 1;
+  box-flex: 1;
+  -webkit-flex: 1 1 auto;
+  -ms-flex: 1 1 auto;
+  flex: 1 1 auto;
+  text-align: left;
+  width: auto;
+  font-size: 15px;
+}
+header .right {
+  font-size: 15px;
+}
+header .alt {
+  padding: 0;
+  text-align: right;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: -webkit-box;
+  display: -moz-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: box;
+  display: flex;
+  -webkit-box-align: stretch;
+  -ms-flex-align: stretch;
+  -webkit-box-align: stretch;
+  -moz-box-align: stretch;
+  -o-box-align: stretch;
+  -ms-flex-align: stretch;
+  -webkit-align-items: stretch;
+  align-items: stretch;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-box-pack: center;
+  -moz-box-pack: center;
+  -o-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+}
+.blog-title a {
+  position: relative;
+}
+button {
+  -webkit-box-align: start;
+  -moz-box-align: start;
+  -o-box-align: start;
+  -ms-flex-align: start;
+  -webkit-align-items: flex-start;
+  align-items: flex-start;
+  text-align: center;
+  cursor: default;
+  color: buttontext;
+  background-color: buttonface;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  padding: 2px 6px 3px;
+  border-width: 2px;
+  border-style: outset;
+  border-color: buttonface;
+  -webkit-border-image: initial;
+  -moz-border-image: initial;
+  -o-border-image: initial;
+  border-image: initial;
+  text-rendering: auto;
+  color: initial;
+  letter-spacing: normal;
+  word-spacing: normal;
+  text-transform: none;
+  text-indent: 0px;
+  text-shadow: none;
+  display: inline-block;
+  text-align: start;
+  margin: 0em 0em 0em 0em;
+  font: 11px system-ui;
+  -webkit-writing-mode: horizontal-tb;
+  -webkit-appearance: button;
+}
+.__web-inspector-hide-shortcut__ {
+  visibility: hidden ;
+}
+.hamburger {
+  display: inline-block;
+  background-color: transparent;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"-3 -6 24 24\"><path fill=\"#FFF\" d=\"M0 12h18v-2H0v2M0 7h18V5H0v2M0 0v2h18V0H0\"/></svg>");
+  background-repeat: no-repeat;
+  -webkit-background-size: 30px 24px;
+  -moz-background-size: 30px 24px;
+  background-size: 30px 24px;
+  background-position: center center;
+  border: none;
+  margin: 0;
+  padding: 0;
+  width: 60px;
+  height: 60px;
+  cursor: pointer;
+  -ms-flex-item-align: center;
+  -ms-grid-row-align: center;
+  -webkit-align-self: center;
+  align-self: center;
+  -ms-flex-item-align: center;
+}
+.tab {
+  position: relative;
+  color: #2d3d40;
+  padding: 6px;
+  margin: 0 4px;
+  text-decoration: none;
+  text-transform: uppercase;
+  font-weight: 400;
+  -webkit-transition: 0.1s ease color;
+  -webkit-transition: 0.1s ease color;
+  -moz-transition: 0.1s ease color;
+  -o-transition: 0.1s ease color;
+  -ms-transition: 0.1s ease color;
+  transition: 0.1s ease color;
+}
+amp-sidebar {
+  width: 250px;
+  background-color: #182022;
+}
+amp-sidebar ul {
+  padding: 10px 0;
+}
+amp-sidebar li {
+  border-top: 1px solid #2f4043;
+}
+amp-sidebar li:last-child {
+  border-bottom: 1px solid #2f4043;
+}
+amp-sidebar li a {
+  color: #fff;
+  font-weight: bold;
+  display: block;
+  padding: 10px 20px;
+}
+amp-sidebar li a:hover {
+  color: #ccc;
+  background-color: #030404;
+}
+.categories-header {
+  background-color: #2d3d40;
+  padding: 0rem 0.8rem;
+}
+.categories-header a {
+  color: #fff;
+}
+.categories-header a:hover {
+  color: #fff;
+}
+.categories-header .breadcrumb ol li {
+  list-style: none;
+  display: inline-block;
+  margin: 0;
+}
+.categories-header .breadcrumb ol li span {
+  font-size: 0.8rem;
+  font-weight: bold;
+}
+.categories-header .breadcrumb ol li:after {
+  content: "/";
+  color: #fff;
+  display: inline-block;
+  margin: 0 0.4rem;
+}
+.categories-header .breadcrumb ol li:last-child:after {
+  content: "";
+  margin: 0;
+}
+.entry-header {
+  display: -webkit-box;
+  display: -moz-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: box;
+  display: flex;
+  -webkit-box-pack: center;
+  -moz-box-pack: center;
+  -o-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -moz-box-align: center;
+  -o-box-align: center;
+  -ms-flex-align: center;
+  -webkit-align-items: center;
+  align-items: center;
+}
+.entry-header .flx:first-child {
+  margin: 0 1rem 0 0;
+}
+.header-cap {
+  -webkit-flex-grow: 3;
+  -webkit-box-flex: 3;
+  -moz-box-flex: 3;
+  -o-box-flex: 3;
+  -ms-box-flex: 3;
+  box-flex: 3;
+  -webkit-flex-grow: 3;
+  flex-grow: 3;
+}
+.title-cover {
+  background-color: #fff;
+  color: #2d3d40;
+  padding: 1.5rem 0.8rem 0 0.8rem;
+}
+.title-cover a {
+  font-size: 1.2rem;
+  color: #2d3d40;
+  text-align: left;
+  font-weight: bold;
+}
+.entry-title {
+  margin: 0;
+}
+.entry-meta-header {
+  font-size: 0.85rem;
+  text-align: center;
+}
+.entry-meta-header .date {
+  font-family: sans-serif;
+}
+h1 a,
+h2 a,
+h3 a,
+h4 a,
+h5 a,
+h6 a {
+  color: #2d3d40;
+  text-decoration: none;
+}
+h1 a:hover,
+h2 a:hover,
+h3 a:hover,
+h4 a:hover,
+h5 a:hover,
+h6 a:hover {
+  color: #e91e63;
+}
+#container {
+  margin-left: auto;
+  margin-right: auto;
+}
+#main {
+  margin-bottom: 3em;
+  padding-left: 0;
+}
+.post {
+  margin-bottom: 3rem;
+  position: relative;
+}
+.entry-content {
+  margin: 0 0.6rem;
+  font-size: 1rem;
+}
+.entry-content h1 {
+  font-size: 1.7rem;
+  line-height: 1.5;
+  margin: 1em 0 0.8em;
+}
+.entry-content h2,
+.entry-content h3,
+.entry-content h4,
+.entry-content h5,
+.entry-content h6,
+.entry-content h2 span,
+.entry-content h3 span,
+.entry-content h4 span,
+.entry-content h5 span,
+.entry-content h6 span {
+  color: #98b8be;
+  font-weight: bold;
+}
+.entry-content h2,
+.entry-content h2 span {
+  font-size: 1.8rem;
+  line-height: 2.6rem;
+  text-align: center;
+}
+.entry-content h2 {
+  border-bottom: 2px solid #cce4e8;
+  margin: 4.5rem 0 0.5em;
+  padding: 0.8em 0;
+}
+.entry-content h3,
+.entry-content h3 span {
+  font-size: 1.6rem;
+  line-height: 2.2rem;
+  text-align: center;
+}
+.entry-content h3 {
+  margin: 3.6rem 0.8rem 3rem 0.8rem;
+  padding: 0;
+}
+.entry-content h4,
+.entry-content h4 span {
+  font-size: 1.4rem;
+  line-height: 2rem;
+  text-align: center;
+}
+.entry-content h4 {
+  margin: 3.6rem 0.8rem 3rem 0.8rem;
+  padding: 0;
+}
+.entry-content h5,
+.entry-content h5 span {
+  font-size: 1.2rem;
+  line-height: 1.8rem;
+  text-align: center;
+}
+.entry-content h5 {
+  margin: 3.6rem 0.8rem 3rem 0.8rem;
+  padding: 0;
+}
+.entry-content h6,
+.entry-content h6 span {
+  font-size: 1.1rem;
+  line-height: 1.6rem;
+  text-align: center;
+}
+.entry-content h6 {
+  margin: 3.6rem 0.8rem 3rem 0.8rem;
+  padding: 0;
+}
+.entry-content p {
+  font-size: 1rem;
+  letter-spacing: 0.05rem;
+  line-height: 2.2rem;
+  margin: 3rem 0.8rem;
+}
+.entry-content p a {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  display: inline;
+  border-bottom: 1px dashed #f1729d;
+  padding-bottom: 0.3rem;
+}
+.entry-content p a:hover {
+  border-bottom: 1px dashed #9c0f3f;
+  padding-bottom: 0.4rem;
+}
+.entry-content em {
+  background-color: #f9f5d1;
+  color: #886d00;
+  font-style: normal;
+  margin: 0 2px;
+  padding: 0.4em;
+}
+.entry-content strong {
+  color: #871c1c;
+  font-style: normal;
+  margin: 0 2px;
+  padding: 0.4em;
+  background-color: #fadcdc;
+}
+.entry-content hr {
+  border: 0;
+  border-top: 3px solid #cce4e8;
+  margin: 3rem auto;
+  width: 20%;
+}
+.entry-content img,
+.entry-content video {
+  display: block;
+  height: auto;
+  margin: auto;
+  max-width: 100%;
+}
+.entry-content iframe {
+  width: 100% ;
+}
+.entry-content blockquote {
+  margin: 3rem 0.8rem;
+  padding: 1rem 1.8rem;
+  position: relative;
+  background-color: none;
+  border-left: 3px solid #98b8be;
+  font-style: italic;
+}
+.entry-content blockquote p {
+  margin: 0.5rem 0;
+}
+.entry-content blockquote blockquote {
+  border-left: none;
+}
+.entry-content .table-wrapper {
+  margin: 3rem 0.8rem;
+}
+.entry-content table {
+  border-collapse: collapse;
+  border-spacing: 0;
+  overflow: auto;
+  display: block;
+  font-size: 0.85rem;
+  margin: 0 auto;
+  width: auto;
+}
+.entry-content td,
+.entry-content th {
+  line-height: 1.8em;
+  padding: 0.8rem 0.8rem;
+  font-size: 0.85rem;
+}
+.entry-content td em,
+.entry-content th em,
+.entry-content td strong,
+.entry-content th strong,
+.entry-content td a,
+.entry-content th a {
+  font-size: 0.85rem;
+}
+.entry-content td {
+  border: 1px solid #c4c4c4;
+}
+.entry-content th {
+  background-color: #ecf5f7;
+  border: 1px solid #c4c4c4;
+}
+.entry-content .table-align-center {
+  text-align: center;
+}
+.entry-content .table-align-right {
+  text-align: right;
+}
+.entry-content ul,
+.entry-content ol,
+.entry-content dl {
+  margin: 3rem 0 3rem 1.6rem;
+  padding: 0;
+  list-style: none;
+  font-size: 1rem;
+}
+.entry-content ul li,
+.entry-content ol li,
+.entry-content dl li {
+  line-height: 2rem;
+  position: relative;
+  padding: 0;
+}
+.entry-content ul li p,
+.entry-content ol li p,
+.entry-content dl li p {
+  line-height: 2rem;
+  margin: 0;
+}
+.entry-content ul li p:not(:first-child),
+.entry-content ol li p:not(:first-child),
+.entry-content dl li p:not(:first-child) {
+  color: #57767c;
+  margin: 0.5rem;
+}
+.entry-content ul li ul,
+.entry-content ol li ul,
+.entry-content dl li ul,
+.entry-content ul li ol,
+.entry-content ol li ol,
+.entry-content dl li ol,
+.entry-content ul li dl,
+.entry-content ol li dl,
+.entry-content dl li dl {
+  margin: 1rem;
+}
+.entry-content ul li {
+  margin: 0.4rem 0 0.4rem 0.8rem;
+}
+.entry-content ul li::after {
+  position: absolute;
+  display: block;
+  content: '';
+  top: 0.75rem;
+  left: -1rem;
+  width: 0.5rem;
+  height: 0.5rem;
+  background-color: #cce4e8;
+  border-radius: 100%;
+}
+.entry-content ol {
+  counter-reset: number;
+}
+.entry-content ol li {
+  margin: 0.4rem 0 0.4rem 2rem;
+}
+.entry-content ol li p:first-child {
+  display: inline-block;
+  line-height: 1.6rem;
+  height: 1.6rem;
+}
+.entry-content ol li:before {
+  position: absolute;
+  display: inline-block;
+  float: left;
+  margin: 0 0.2rem 0 0;
+  padding: 0;
+  counter-increment: number;
+  content: counter(number);
+  left: -2.2rem;
+  top: 0.2rem;
+  background-color: #98b8be;
+  width: 1.6rem;
+  height: 1.6rem;
+  border-radius: 50%;
+  color: #fff;
+  text-align: center;
+  font-weight: bold;
+  font-size: 0.8rem;
+  line-height: 1.6rem;
+}
+kbd {
+  font-family: sans-serif;
+  text-align: center;
+  display: inline-block;
+  color: #425a5e;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-border-radius: 3px;
+  -webkit-box-shadow: 0 0 10px #e8e8e8 inset, 0 1px 0 #c3c3c3, 0 2px 0 #c9c9c9, 0 3px 3px #333;
+  box-shadow: 0 0 10px #e8e8e8 inset, 0 1px 0 #c3c3c3, 0 2px 0 #c9c9c9, 0 3px 3px #333;
+  -webkit-box-shadow: 0 0 10px #e2e2e2 inset, 0 1px 0 #c3c3c3, 0 2px 0 #c9c9c9, 0 3px 3px #333;
+  -webkit-font-smoothing: subpixel-antialiased;
+  background: #fff;
+  border-left: 1px solid #fff;
+  border-radius: 3px;
+  border-right: 1px solid #e6e6e6;
+  border-top: 1px solid #fff;
+  font-size: 0.85rem;
+  line-height: 1rem;
+  margin: 5px;
+  padding: 6px 8px 3px;
+  text-shadow: 0 1px 0 #fff;
+  vertical-align: baseline;
+  
+}
+img.responsive-img {
+  height: auto;
+  max-width: 100%;
+}
+video.responsive-video {
+  height: auto;
+  max-width: 100%;
+}
+amp-instagram,
+amp-vimeo,
+amp-video,
+amp-youtube,
+amp-twitter,
+.soundcloud-wrapper,
+.amp-img-wrapper,
+.googleAdPost,
+.ad-footer {
+  margin: 3rem 0.8rem;
+}
+code,
+figure.highlight .code,
+pre {
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: subpixel-antialiased;
+}
+code,
+pre,
+samp {
+  font-family: Menlo, Consolas, Monaco, Consolas, monospace;
+}
+p code {
+  font-size: 1rem;
+}
+code,
+pre {
+  font-size: 0.85rem;
+  letter-spacing: 0.05rem;
+  background-color: #ecf5f7;
+  color: #007e96;
+}
+code {
+  margin: 0 3px;
+  padding: 0.4em;
+}
+samp {
+  font-size: 0.85rem;
+  letter-spacing: 0.05rem;
+}
+sub,
+sup {
+  font-size: 0.75rem;
+  line-height: 0;
+  position: relative;
+}
+sub {
+  bottom: -0.2em;
+}
+sup {
+  top: -0.5em;
+}
+pre {
+  font-size: 1rem;
+  letter-spacing: 0.05rem;
+  margin: 0 3px;
+  padding: 15px;
+  -webkit-background-clip: padding;
+  -moz-background-clip: padding;
+  background-clip: padding-box;
+  border: 0;
+  line-height: 1.3rem;
+  overflow-x: auto;
+}
+pre .addition,
+pre .css .tag,
+pre .keyword,
+pre .method,
+pre .nginx .title,
+pre .request,
+pre .status,
+pre .winutils {
+  color: #66d9ef;
+}
+pre .attr_selector,
+pre .cdata,
+pre .clojure .title,
+pre .diff .change,
+pre .important {
+  color: #9882eb;
+}
+pre .preprocessor {
+  color: #9882eb;
+}
+pre .preprocessor .keyword {
+  color: #9882eb;
+}
+pre .shebang,
+pre .special,
+pre .subst {
+  color: #9882eb;
+}
+pre .symbol {
+  color: #9882eb;
+}
+pre .symbol .string {
+  color: #9882eb;
+}
+pre .attribute,
+pre .class .title,
+pre .constant,
+pre .haskell .type,
+pre .lisp .body,
+pre .parent,
+pre .smalltalk .number,
+pre .variable {
+  color: #a6e22e;
+}
+pre .built_in,
+pre .chunk,
+pre .decorator,
+pre .id,
+pre .identifier,
+pre .literal,
+pre .localvars,
+pre .title,
+pre .vhdl,
+pre .deletion {
+  color: #f92672;
+}
+pre .command,
+pre .hexcolor,
+pre .number,
+pre .phpdoc,
+pre .regexp,
+pre .string,
+pre .tag .value,
+pre .tex .formula {
+  color: #e6db74;
+}
+pre .comment,
+pre .diff .header,
+pre .doctype,
+pre .javadoc,
+pre .lisp .string,
+pre .pi,
+pre .template_comment {
+  color: #75715e;
+  font-weight: normal;
+}
+.line {
+  font-size: 0.85rem;
+  letter-spacing: 0.05rem;
+  line-height: 2rem;
+  color: #f8f8f2;
+}
+.line span {
+  font-size: 0.85rem;
+  letter-spacing: 0.05rem;
+}
+.gist {
+  background: #fff;
+  border: 1px solid color-gutter;
+  color: #f8f8f2;
+  line-height: 1.6rem;
+  margin-top: 15px;
+  overflow: auto;
+  padding: 7px 15px;
+}
+.gist .gist-file {
+  border: none;
+  font-family: inherit;
+  font-size: 1rem;
+  letter-spacing: 0;
+  margin: 0;
+}
+.gist .gist-file .gist-data {
+  background: 0 0;
+  border-bottom: none;
+}
+.gist .gist-file .gist-data pre {
+  font-family: Menlo, Consolas, Monaco, Consolas, monospace;
+  padding: 0 ;
+}
+.gist .gist-file .gist-meta {
+  background: 0 0;
+  color: #f8f8f2;
+  font-size: 1rem;
+  margin-top: 5px;
+  padding: 0;
+}
+.gist .gist-file .gist-meta a {
+  color: #f8f8f2;
+}
+.gist .gist-file .gist-meta a:visited {
+  color: #f8f8f2;
+}
+figure.highlight {
+  font-size: 0.95rem;
+  margin: 3rem 0.8rem;
+  background: #263338;
+  border: 1px solid color-gutter;
+  line-height: 2rem;
+  overflow: auto;
+  position: relative;
+}
+figure.highlight .code {
+  padding: 0 1em 1em 1em;
+  color: #f8f8f2;
+}
+figure.highlight .gutter {
+  display: none;
+}
+figure.highlight figcaption {
+  font-size: 1rem;
+  font-weight: bold;
+  color: #e9e9d6;
+  background-color: #1e282c;
+  padding: 0.6em 1em;
+}
+figure.highlight figcaption a {
+  position: absolute;
+  right: 1rem;
+}
+figure.highlight figcaption:before {
+  content: "\f121";
+  font-family: "fontawesome";
+  text-align: center;
+  display: inline-block;
+  margin-right: 0.6em;
+}
+figure.highlight pre {
+  background: 0 0;
+  border: none;
+  margin: 0;
+  padding: 0.5rem;
+}
+figure.highlight table {
+  border-spacing: 0;
+  margin: 0;
+}
+figure.highlight th {
+  border: 0;
+  font-weight: 400;
+  padding: 0;
+}
+figure.highlight td {
+  border: 0;
+  font-size: 1.1rem;
+  padding: 0;
+}
+.entry-content .toc {
+  background: #fff;
+  padding: 0.5rem;
+  margin: 3rem 0;
+  border: 1px solid #cce4e8;
+  border-radius: 2px;
+}
+.entry-content .toc ul {
+  margin-bottom: 0;
+  padding: 0;
+  margin: 0;
+  border-top: 1px solid #5d8b93;
+  border-radius: 2px;
+}
+.entry-content .toc ul:first-child {
+  border-top: none;
+}
+.entry-content .toc ul ul,
+.entry-content .toc ul ol {
+  margin-bottom: 0;
+  padding: 0;
+  margin: 0;
+}
+.entry-content .toc ul li {
+  padding: 0;
+  margin: 0;
+  border-top: 1px solid #5d8b93;
+}
+.entry-content .toc ul li:first-child {
+  border-top: none;
+}
+.entry-content .toc ul li::after,
+.entry-content .toc ul li::before {
+  content: normal;
+}
+.entry-content .toc ul li a {
+  font-size: 1.2rem;
+  font-weight: bold;
+  display: block;
+  padding: 1rem;
+  background-color: #3d5b61;
+  color: #fff;
+  -webkit-transition: 0.3s;
+  -ms-transition: 0.3s;
+  -moz-transition: 0.3s;
+  -o-transition: 0.3s;
+  -webkit-transition: 0.3s;
+  -moz-transition: 0.3s;
+  -o-transition: 0.3s;
+  -ms-transition: 0.3s;
+  transition: 0.3s;
+}
+.entry-content .toc ul li a:hover {
+  color: #fff;
+  background-color: #2c4145;
+}
+.entry-content .toc ul li a:before {
+  content: "\f02d";
+  font-family: "fontawesome";
+  display: inline-block;
+  padding: 0;
+  margin: 0;
+  margin-right: 0.8rem;
+}
+.entry-content .toc ul li ul,
+.entry-content .toc ul li ol {
+  margin-bottom: 0;
+  padding: 0;
+  margin: 0;
+}
+.entry-content .toc ul li ul li a,
+.entry-content .toc ul li ol li a {
+  padding: 0.5rem 0.75rem 0.5rem 2rem;
+  font-size: 0.9rem;
+  background-color: #416167;
+}
+.entry-content .toc ul li ul li a:before,
+.entry-content .toc ul li ol li a:before {
+  content: "\f0da";
+  font-family: "fontawesome";
+  display: inline-block;
+  padding: 0;
+  margin: 0;
+  margin-right: 0.6rem;
+}
+.entry-content .toc ul li ul li ul li a,
+.entry-content .toc ul li ol li ul li a {
+  padding: 0.5rem 0.75rem 0.5rem 4rem;
+}
+.entry-content .toc ul li ul li ul li a:before,
+.entry-content .toc ul li ol li ul li a:before {
+  content: none;
+}
+.meta-content {
+  background-color: #fff;
+  margin: 1.5rem 0.8rem;
+  padding: 0;
+  border-top: 1px dotted #cce4e8;
+  letter-spacing: 0.05rem;
+}
+.meta-wrapper {
+  margin: 3rem 0.8rem;
+  padding: 0;
+  background-color: #fff;
+}
+h6.tag,
+h6.categories {
+  color: #2d3d40;
+  font-size: 0.9rem;
+  font-weight: bold;
+}
+.article-tag-list {
+  padding: 0;
+}
+.article-tag,
+.article-tag-list,
+.article-categories,
+.article-categories-list {
+  padding: 0;
+  margin: 0;
+}
+.article-categories {
+  margin-bottom: 1.6em;
+}
+.article-tag-list li,
+.article-categories-list li {
+  list-style: none;
+  display: inline-block;
+  padding: 0;
+  margin: 0.2rem 0.1rem;
+}
+.article-tag-list li a,
+.article-categories-list li a {
+  font-size: 0.8rem;
+  font-weight: bold;
+  padding: 0.4rem 0.8rem;
+  margin: 0;
+  background-color: #ecf5f7;
+  color: #2d3d40;
+  border-radius: 2px;
+  display: block;
+}
+.article-tag-list li a:before,
+.article-categories-list li a:before {
+  content: "#";
+}
+.article-tag-list li a:hover,
+.article-categories-list li a:hover {
+  color: #fff;
+  background-color: #2d3d40;
+}
+.widget {
+  margin: 1.5rem 0.8rem;
+  padding: 0;
+}
+.widget-h {
+  text-align: center;
+  margin: 1.6rem 0;
+}
+.widget-h h6 {
+  color: #fff;
+  background-color: #2d3d40;
+  display: inline-block;
+  padding: 0.4rem 1rem;
+  font-size: 0.9rem;
+  font-weight: bold;
+}
+.posts-list li {
+  list-style: none;
+  margin: 0.8rem 0;
+  display: -webkit-box;
+  display: -moz-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: box;
+  display: flex;
+  -webkit-box-pack: center;
+  -moz-box-pack: center;
+  -o-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -moz-box-align: center;
+  -o-box-align: center;
+  -ms-flex-align: center;
+  -webkit-align-items: center;
+  align-items: center;
+}
+.posts-list li .posts-list-link {
+  -webkit-flex-grow: 3;
+  -webkit-box-flex: 3;
+  -moz-box-flex: 3;
+  -o-box-flex: 3;
+  -ms-box-flex: 3;
+  box-flex: 3;
+  -webkit-flex-grow: 3;
+  flex-grow: 3;
+}
+.posts-list li .posts-list-link a {
+  color: #2d3d40;
+  font-size: 1.1rem;
+  font-weight: bold;
+}
+.posts-list li .posts-list-link a:hover {
+  color: #e91e63;
+}
+.posts-list li .posts-list-meta {
+  font-size: 0.7rem;
+}
+.posts-list li .flx:first-child {
+  margin: 0 1rem 0 0;
+}
+.posts-list li amp-img {
+  border-radius: 2px;
+}
+#footer {
+  background-color: #2d3d40;
+  color: #fff;
+  display: block;
+  font-size: 1rem;
+  letter-spacing: 0.05rem;
+  line-height: 2rem;
+  margin: 3rem 0 0 0;
+  padding: 0;
+}
+.site-author-info {
+  margin: 0;
+  padding: 3rem 1.6rem;
+}
+.site-author-info h6 {
+  font-size: 1rem;
+  color: #fff;
+  font-weight: bold;
+  display: inline-block;
+  background-color: #222f31;
+  padding: 0.4rem 0.8rem;
+}
+.site-author-info-wrapper {
+  display: -webkit-box;
+  display: -moz-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: box;
+  display: flex;
+  -webkit-box-pack: center;
+  -moz-box-pack: center;
+  -o-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -moz-box-align: center;
+  -o-box-align: center;
+  -ms-flex-align: center;
+  -webkit-align-items: center;
+  align-items: center;
+}
+.site-author-info-wrapper .flx:first-child {
+  margin: 0 1rem 0 0;
+}
+.authorCap-wrapper {
+  -webkit-flex-grow: 3;
+  -webkit-box-flex: 3;
+  -moz-box-flex: 3;
+  -o-box-flex: 3;
+  -ms-box-flex: 3;
+  box-flex: 3;
+  -webkit-flex-grow: 3;
+  flex-grow: 3;
+}
+.authorCap {
+  font-size: 1.4rem;
+  font-weight: bold;
+}
+.authorReading {
+  font-size: 0.7rem;
+}
+.site-author-desc {
+  font-size: 0.8rem;
+  line-height: 1.6rem;
+  margin: 1.4rem 0;
+}
+.copyright-tool {
+  margin: 0;
+  padding: 1.5rem 1.6rem;
+  border-top: 1px solid #384b4f;
+}
+.copyright-notice p {
+  font-size: 0.6rem;
+  letter-spacing: 0.05rem;
+  line-height: 1.2rem;
+  color: #8ba8ae;
+}
+.copyright-title {
+  font-size: 1rem;
+  text-align: center;
+  margin: 0.8rem 0 0.4rem 0;
+}
+.copyright-license {
+  margin: 0.4rem 0 0.8rem 0;
+  font-size: 0.7rem;
+  text-align: center;
+}
+.copyright-license a {
+  color: #e6e6e6;
+  font-size: 0.7rem;
+}
+.copyright-license a:hover {
+  color: #b3b3b3;
+}
+.sns-link {
+  margin: 0;
+  text-align: center;
+}
+.sns-link a {
+  display: inline-block;
+  font-size: 1.6rem;
+  text-align: center;
+  width: 2rem;
+  height: 2rem;
+  line-height: 2rem;
+  padding: 0.6rem;
+  margin: 0 0.1rem;
+  background-color: #222f31;
+  color: #fff;
+  border-radius: 4px;
+}
+.sns-link a:hover {
+  color: #ccc;
+  background-color: #030404;
+}
+.footer-menu {
+  padding: 1.5rem 0.8rem;
+  border-top: 1px solid #384b4f;
+}
+.footer-menu ul li {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.footer-menu ul li a {
+  display: block;
+  padding: 0.6rem;
+  margin: 0.2rem 1.6rem;
+  font-size: 1rem;
+  color: #fff;
+  background-color: #222f31;
+  border-radius: 4px;
+  text-align: center;
+  font-weight: bold;
+}
+.footer-menu ul li a:hover {
+  color: #ccc;
+  background-color: #030404;
+}
+.social-share {
+  margin: 1.5rem 0.8rem;
+  display: -webkit-box;
+  display: -moz-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: box;
+  display: flex;
+  -webkit-box-pack: center;
+  -moz-box-pack: center;
+  -o-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+}
+.social-share amp-social-share,
+.social-share .sbtn {
+  margin: 5px;
+}
+.sbtn {
+  padding: 0;
+  width: 4rem;
+  height: 3rem;
+  line-height: 3rem;
+  color: #fff;
+  font-size: 1.2rem;
+  text-align: center;
+  border-radius: 4px;
+}
+.sbtn:hover {
+  color: #fff;
+}
+.tw {
+  background-color: #1cafe8;
+}
+.tw:hover {
+  background-color: #0f6b8f;
+}
+.fb {
+  background-color: #4f677f;
+}
+.fb:hover {
+  background-color: #283440;
+}
+.ht {
+  background-color: #35acda;
+}
+.ht:hover {
+  background-color: #1a6e8f;
+}
+.gp {
+  background-color: #d56153;
+}
+.gp:hover {
+  background-color: #9c3326;
+}
+.tb {
+  background-color: #465f79;
+}
+.tb:hover {
+  background-color: #212c38;
+}
+.icon-hatena:before {
+  content: "B";
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+#totop {
+  position: fixed;
+  bottom: 2rem;
+  right: 1.6rem;
+  font-size: 1.2rem;
+  z-index: 995;
+}
+#totop a {
+  background: rgba(152,184,190,0.6);
+  text-decoration: none;
+  color: #fff;
+  padding: 0.8rem;
+  border-radius: 50%;
+}
+#totop a:before {
+  content: "\f062";
+  font-family: "fontawesome";
+  font-size: 1.2rem;
+}
+#totop a:hover {
+  text-decoration: none;
+  background: #5d8b93;
+  color: #fff;
+  line-height: 2.3em;
+}
+@media (min-width: 800px) {
+  .title-cover,
+  .entry-content,
+  .categories,
+  .meta-content,
+  .site-author-info {
+    width: 780px;
+    margin: 0 auto;
+  }
+  .nav-container {
+    width: 800px;
+    margin: 0 auto;
+  }
+}
+@media (min-width: 0px) and (max-width: 480px) {
+  .site-author-info-wrapper {
+    display: block;
+  }
+  .gravatar-area {
+    text-align: center;
+  }
+  .gravatar-area amp-img {
+    display: inline-block;
+  }
+  .entry-content td,
+  .entry-content th {
+    line-height: 1.8em;
+    padding: 0.6rem 0.6rem;
+    font-size: 0.5rem;
+  }
+  .entry-content td em,
+  .entry-content th em,
+  .entry-content td strong,
+  .entry-content th strong,
+  .entry-content td a,
+  .entry-content th a {
+    font-size: 0.5rem;
+  }
+}
+
+	</style>
+	
+  </head>
+  <body>
+  	
+  	
+  	<!-- google analytics -->
+  	
+  	
+  	
+  	<!-- menu -->
+  	<header>
+  		<div class="nav-container">
+	  		<div class="left-nav">
+	  			<div class="header-title">
+	  				<a href="/">Chester.Cao Blog</a>
+	  			</div>
+	  		</div>
+	  		
+	  	</div>
+    </header>
+  	
+  	
+  	<!-- sidebar -->
+  	
+  	
+  	<!-- container -->
+  	<div id="container">
+	  	<div id="main">
+		    <article id="post-git/git-submodule" class="post">
+		    
+		   		<!-- categories and bread crumb -->
+		    	
+				<div class="categories-header">
+					<div class="categories">
+						<div class="breadcrumb inline-icon">
+							<ol itemscope itemtype="http://schema.org/BreadcrumbList">
+							  <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+							    <a itemprop="item" href="/">
+							    	<span class="sns-icon home-icon"></span>
+							        <span itemprop="name"><span class="fa fa-fw fa-home"></span></span>
+							    </a>
+							    <meta itemprop="position" content="1" />
+							  </li>
+
+								
+						    		<li itemprop="itemListElement" itemscope
+									      itemtype="http://schema.org/ListItem">
+									    <a itemprop="item" href="/categories/git/">
+									      
+									      	<span class="sns-icon folder-icon"></span>
+									      
+									      <span itemprop="name">git</span>
+									    </a>
+									    <meta itemprop="position" content="2" />
+									</li>
+								
+							</ol>
+						</div>
+					</div>
+				</div>
+				
+		    
+		    	<!-- entry title -->
+				<div class="title-cover">
+					<div class="entry-header">
+						
+						
+						
+			          	<div class="header-thumb flx">
+			          		<div class="thumbImg-w circle">
+			          			<amp-img class="thumbImg" layout="fixed" width="128" height="100" src="\amp-dist\sample\sample-substituteTitleImage.png">
+			          			</amp-img>
+			          		</div>
+			          	</div>
+			            
+			            
+			            <div class="header-cap flx">
+							
+							  <h1 class="article-title entry-title" itemprop="name">
+							    <a href="http://blog.rcant.com/2017/05/28/git/git-submodule/" target="_blank" itemprop="url">Git Submodule使用教程</a>
+							  </h1>
+							
+						</div>
+					</div>
+					
+					<!-- datePublished -->
+					<div class="entry-meta-header">
+						<span class="meta-elements date">
+							<span class="fa fa-fw fa-clock-o"></span>
+							<time datetime="2017-05-28" itemprop="datePublished">2017.05.28</time>
+						</span>
+					</div>
+				</div>
+				
+				
+				
+				<!-- entry content -->
+			    <div class="entry-content ecp">
+			    	<!-- social share button -->
+			    	
+			    	
+			    	
+                    <!-- google Adsense Matched content -->
+                    
+                    
+			    	<!-- content -->
+			  		<h2 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h2><p>Git Submodule使用教程</p>
+<h2 id="Submodule-是什么？"><a href="#Submodule-是什么？" class="headerlink" title="Submodule 是什么？"></a>Submodule 是什么？</h2><p>项目的版本库在某些情况下需要引用其他版本库的文件，例如公司积累了一套常用的函数库，被多个项目调用. 显然这个函数库的代码不能直接放到某个项目的代码中，而是要独立为一个代码库。这个时候就需要使用Submodule。</p>
+<p>1.对于公共资源各种程序员的处理方式<br>每个公司的系统都会有一套统一的系统风格，或者针对某一个大客户的多个系统风格保持统一，而且如果风格改动后要同步到多个系统中；这样的需求几乎每个开发人员都遇到，下面看看各个层次的程序员怎么处理：</p>
+<p>假如对于系统的风格需要几个目录：css、images、js。</p>
+<ul>
+<li>普通程序员，把最新版本的代码逐个复制到每个项目中，如果有N个项目，那就是要复制N x 3次；如果漏掉了某个文件夹没有复制…</li>
+<li>文艺程序员，使用Git Submodule功能，执行：<span class="label danger">git submodule update</span>，然后冲一杯咖啡悠哉的享受着。</li>
+</ul>
+<p>类似于SVN的svn:externals.</p>
+<div class="table-container">
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>功能</th>
+<th>svn:externals</th>
+<th>git submodule</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>如何记录外部版本库的地址</td>
+<td>目录 svn:externals 属性</td>
+<td>项目根目录下的 .gitmodules 文件</td>
+</tr>
+<tr>
+<td>默认是否自动检出外部版本库</td>
+<td>是\n在使用svn checkout 检出时若使用 —ignore-externals可以忽略对外部版本库的引用，不检出</td>
+<td>否\n默认不克隆外部版本库。若要克隆则需要使用git submodule init及git submodule update命令</td>
+</tr>
+<tr>
+<td>是否能部分引用外部版本库内容</td>
+<td>是\n因为svn支持部分检出</td>
+<td>否\n必须克隆整个外部版本库</td>
+</tr>
+<tr>
+<td>是否可以指向分支而随之改变</td>
+<td>是</td>
+<td>否\n固定于外部版本库的某个提交</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<span id="more"></span>
+<h2 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h2><div class="note info">
+            <p>说明：本例采用<span class="label danger">两个项目</span>以及<span class="label danger">两个公共类库</span>演示对submodule的操作。</p>
+          </div> 
+<h3 id="准备环境"><a href="#准备环境" class="headerlink" title="准备环境"></a>准备环境</h3><h4 id="创建公共类库的本地仓库"><a href="#创建公共类库的本地仓库" class="headerlink" title="创建公共类库的本地仓库"></a>创建公共类库的本地仓库</h4><figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost projects]# git --git-dir=/root/repos/libA.git init --bare</span><br><span class="line">Initialized empty Git repository in /root/repos/libA.git/</span><br><span class="line">[root@localhost projects]# git --git-dir=/root/repos/libB.git init --bare</span><br><span class="line">Initialized empty Git repository in /root/repos/libB.git/</span><br><span class="line">[root@localhost projects]# ls -al /root/repos</span><br><span class="line">total 4</span><br><span class="line">drwxr-xr-x.  4 root root   38 Nov 20 04:35 .</span><br><span class="line">dr-xr-x---. 13 root root 4096 Nov 20 04:34 ..</span><br><span class="line">drwxr-xr-x.  7 root root  119 Nov 20 04:35 libA.git</span><br><span class="line">drwxr-xr-x.  7 root root  119 Nov 20 04:35 libB.git</span><br></pre></td></tr></tbody></table></figure>
+<h4 id="初始化公共库"><a href="#初始化公共库" class="headerlink" title="初始化公共库"></a>初始化公共库</h4><p>获取<br></p><figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost projects]# git clone /root/repos/libA.git</span><br><span class="line">Cloning into 'libA'...</span><br><span class="line">warning: You appear to have cloned an empty repository.</span><br><span class="line">done.</span><br><span class="line">[root@localhost projects]# git clone /root/repos/libB.git</span><br><span class="line">Cloning into 'libB'...</span><br><span class="line">warning: You appear to have cloned an empty repository.</span><br><span class="line">done.</span><br><span class="line">[root@localhost projects]#</span><br><span class="line"></span><br></pre></td></tr></tbody></table></figure>
+<p>初始化libA</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost projects]# cd libA/</span><br><span class="line">[root@localhost libA]# echo "libA" &gt; readme</span><br><span class="line">[root@localhost libA]# git add readme</span><br><span class="line">[root@localhost libA]# git commit -m "init" readme</span><br><span class="line">[master (root-commit) ee8edb6] init</span><br><span class="line"> 1 file changed, 1 insertion(+)</span><br><span class="line"> create mode 100644 readme</span><br><span class="line">[root@localhost libA]# git push origin master</span><br><span class="line">Enumerating objects: 3, done.</span><br><span class="line">Counting objects: 100% (3/3), done.</span><br><span class="line">Writing objects: 100% (3/3), 207 bytes | 69.00 KiB/s, done.</span><br><span class="line">Total 3 (delta 0), reused 0 (delta 0)</span><br><span class="line">To /root/repos/libA.git</span><br><span class="line"> * [new branch]      master -&gt; master</span><br></pre></td></tr></tbody></table></figure>
+<p>初始化libB</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost libA]# cd ../libB/</span><br><span class="line">[root@localhost libB]# echo "libB"&gt;readme</span><br><span class="line">[root@localhost libB]# git add readme</span><br><span class="line">[root@localhost libB]# git commit -m"init" readme</span><br><span class="line">[master (root-commit) f70d346] init</span><br><span class="line"> 1 file changed, 1 insertion(+)</span><br><span class="line"> create mode 100644 readme</span><br><span class="line">[root@localhost libB]# git push origin master</span><br><span class="line">Enumerating objects: 3, done.</span><br><span class="line">Counting objects: 100% (3/3), done.</span><br><span class="line">Writing objects: 100% (3/3), 200 bytes | 100.00 KiB/s, done.</span><br><span class="line">Total 3 (delta 0), reused 0 (delta 0)</span><br><span class="line">To /root/repos/libB.git</span><br><span class="line"> * [new branch]      master -&gt; master</span><br></pre></td></tr></tbody></table></figure>
+<h2 id="创建项目使用两个模块"><a href="#创建项目使用两个模块" class="headerlink" title="创建项目使用两个模块"></a>创建项目使用两个模块</h2><h3 id="创建两个项目仓库"><a href="#创建两个项目仓库" class="headerlink" title="创建两个项目仓库"></a>创建两个项目仓库</h3><figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost projects]# git --git-dir=/root/repos/project1.git init --bare</span><br><span class="line">Initialized empty Git repository in /root/repos/project1.git/</span><br><span class="line">[root@localhost projects]# git --git-dir=/root/repos/project2.git init --bare</span><br><span class="line">Initialized empty Git repository in /root/repos/project2.git/</span><br><span class="line">[root@localhost projects]#</span><br></pre></td></tr></tbody></table></figure>
+<h3 id="获取project1到本地"><a href="#获取project1到本地" class="headerlink" title="获取project1到本地"></a>获取project1到本地</h3><figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost libB]# cd ../</span><br><span class="line">[root@localhost projects]# git clone /root/repos/project1.git</span><br><span class="line">Cloning into 'project1'...</span><br><span class="line">warning: You appear to have cloned an empty repository.</span><br><span class="line">done.</span><br><span class="line">[root@localhost projects]# cd project1/</span><br></pre></td></tr></tbody></table></figure>
+<h3 id="使用-添加子模块"><a href="#使用-添加子模块" class="headerlink" title="使用  添加子模块"></a>使用 <span class="label danger">git submodule add</span> 添加子模块</h3><figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost project1]# git submodule add /root/repos/libA.git libs/libA</span><br><span class="line">Cloning into '/root/projects/project1/libs/libA'...</span><br><span class="line">done.</span><br><span class="line">[root@localhost project1]# git submodule add /root/repos/libB.git libs/libB</span><br><span class="line">Cloning into '/root/projects/project1/libs/libB'...</span><br><span class="line">done.</span><br><span class="line">[root@localhost project1]# git status</span><br><span class="line">On branch master</span><br><span class="line"></span><br><span class="line">No commits yet</span><br><span class="line"></span><br><span class="line">Changes to be committed:</span><br><span class="line">  (use "git rm --cached &lt;file&gt;..." to unstage)</span><br><span class="line"></span><br><span class="line">        new file:   .gitmodules</span><br><span class="line">        new file:   libs/libA</span><br><span class="line">        new file:   libs/libB</span><br></pre></td></tr></tbody></table></figure>
+<p>好了，到目前为止我们已经使用<span class="label danger">git submodule add</span>命令为<span class="label danger">project1</span>成功添加了两个公共类库（libA、libB），查看了当前的状态发现添加了一个新文件(.gitmodules)和两个文件夹(libs/libA、libs/libB)；那么新增的.gitmodules文件是做什么用的呢？我们查看一下文件内容便知晓了：</p>
+<p>模块的记录文件 在.gitmodules存取</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost project1]# cat .gitmodules</span><br><span class="line">[submodule "libs/libA"]</span><br><span class="line">        path = libs/libA</span><br><span class="line">        url = /root/repos/libA.git</span><br><span class="line">[submodule "libs/libB"]</span><br><span class="line">        path = libs/libB</span><br><span class="line">        url = /root/repos/libB.git</span><br></pre></td></tr></tbody></table></figure>
+<p>顺便看一下 .git/config<br></p><figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost project1]# cat .git/config</span><br><span class="line">[core]</span><br><span class="line">        repositoryformatversion = 0</span><br><span class="line">        filemode = true</span><br><span class="line">        bare = false</span><br><span class="line">        logallrefupdates = true</span><br><span class="line">[remote "origin"]</span><br><span class="line">        url = /root/repos/project1.git</span><br><span class="line">        fetch = +refs/heads/*:refs/remotes/origin/*</span><br><span class="line">[branch "master"]</span><br><span class="line">        remote = origin</span><br><span class="line">        merge = refs/heads/master</span><br><span class="line">[submodule "libs/libA"]</span><br><span class="line">        url = /root/repos/libA.git</span><br><span class="line">        active = true</span><br><span class="line">[submodule "libs/libB"]</span><br><span class="line">        url = /root/repos/libB.git</span><br><span class="line">        active = true</span><br></pre></td></tr></tbody></table></figure>
+<p>可以看到 libs目录下已经存在两个子模块的内容了</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost project1]# tree -L 2 libs/</span><br><span class="line">libs/</span><br><span class="line">├── libA</span><br><span class="line">│&nbsp;&nbsp; └── readme</span><br><span class="line">└── libB</span><br><span class="line">    └── readme</span><br><span class="line"></span><br><span class="line">2 directories, 2 files</span><br><span class="line">[root@localhost project1]# tree -L 2 .git/modules/libs/</span><br><span class="line">.git/modules/libs/</span><br><span class="line">├── libA</span><br><span class="line">│&nbsp;&nbsp; ├── branches</span><br><span class="line">│&nbsp;&nbsp; ├── config</span><br><span class="line">│&nbsp;&nbsp; ├── description</span><br><span class="line">│&nbsp;&nbsp; ├── HEAD</span><br><span class="line">│&nbsp;&nbsp; ├── hooks</span><br><span class="line">│&nbsp;&nbsp; ├── index</span><br><span class="line">│&nbsp;&nbsp; ├── info</span><br><span class="line">│&nbsp;&nbsp; ├── logs</span><br><span class="line">│&nbsp;&nbsp; ├── objects</span><br><span class="line">│&nbsp;&nbsp; ├── packed-refs</span><br><span class="line">│&nbsp;&nbsp; └── refs</span><br><span class="line">└── libB</span><br><span class="line">    ├── branches</span><br><span class="line">    ├── config</span><br><span class="line">    ├── description</span><br><span class="line">    ├── HEAD</span><br><span class="line">    ├── hooks</span><br><span class="line">    ├── index</span><br><span class="line">    ├── info</span><br><span class="line">    ├── logs</span><br><span class="line">    ├── objects</span><br><span class="line">    ├── packed-refs</span><br><span class="line">    └── refs</span><br><span class="line"></span><br><span class="line">14 directories, 10 files</span><br></pre></td></tr></tbody></table></figure>
+<p>还可以查看当前submodule状态<br></p><figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost project1]# git submodule status</span><br><span class="line"> ee8edb6e68cf05a4cceeccb3e0344dc149c5a1ea libs/libA (heads/master)</span><br><span class="line"> f70d346153fe4020db82d3a8b990c1898b6c86fb libs/libB (heads/master)</span><br></pre></td></tr></tbody></table></figure>
+<p>将修改提交到仓库中</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost project1]# git commit -am"add submodules to project"</span><br><span class="line">[master (root-commit) fabea54] add submodules to project</span><br><span class="line"> 3 files changed, 8 insertions(+)</span><br><span class="line"> create mode 100644 .gitmodules</span><br><span class="line"> create mode 160000 libs/libA</span><br><span class="line"> create mode 160000 libs/libB</span><br><span class="line">[root@localhost project1]# git push</span><br><span class="line">Enumerating objects: 4, done.</span><br><span class="line">Counting objects: 100% (4/4), done.</span><br><span class="line">Compressing objects: 100% (4/4), done.</span><br><span class="line">Writing objects: 100% (4/4), 360 bytes | 180.00 KiB/s, done.</span><br><span class="line">Total 4 (delta 0), reused 0 (delta 0)</span><br><span class="line">To /root/repos/project1.git</span><br><span class="line"> * [new branch]      master -&gt; master</span><br></pre></td></tr></tbody></table></figure>
+<h2 id="其他人使用带有Submodule的仓库"><a href="#其他人使用带有Submodule的仓库" class="headerlink" title="其他人使用带有Submodule的仓库"></a>其他人使用带有Submodule的仓库</h2><p>开发人员B …</p>
+<h3 id="使用获取远程仓库"><a href="#使用获取远程仓库" class="headerlink" title="使用获取远程仓库"></a>使用<span class="label danger">git clone</span>获取远程仓库</h3><figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost projects]# git clone /root/repos/project1.git project1-b</span><br><span class="line">Cloning into 'project1-b'...</span><br><span class="line">done.</span><br></pre></td></tr></tbody></table></figure>
+<h3 id="使用查看当前子模块状态"><a href="#使用查看当前子模块状态" class="headerlink" title="使用查看当前子模块状态"></a>使用<span class="label danger">git submodule status</span>查看当前子模块状态</h3><figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost project1-b]# git submodule status</span><br><span class="line">-ee8edb6e68cf05a4cceeccb3e0344dc149c5a1ea libs/libA</span><br><span class="line">-f70d346153fe4020db82d3a8b990c1898b6c86fb libs/libB</span><br></pre></td></tr></tbody></table></figure>
+<p>其中 <span class="label danger">-</span> 代表资源未初始化到模块中<br>后面的代码为 对应模块git库的<span class="label danger">commitID</span></p>
+<p>未初始化检出 即未调用过 <span class="label danger">git submodule init</span> </p>
+<p>此时<span class="label danger">.git/config</span> 中是不存在 submodule 的信息的</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost project1-b]# cat .git/config</span><br><span class="line">[core]</span><br><span class="line">        repositoryformatversion = 0</span><br><span class="line">        filemode = true</span><br><span class="line">        bare = false</span><br><span class="line">        logallrefupdates = true</span><br><span class="line">[remote "origin"]</span><br><span class="line">        url = /root/repos/project1.git</span><br><span class="line">        fetch = +refs/heads/*:refs/remotes/origin/*</span><br><span class="line">[branch "master"]</span><br><span class="line">        remote = origin</span><br><span class="line">        merge = refs/heads/master</span><br></pre></td></tr></tbody></table></figure>
+<h3 id="初始化"><a href="#初始化" class="headerlink" title="初始化 "></a>初始化 <span class="label danger">git submodule init</span></h3><div class="note ">
+            <p>执行 <span class="label danger">git submodule init</span>  实际上修改了  <span class="label danger">.git/config</span>  文件，对子模块进行了注册。</p>
+          </div>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost project1-b]# git submodule init</span><br><span class="line">Submodule 'libs/libA' (/root/repos/libA.git) registered for path 'libs/libA'</span><br><span class="line">Submodule 'libs/libB' (/root/repos/libB.git) registered for path 'libs/libB'</span><br></pre></td></tr></tbody></table></figure>
+<p>查看状态 </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost project1-b]# git submodule status</span><br><span class="line"> ee8edb6e68cf05a4cceeccb3e0344dc149c5a1ea libs/libA</span><br><span class="line"> f70d346153fe4020db82d3a8b990c1898b6c86fb libs/libB</span><br></pre></td></tr></tbody></table></figure>
+<p>此时前面以及没有<span class="label danger">-</span>符号了<br>查看文件<span class="label danger">.git/config</span><br>(以加号开始的行为新增加的行)</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">[core]</span><br><span class="line">        repositoryformatversion = 0</span><br><span class="line">        filemode = true</span><br><span class="line">        bare = false</span><br><span class="line">        logallrefupdates = true</span><br><span class="line">[remote "origin"]</span><br><span class="line">        url = /root/repos/project1.git</span><br><span class="line">        fetch = +refs/heads/*:refs/remotes/origin/*</span><br><span class="line">[branch "master"]</span><br><span class="line">        remote = origin</span><br><span class="line">        merge = refs/heads/master</span><br><span class="line">+[submodule "libs/libA"]</span><br><span class="line">+        active = true</span><br><span class="line">+        url = /root/repos/libA.git</span><br><span class="line">+[submodule "libs/libB"]</span><br><span class="line">+        active = true</span><br><span class="line">+        url = /root/repos/libB.git</span><br></pre></td></tr></tbody></table></figure>
+<p>查看 工作空间中的文件信息 </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost project1-b]# tree -L 2 libs/</span><br><span class="line">libs/</span><br><span class="line">├── libA</span><br><span class="line">└── libB</span><br><span class="line"></span><br><span class="line">2 directories, 0 files</span><br></pre></td></tr></tbody></table></figure>
+<p>发现并不存在文件，这是需要 检出 子模块的代码信息</p>
+<h3 id="使用-检出代码"><a href="#使用-检出代码" class="headerlink" title="使用  检出代码"></a>使用 <span class="label danger">git submodule update</span> 检出代码</h3><figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost project1-b]# git submodule update</span><br><span class="line">Cloning into '/root/projects/project1-b/libs/libA'...</span><br><span class="line">done.</span><br><span class="line">Cloning into '/root/projects/project1-b/libs/libB'...</span><br><span class="line">done.</span><br><span class="line">Submodule path 'libs/libA': checked out 'ee8edb6e68cf05a4cceeccb3e0344dc149c5a1ea'</span><br><span class="line">Submodule path 'libs/libB': checked out 'f70d346153fe4020db82d3a8b990c1898b6c86fb'</span><br><span class="line">[root@localhost project1-b]# tree -L 2 libs/</span><br><span class="line">libs/</span><br><span class="line">├── libA</span><br><span class="line">│&nbsp;&nbsp; └── readme</span><br><span class="line">└── libB</span><br><span class="line">    └── readme</span><br><span class="line"></span><br><span class="line">2 directories, 2 files</span><br></pre></td></tr></tbody></table></figure>
+<h3 id="修改子模块"><a href="#修改子模块" class="headerlink" title="修改子模块"></a>修改子模块</h3><p>查看当前 仓库状态<br></p><figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost project1-b]# git status</span><br><span class="line">On branch master</span><br><span class="line">Your branch is up to date with 'origin/master'.</span><br><span class="line"></span><br><span class="line">nothing to commit, working tree clean</span><br></pre></td></tr></tbody></table></figure>
+<p>如果我们进入子模块A 查看状态呢<br></p><figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost project1-b]# cd libs/libA/</span><br><span class="line">[root@localhost libA]# git status</span><br><span class="line">HEAD detached at ee8edb6</span><br><span class="line">nothing to commit, working tree clean</span><br><span class="line">[root@localhost libA]# git branch</span><br><span class="line">* (HEAD detached at ee8edb6)</span><br><span class="line">  master</span><br></pre></td></tr></tbody></table></figure><br>我们发现 当前 git的头指针不是指向master的，而是指向固定的commitID的<br>如果这个时候我们修改子模块A中的文件，提交就会丢失。
+<p>我们看 .gitmodule 文件<br></p><figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost libA]# cat ../../.gitmodules</span><br><span class="line">[submodule "libs/libA"]</span><br><span class="line">        path = libs/libA</span><br><span class="line">        url = /root/repos/libA.git</span><br><span class="line">[submodule "libs/libB"]</span><br><span class="line">        path = libs/libB</span><br><span class="line">        url = /root/repos/libB.git</span><br></pre></td></tr></tbody></table></figure>
+<p>每一个 submodule 记录了</p>
+<ul>
+<li>submodule 名称 submodule “libs/libA”</li>
+<li>submodule 在主项目中的位置 path = libs/libA</li>
+<li>submodule 使用的仓库地址 url = /root/repos/libB.git</li>
+<li>submodule 版本默认commitID [default:master]</li>
+</ul>
+<p>这个时候如果我们需要修改 子模块的内容<br>需要先将 当前Head 指向 需要修改的分支，修改完内容后提交到分支上<br>比如当前的分支master</p>
+<p>切换分支 修改内容，并提交<br></p><figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost libA]# git checkout master</span><br><span class="line">Switched to branch 'master'</span><br><span class="line">Your branch is up to date with 'origin/master'.</span><br><span class="line">[root@localhost libA]# echo "add by developer B" &gt;&gt; readme</span><br><span class="line">[root@localhost libA]# git commit -am "update libA by developer B"</span><br><span class="line">[master 0d13d75] update libA by developer B</span><br><span class="line"> 1 file changed, 1 insertion(+)</span><br></pre></td></tr></tbody></table></figure>
+<p>将工作空间切换到主项目下，查看当前主项目状态<br></p><figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost libA]# cd ../../</span><br><span class="line">[root@localhost project1-b]# git status</span><br><span class="line">On branch master</span><br><span class="line">Your branch is up to date with 'origin/master'.</span><br><span class="line"></span><br><span class="line">Changes not staged for commit:</span><br><span class="line">  (use "git add &lt;file&gt;..." to update what will be committed)</span><br><span class="line">  (use "git checkout -- &lt;file&gt;..." to discard changes in working directory)</span><br><span class="line"></span><br><span class="line">        modified:   libs/libA (new commits)</span><br><span class="line"></span><br><span class="line">no changes added to commit (use "git add" and/or "git commit -a")</span><br><span class="line">[root@localhost project1-b]# git diff</span><br><span class="line">diff --git a/libs/libA b/libs/libA</span><br><span class="line">index ee8edb6..0d13d75 160000</span><br><span class="line">--- a/libs/libA</span><br><span class="line">+++ b/libs/libA</span><br><span class="line">@@ -1 +1 @@</span><br><span class="line">-Subproject commit ee8edb6e68cf05a4cceeccb3e0344dc149c5a1ea</span><br><span class="line">+Subproject commit 0d13d7551eea10cb8c1407055fa674109753f360</span><br></pre></td></tr></tbody></table></figure><br>我们可以发现commitID 以及被修改了
+<div class="note ">
+            <p>注意：如果现在执行了 git submodule update 操作那么libs/libA的commit id又会还原到ee8edb6e68cf05a4cceeccb3e0344dc149c5a1ea</p>
+          </div>
+<p>这样的话刚刚的修改是不是就丢了呢？不会，因为修改已经提交到了master分支，只要再git checkout master就可以了。</p>
+<p>我们现在先将 libs/libA 的修改提交到仓库</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost project1-b]# cd libs/libA/</span><br><span class="line">[root@localhost libA]# git push</span><br><span class="line">Enumerating objects: 5, done.</span><br><span class="line">Counting objects: 100% (5/5), done.</span><br><span class="line">Writing objects: 100% (3/3), 265 bytes | 88.00 KiB/s, done.</span><br><span class="line">Total 3 (delta 0), reused 0 (delta 0)</span><br><span class="line">To /root/repos/libA.git</span><br><span class="line">   ee8edb6..0d13d75  master -&gt; master</span><br></pre></td></tr></tbody></table></figure>
+<p>现在仅仅只完成了一步，下一步要提交主项目引用submodule的commit id：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"></span><br></pre></td></tr></tbody></table></figure>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://www.cnblogs.com/lsgxeva/p/8540758.html">Git Submodule使用完整教程</a><br><a href="https://www.jianshu.com/p/e27a978ddb88">git submodule 的使用</a><br><a href="https://www.jianshu.com/p/f8a55b972972/">git submodule 使用小结</a></p>
+
+			  		
+			  		<!-- google Adsense -->
+			  		
+					
+					
+					
+					
+			    	
+					
+					<!-- google Adsense Matched content -->
+			  		
+			  	</div>
+				
+		  	</article>
+		  	
+		  	
+		  	<!-- TAGS -->
+		  	
+		  	<div class="meta-content">
+				
+				<div class="widget">
+				  	<h6 class="tag"><span class="fa fa-fw fa-tag"></span>TAGS</h6>
+				  	<div class="article-tag">
+						<ul class="article-tag-list">
+							
+					    		<li class="article-tag-list-item">
+					    			<a class="article-tag-list-link" href="/tags/git/">
+					    				git
+					    			</a>
+					    		</li>
+							
+						</ul>
+					</div>
+				</div>
+				
+			</div>
+		  	
+		  	
+		  	<!-- Categories posts -->
+		  	
+		  	
+		  	
+		  	<!-- Detailed categories  posts -->
+		  	
+		  	
+		  	
+		  	<!-- Latests -->
+		  	
+			
+		</div>
+		
+		
+		<footer id="footer">
+		
+			
+			
+			
+			
+			<div class="copyright-tool">
+				
+				
+				
+				<div class="copyright-title">
+					<span>
+					&copy; 2023&nbsp;Chester.Cao Blog
+					</span>
+				</div>
+				
+				<div class="copyright-license">
+					<aside>
+						Powered by <a href="https://hexo.io/">Hexo</a>. <a href="https://github.com/tea3/hexo-generator-amp">AMP-Theme</a> designed by <a href="https://github.com/tea3/">tea</a>.
+					</aside>
+				</div>
+			</div>
+			
+		</footer>
+
+
+  	<div id="totop"><a href="#"></a></div>
+
+
+  </body>
+</html>

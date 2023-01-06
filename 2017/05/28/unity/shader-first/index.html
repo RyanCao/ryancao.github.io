@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.2">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <link rel="amphtml" href="./amp/">
+  <meta name="baidu-site-verification" content="code-mUG0UNAPhR">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"blog.rcant.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="引子Shader 简单介绍 主要讲一些概念的东西，和基本构造，是基础知识 动机如果你是刚刚接触Shader编程的新手，你可能不知道从何开始踏出Shader编程的第一步。本教程将带你一步步完成一个表面着色器(Surface Shader)和片段着色器(Fragment Shader)。本教程也将介绍在Unity3D Shader编程中所使用的一些函数和变量，这些内容可能和你在网上看到的不一样哦！ 如">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Shader 学习文档 [一]">
+<meta property="og:url" content="http://blog.rcant.com/2017/05/28/unity/shader-first/index.html">
+<meta property="og:site_name" content="Chester.Cao Blog">
+<meta property="og:description" content="引子Shader 简单介绍 主要讲一些概念的东西，和基本构造，是基础知识 动机如果你是刚刚接触Shader编程的新手，你可能不知道从何开始踏出Shader编程的第一步。本教程将带你一步步完成一个表面着色器(Surface Shader)和片段着色器(Fragment Shader)。本教程也将介绍在Unity3D Shader编程中所使用的一些函数和变量，这些内容可能和你在网上看到的不一样哦！ 如">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2017-05-28T03:39:17.000Z">
+<meta property="article:modified_time" content="2023-01-06T09:42:19.905Z">
+<meta property="article:author" content="Chester.C">
+<meta property="article:tag" content="unity3d">
+<meta property="article:tag" content="shader">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://blog.rcant.com/2017/05/28/unity/shader-first/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Shader 学习文档 [一] | Chester.Cao Blog</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?974592ac4c5733a52af2b871678a5334";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Chester.Cao Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Chester.Cao Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Devlopper in C#</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-topics">
+
+    <a href="/topics/" rel="section"><i class="fa fa-fw fa-pencil"></i>主题</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://blog.rcant.com/2017/05/28/unity/shader-first/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Chester.C">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chester.Cao Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Shader 学习文档 [一]
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2017-05-28 11:39:17" itemprop="dateCreated datePublished" datetime="2017-05-28T11:39:17+08:00">2017-05-28</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-01-06 17:42:19" itemprop="dateModified" datetime="2023-01-06T17:42:19+08:00">2023-01-06</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/unity3d/" itemprop="url" rel="index"><span itemprop="name">unity3d</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2017/05/28/unity/shader-first/" class="post-meta-item leancloud_visitors" data-flag-title="Shader 学习文档 [一]" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2017/05/28/unity/shader-first/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2017/05/28/unity/shader-first/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h2><p>Shader 简单介绍</p>
+<p>主要讲一些概念的东西，和基本构造，是基础知识</p>
+<h2 id="动机"><a href="#动机" class="headerlink" title="动机"></a>动机</h2><p>如果你是刚刚接触Shader编程的新手，你可能不知道从何开始踏出Shader编程的第一步。本教程将带你一步步完成一个表面着色器(Surface Shader)和片段着色器(Fragment Shader)。本教程也将介绍在Unity3D Shader编程中所使用的一些函数和变量，这些内容可能和你在网上看到的不一样哦！</p>
+<p>如果你满足下面的条件，我觉得你应该看看这篇文章：</p>
+<ul>
+<li>如果你是shader编程的新手。</li>
+<li>你想在你的游戏中使用shader做一些很炫酷的效果，但是你在网上找不到可用的Shader（译者注：o(╯□╰)o自己动手丰衣足食）。</li>
+<li>由于缺乏对基础知识的了解，造成不能随心所欲使用Strumpy着色器编辑器（译者注：Strumpy Shader Editor，一种图形化编写shader的方式，看着很诱人！）。</li>
+<li>你想在你的Shader代码中手动处理纹理(Textures)</li>
+</ul>
+<p>本文是该系列教程的第一篇文章，随后我们会制作一些更复杂的shader。相比起来，第一篇文章确实很简单。<br><span id="more"></span></p>
+<h2 id="Unity3D-Shader有以下几种"><a href="#Unity3D-Shader有以下几种" class="headerlink" title="Unity3D Shader有以下几种"></a>Unity3D Shader有以下几种</h2><h3 id="1-表面着色器（Surface-Shader）"><a href="#1-表面着色器（Surface-Shader）" class="headerlink" title="1. 表面着色器（Surface Shader）"></a>1. 表面着色器（Surface Shader）</h3><blockquote>
+<p>后台自动为你做的绝大部分的工作，减少了你工作量，并且适合绝大多数需要shader的情况。</p>
+</blockquote>
+<h3 id="2-片段着色器（Fragment-Shader）"><a href="#2-片段着色器（Fragment-Shader）" class="headerlink" title="2. 片段着色器（Fragment Shader）"></a>2. 片段着色器（Fragment Shader）</h3><blockquote>
+<p>可以让你做更多的效果，但是此shader更难写。你也可以用它做一些底层的工作，比如顶点光照(Vertex lighting，即在每个顶点存储该点的光照信息)。顶点光照对于移动设备很有用（译者注：估计省内存吧）。该shader对于一些需要多通道(multiple passes)的高级渲染效果也很有效。也可以称 CG Shader</p>
+</blockquote>
+<h3 id="3-Gpu-编程-Compute-Shader"><a href="#3-Gpu-编程-Compute-Shader" class="headerlink" title="3. Gpu 编程(Compute Shader)"></a>3. Gpu 编程(Compute Shader)</h3><blockquote>
+<p>是在GPU运行却又在普通渲染管线之外的程序。用于运行GPGPU program。</p>
+</blockquote>
+<h2 id="一个自动生成的-Surface-Shader"><a href="#一个自动生成的-Surface-Shader" class="headerlink" title="一个自动生成的 Surface Shader"></a>一个自动生成的 Surface Shader</h2><p>这是使用Unity 新建SurfaceShader 自动生成的</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line">Shader &quot;Custom/NewSurfaceShader&quot; &#123;</span><br><span class="line">	Properties &#123;</span><br><span class="line">		_Color (&quot;Color&quot;, Color) = (1,1,1,1)</span><br><span class="line">		_MainTex (&quot;Albedo (RGB)&quot;, 2D) = &quot;white&quot; &#123;&#125;</span><br><span class="line">		_Glossiness (&quot;Smoothness&quot;, Range(0,1)) = 0.5</span><br><span class="line">		_Metallic (&quot;Metallic&quot;, Range(0,1)) = 0.0</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	SubShader &#123;</span><br><span class="line">		Tags &#123; &quot;RenderType&quot;=&quot;Opaque&quot; &#125;</span><br><span class="line">		LOD 200</span><br><span class="line">		</span><br><span class="line">		CGPROGRAM</span><br><span class="line">		// Physically based Standard lighting model, and enable shadows on all light types</span><br><span class="line">		#pragma surface surf Standard fullforwardshadows</span><br><span class="line"></span><br><span class="line">		// Use shader model 3.0 target, to get nicer looking lighting</span><br><span class="line">		#pragma target 3.0</span><br><span class="line"></span><br><span class="line">		sampler2D _MainTex;</span><br><span class="line"></span><br><span class="line">		struct Input &#123;</span><br><span class="line">			float2 uv_MainTex;</span><br><span class="line">		&#125;;</span><br><span class="line"></span><br><span class="line">		half _Glossiness;</span><br><span class="line">		half _Metallic;</span><br><span class="line">		fixed4 _Color;</span><br><span class="line"></span><br><span class="line">		void surf (Input IN, inout SurfaceOutputStandard o) &#123;</span><br><span class="line">			// Albedo comes from a texture tinted by color</span><br><span class="line">			fixed4 c = tex2D (_MainTex, IN.uv_MainTex) * _Color;</span><br><span class="line">			o.Albedo = c.rgb;</span><br><span class="line">			// Metallic and smoothness come from slider variables</span><br><span class="line">			o.Metallic = _Metallic;</span><br><span class="line">			o.Smoothness = _Glossiness;</span><br><span class="line">			o.Alpha = c.a;</span><br><span class="line">		&#125;</span><br><span class="line">		ENDCG</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	FallBack &quot;Diffuse&quot;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<ul>
+<li>Properties 代表的是属性值定义</li>
+<li>SubShader Unity中的每一个着色器都包含一个subshader的列表  当Unity需要显示一个网格时，它能发现使用的着色器，并提取第一个能运行在当前用户的显示卡上的子着色器。</li>
+<li>FallBack 如果不可用则回调</li>
+</ul>
+<h2 id="Properties-介绍"><a href="#Properties-介绍" class="headerlink" title="Properties 介绍"></a>Properties 介绍</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">// properties for a water shader</span><br><span class="line">Properties</span><br><span class="line">&#123;</span><br><span class="line">    _WaveScale (&quot;Wave scale&quot;, Range (0.02,0.15)) = 0.07 // sliders</span><br><span class="line">    _ReflDistort (&quot;Reflection distort&quot;, Range (0,1.5)) = 0.5</span><br><span class="line">    _RefrDistort (&quot;Refraction distort&quot;, Range (0,1.5)) = 0.4</span><br><span class="line">    _RefrColor (&quot;Refraction color&quot;, Color) = (.34, .85, .92, 1) // color</span><br><span class="line">    _ReflectionTex (&quot;Environment Reflection&quot;, 2D) = &quot;&quot; &#123;&#125; // textures</span><br><span class="line">    _RefractionTex (&quot;Environment Refraction&quot;, 2D) = &quot;&quot; &#123;&#125;</span><br><span class="line">    _Fresnel (&quot;Fresnel (A) &quot;, 2D) = &quot;&quot; &#123;&#125;</span><br><span class="line">    _BumpMap (&quot;Bumpmap (RGB) &quot;, 2D) = &quot;&quot; &#123;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="SubShader-介绍"><a href="#SubShader-介绍" class="headerlink" title="SubShader 介绍"></a>SubShader 介绍</h2><h3 id="一、SubShader-Tags"><a href="#一、SubShader-Tags" class="headerlink" title="一、SubShader Tags"></a>一、SubShader Tags</h3><p>Subshaders使用标签来告诉引擎如何以及何时将其渲染。</p>
+<p>语法：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Tags &#123; &quot;TagName1&quot; = &quot;Value1&quot; &quot;TagName2&quot; = &quot;Value2&quot; &#125; </span><br></pre></td></tr></table></figure>
+<p>指定TagName1具有Value1的值，TagName2具有Value2的值。标签的数目不受限制。</p>
+<h4 id="1-Queue-标签。"><a href="#1-Queue-标签。" class="headerlink" title="1. Queue 标签。"></a>1. Queue 标签。</h4><blockquote>
+<p>定义渲染顺序</p>
+</blockquote>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>QueueTag</th>
+<th style="text-align:center">Value</th>
+<th style="text-align:center">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Background</td>
+<td style="text-align:center">1000</td>
+<td style="text-align:center">比如用于天空盒。</td>
+</tr>
+<tr>
+<td>Geometry</td>
+<td style="text-align:center">2000</td>
+<td style="text-align:center">大部分物体在这个队列。不透明的物体也在这里。这个队列内部的物体的渲染顺序会有进一步的优化（应该是从近到远，early-z test可以剔除不需经过FS处理的片元）。其他队列的物体都是按空间位置的从远到近进行渲染。</td>
+</tr>
+<tr>
+<td>AlphaTest</td>
+<td style="text-align:center">2450</td>
+<td style="text-align:center">已进行AlphaTest的物体在这个队列。</td>
+</tr>
+<tr>
+<td>Transparent</td>
+<td style="text-align:center">3000</td>
+<td style="text-align:center">透明物体。</td>
+</tr>
+<tr>
+<td>Overlay</td>
+<td style="text-align:center">4000</td>
+<td style="text-align:center">比如镜头光晕。</td>
+</tr>
+<tr>
+<td>自定义</td>
+<td style="text-align:center">Geometry+10</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h4 id="2-RenderType-标签。"><a href="#2-RenderType-标签。" class="headerlink" title="2. RenderType 标签。"></a>2. RenderType 标签。</h4><blockquote>
+<p>Unity可以运行时替换符合特定RenderType的所有Shader。Camera.RenderWithShader或者Camera.SetReplacementShader配合使用。</p>
+</blockquote>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>RenderTypeTag</th>
+<th style="text-align:center">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Opaque</td>
+<td style="text-align:center">绝大部分不透明的物体都使用这个</td>
+</tr>
+<tr>
+<td>Transparent</td>
+<td style="text-align:center">绝大部分透明的物体、包括粒子特效都使用这个</td>
+</tr>
+<tr>
+<td>TransparentCutout</td>
+<td style="text-align:center">蒙皮透明着色器masked transparency shaders （Transparent Cutout，两个通道的植被着色器）</td>
+</tr>
+<tr>
+<td>Background</td>
+<td style="text-align:center">天空盒都使用这个</td>
+</tr>
+<tr>
+<td>Overlay</td>
+<td style="text-align:center">GUI、镜头光晕都使用这个 闪光着色器。</td>
+</tr>
+<tr>
+<td>TreeOpaque</td>
+<td style="text-align:center">地形引擎中的树皮。</td>
+</tr>
+<tr>
+<td>TreeTransparentCutout</td>
+<td style="text-align:center">terrain engine tree leaves</td>
+</tr>
+<tr>
+<td>TreeBillboard</td>
+<td style="text-align:center">terrain engine billboarded trees. Grass: terrain</td>
+</tr>
+<tr>
+<td>GrassBillboard</td>
+<td style="text-align:center">terrain engine billboarded grass.</td>
+</tr>
+<tr>
+<td>自定义</td>
+<td style="text-align:center">参考Rendering with Replaced Shaders</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h4 id="3-ForceNoShadowCasting"><a href="#3-ForceNoShadowCasting" class="headerlink" title="3. ForceNoShadowCasting"></a>3. ForceNoShadowCasting</h4><blockquote>
+<p>值为true时，表示不接受阴影。 </p>
+</blockquote>
+<h4 id="4-IgnoreProjector"><a href="#4-IgnoreProjector" class="headerlink" title="4. IgnoreProjector"></a>4. IgnoreProjector</h4><blockquote>
+<p>值为true时，表示不接受Projector组件的投影。 </p>
+</blockquote>
+<h4 id="5-DisableBatching-tag"><a href="#5-DisableBatching-tag" class="headerlink" title="5. DisableBatching tag"></a>5. DisableBatching tag</h4><blockquote>
+<p>禁用批处理</p>
+</blockquote>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>DisableBatchingTag</th>
+<th style="text-align:center">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>True</td>
+<td style="text-align:center">始终禁用此着色器的批处理</td>
+</tr>
+<tr>
+<td>False</td>
+<td style="text-align:center">不禁用批处理;这是默认值</td>
+</tr>
+<tr>
+<td>LODFading</td>
+<td style="text-align:center">当LOD衰减活动时禁用批处理;主要用于树</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h4 id="6-CanUseSpriteAtlas"><a href="#6-CanUseSpriteAtlas" class="headerlink" title="6. CanUseSpriteAtlas"></a>6. CanUseSpriteAtlas</h4><blockquote>
+<p>可以使用Sprite图集<br>如果shader用于sprite，则将CanUseSpriteAtlas标记设置为“False”，并且当它们打包到地图集时不会工作（请参阅Sprite Packer）。</p>
+</blockquote>
+<h4 id="7-PreviewType"><a href="#7-PreviewType" class="headerlink" title="7. PreviewType"></a>7. PreviewType</h4><blockquote>
+<p>预览类型<br>PreviewType指示material inspector预览应如何显示材质。 默认情况下，材质显示为球体，但PreviewType也可以设置为“Plane”（显示为2D）或“Skybox”（将显示为天空盒）。</p>
+</blockquote>
+<p>参考<a target="_blank" rel="noopener" href="https://docs.unity3d.com/Manual/SL-SubShaderTags.html">Unity官方文档</a></p>
+<h3 id="二、Pass的Tag"><a href="#二、Pass的Tag" class="headerlink" title="二、Pass的Tag"></a>二、Pass的Tag</h3><p>最重要Tag是 LightMode，指定 Pass 和 Unity 的哪一种渲染路径（ Rendering Path ）搭配使用。除最重要的ForwardBase、ForwardAdd外，这里需额外提醒的Tag取值可包括： </p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>LightModeTag</th>
+<th style="text-align:center">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ForwardBase</td>
+<td style="text-align:center">XXX</td>
+</tr>
+<tr>
+<td>ForwardAdd</td>
+<td style="text-align:center">XXX</td>
+</tr>
+<tr>
+<td>Always</td>
+<td style="text-align:center">永远都渲染，但不处理光照</td>
+</tr>
+<tr>
+<td>ShadowCaster</td>
+<td style="text-align:center">用于渲染产生阴影的物体</td>
+</tr>
+<tr>
+<td>ShadowCollector</td>
+<td style="text-align:center">用于收集物体阴影到屏幕坐标Buff里</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h3 id="三、Shader-LOD"><a href="#三、Shader-LOD" class="headerlink" title="三、Shader LOD"></a>三、Shader LOD</h3><ul>
+<li>这个是另外一种控制细节级别的技术 </li>
+<li>在一个Shader当中，可以给不同的subshader指定不同的LOD属性，例如：</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">SubShader &#123;</span><br><span class="line">    LOD 200</span><br><span class="line">    Pass &#123;</span><br><span class="line">//insert shader pass here</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">SubShader &#123;</span><br><span class="line">            LOD 100</span><br><span class="line">    Pass &#123;</span><br><span class="line">//insert shader pass here</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">SubShader &#123;</span><br><span class="line">            LOD 0</span><br><span class="line">    Pass &#123;</span><br><span class="line">//insert shader pass here</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>说明： Shader LOD 就是让我们设置一个数值，这个数值决定了我们能用什么样的Shader。可以通过Shader.maximumLOD或者Shader.globalMaximumLOD 设定允许的最大LOD，当设定的LOD小于SubShader所指定的LOD时，这个SubShader将不可用。通过LOD，我们就可以为某个材质写一组SubShader，指定不同的LOD，LOD越大则渲染效果越好，当然对硬件的要求也可能越高，然后根据不同的终端硬件配置来设置 globalMaximumLOD来达到兼顾性能的最佳显示效果。</p>
+<h3 id="四、CG程序"><a href="#四、CG程序" class="headerlink" title="四、CG程序"></a>四、CG程序</h3><h4 id="解释"><a href="#解释" class="headerlink" title="解释"></a>解释</h4><h5 id="1-CGPROGRAM和ENDCG之间存放的就是CG程序。"><a href="#1-CGPROGRAM和ENDCG之间存放的就是CG程序。" class="headerlink" title="1. CGPROGRAM和ENDCG之间存放的就是CG程序。"></a>1. CGPROGRAM和ENDCG之间存放的就是CG程序。</h5><h5 id="2-预编译头：-pragma-surface-surf-Standard-fullforwardshadows"><a href="#2-预编译头：-pragma-surface-surf-Standard-fullforwardshadows" class="headerlink" title="2. 预编译头：#pragma surface surf Standard fullforwardshadows"></a>2. 预编译头：#pragma surface surf Standard fullforwardshadows</h5><blockquote>
+<p>surface表示这是一个Surface Shader，surf表示表面函数的名字，Standard表示使用Standard的光照模型，fullforwardshadows是阴影类型</p>
+</blockquote>
+<h5 id="3-预编译头：-pragma-target-3-0"><a href="#3-预编译头：-pragma-target-3-0" class="headerlink" title="3. 预编译头：#pragma target 3.0"></a>3. 预编译头：#pragma target 3.0</h5><blockquote>
+<p>Shader model的版本，用来获取更好的光照效果</p>
+</blockquote>
+<h5 id="4-剩余的就是如何操作surf函数"><a href="#4-剩余的就是如何操作surf函数" class="headerlink" title="4. 剩余的就是如何操作surf函数"></a>4. 剩余的就是如何操作surf函数</h5><blockquote>
+<p>这里只是简单的进行赋值，因此会困惑人的地方就是CG语法了，CG可以参考<a target="_blank" rel="noopener" href="http://http.developer.nvidia.com/CgTutorial/cg_tutorial_chapter01.html">The Cg Tutorial</a></p>
+</blockquote>
+<h4 id="关于光照模型的代码"><a href="#关于光照模型的代码" class="headerlink" title="关于光照模型的代码"></a>关于光照模型的代码</h4><p>可以在<br>Unity/Editor/Data/CGIncludes/UnityPBSLighting.cginc<br>Unity/Editor/Data/CGIncludes/Lighting.cginc<br>下找到很多光照模型的代码<br>函数前缀是Lighting的</p>
+<p>例如下面这种</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">inline half4 LightingStandard (SurfaceOutputStandard s, half3 viewDir, UnityGI gi)</span><br><span class="line">&#123;</span><br><span class="line">	s.Normal = normalize(s.Normal);</span><br><span class="line"></span><br><span class="line">	half oneMinusReflectivity;</span><br><span class="line">	half3 specColor;</span><br><span class="line">	s.Albedo = DiffuseAndSpecularFromMetallic (s.Albedo, s.Metallic, /*out*/ specColor, /*out*/ oneMinusReflectivity);</span><br><span class="line"></span><br><span class="line">	// shader relies on pre-multiply alpha-blend (_SrcBlend = One, _DstBlend = OneMinusSrcAlpha)</span><br><span class="line">	// this is necessary to handle transparency in physically correct way - only diffuse component gets affected by alpha</span><br><span class="line">	half outputAlpha;</span><br><span class="line">	s.Albedo = PreMultiplyAlpha (s.Albedo, s.Alpha, oneMinusReflectivity, /*out*/ outputAlpha);</span><br><span class="line"></span><br><span class="line">	half4 c = UNITY_BRDF_PBS (s.Albedo, specColor, oneMinusReflectivity, s.Smoothness, s.Normal, viewDir, gi.light, gi.indirect);</span><br><span class="line">	c.rgb += UNITY_BRDF_GI (s.Albedo, specColor, oneMinusReflectivity, s.Smoothness, s.Normal, viewDir, s.Occlusion, gi);</span><br><span class="line">	c.a = outputAlpha;</span><br><span class="line">	return c;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">inline half4 LightingStandard_Deferred (SurfaceOutputStandard s, half3 viewDir, UnityGI gi, out half4 outDiffuseOcclusion, out half4 outSpecSmoothness, out half4 outNormal)</span><br><span class="line">&#123;</span><br><span class="line">	half oneMinusReflectivity;</span><br><span class="line">	half3 specColor;</span><br><span class="line">	s.Albedo = DiffuseAndSpecularFromMetallic (s.Albedo, s.Metallic, /*out*/ specColor, /*out*/ oneMinusReflectivity);</span><br><span class="line"></span><br><span class="line">	half4 c = UNITY_BRDF_PBS (s.Albedo, specColor, oneMinusReflectivity, s.Smoothness, s.Normal, viewDir, gi.light, gi.indirect);</span><br><span class="line">	c.rgb += UNITY_BRDF_GI (s.Albedo, specColor, oneMinusReflectivity, s.Smoothness, s.Normal, viewDir, s.Occlusion, gi);</span><br><span class="line"></span><br><span class="line">	outDiffuseOcclusion = half4(s.Albedo, s.Occlusion);</span><br><span class="line">	outSpecSmoothness = half4(specColor, s.Smoothness);</span><br><span class="line">	outNormal = half4(s.Normal * 0.5 + 0.5, 1);</span><br><span class="line">	half4 emission = half4(s.Emission + c.rgb, 1);</span><br><span class="line">	return emission;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>surf 函数的输出结果 是 SurfaceOutputStandard 类型</p>
+<p>LightingStandard 函数输入参数为 SurfaceOutputStandard 类型</p>
+<p>所以要注意你选择的 关照模型需要 那些参数，对哪些参数做出修改会比较好</p>
+<h2 id="更多学习点"><a href="#更多学习点" class="headerlink" title="更多学习点"></a>更多学习点</h2><ul>
+<li>理解下关照算法</li>
+<li>阴影类型怎么运作的</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/unity3d/" rel="tag"># unity3d</a>
+              <a href="/tags/shader/" rel="tag"># shader</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2017/05/27/git/git-forth/" rel="prev" title="Git 学习文档 [四]">
+      <i class="fa fa-chevron-left"></i> Git 学习文档 [四]
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2017/05/28/git/git-submodule/" rel="next" title="Git Submodule使用教程">
+      Git Submodule使用教程 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%95%E5%AD%90"><span class="nav-number">1.</span> <span class="nav-text">引子</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8A%A8%E6%9C%BA"><span class="nav-number">2.</span> <span class="nav-text">动机</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Unity3D-Shader%E6%9C%89%E4%BB%A5%E4%B8%8B%E5%87%A0%E7%A7%8D"><span class="nav-number">3.</span> <span class="nav-text">Unity3D Shader有以下几种</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E8%A1%A8%E9%9D%A2%E7%9D%80%E8%89%B2%E5%99%A8%EF%BC%88Surface-Shader%EF%BC%89"><span class="nav-number">3.1.</span> <span class="nav-text">1. 表面着色器（Surface Shader）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E7%89%87%E6%AE%B5%E7%9D%80%E8%89%B2%E5%99%A8%EF%BC%88Fragment-Shader%EF%BC%89"><span class="nav-number">3.2.</span> <span class="nav-text">2. 片段着色器（Fragment Shader）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-Gpu-%E7%BC%96%E7%A8%8B-Compute-Shader"><span class="nav-number">3.3.</span> <span class="nav-text">3. Gpu 编程(Compute Shader)</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E4%B8%AA%E8%87%AA%E5%8A%A8%E7%94%9F%E6%88%90%E7%9A%84-Surface-Shader"><span class="nav-number">4.</span> <span class="nav-text">一个自动生成的 Surface Shader</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Properties-%E4%BB%8B%E7%BB%8D"><span class="nav-number">5.</span> <span class="nav-text">Properties 介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SubShader-%E4%BB%8B%E7%BB%8D"><span class="nav-number">6.</span> <span class="nav-text">SubShader 介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%80%E3%80%81SubShader-Tags"><span class="nav-number">6.1.</span> <span class="nav-text">一、SubShader Tags</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-Queue-%E6%A0%87%E7%AD%BE%E3%80%82"><span class="nav-number">6.1.1.</span> <span class="nav-text">1. Queue 标签。</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-RenderType-%E6%A0%87%E7%AD%BE%E3%80%82"><span class="nav-number">6.1.2.</span> <span class="nav-text">2. RenderType 标签。</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-ForceNoShadowCasting"><span class="nav-number">6.1.3.</span> <span class="nav-text">3. ForceNoShadowCasting</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-IgnoreProjector"><span class="nav-number">6.1.4.</span> <span class="nav-text">4. IgnoreProjector</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-DisableBatching-tag"><span class="nav-number">6.1.5.</span> <span class="nav-text">5. DisableBatching tag</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#6-CanUseSpriteAtlas"><span class="nav-number">6.1.6.</span> <span class="nav-text">6. CanUseSpriteAtlas</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#7-PreviewType"><span class="nav-number">6.1.7.</span> <span class="nav-text">7. PreviewType</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%8C%E3%80%81Pass%E7%9A%84Tag"><span class="nav-number">6.2.</span> <span class="nav-text">二、Pass的Tag</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%89%E3%80%81Shader-LOD"><span class="nav-number">6.3.</span> <span class="nav-text">三、Shader LOD</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9B%9B%E3%80%81CG%E7%A8%8B%E5%BA%8F"><span class="nav-number">6.4.</span> <span class="nav-text">四、CG程序</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%A7%A3%E9%87%8A"><span class="nav-number">6.4.1.</span> <span class="nav-text">解释</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-CGPROGRAM%E5%92%8CENDCG%E4%B9%8B%E9%97%B4%E5%AD%98%E6%94%BE%E7%9A%84%E5%B0%B1%E6%98%AFCG%E7%A8%8B%E5%BA%8F%E3%80%82"><span class="nav-number">6.4.1.1.</span> <span class="nav-text">1. CGPROGRAM和ENDCG之间存放的就是CG程序。</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-%E9%A2%84%E7%BC%96%E8%AF%91%E5%A4%B4%EF%BC%9A-pragma-surface-surf-Standard-fullforwardshadows"><span class="nav-number">6.4.1.2.</span> <span class="nav-text">2. 预编译头：#pragma surface surf Standard fullforwardshadows</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#3-%E9%A2%84%E7%BC%96%E8%AF%91%E5%A4%B4%EF%BC%9A-pragma-target-3-0"><span class="nav-number">6.4.1.3.</span> <span class="nav-text">3. 预编译头：#pragma target 3.0</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#4-%E5%89%A9%E4%BD%99%E7%9A%84%E5%B0%B1%E6%98%AF%E5%A6%82%E4%BD%95%E6%93%8D%E4%BD%9Csurf%E5%87%BD%E6%95%B0"><span class="nav-number">6.4.1.4.</span> <span class="nav-text">4. 剩余的就是如何操作surf函数</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%85%B3%E4%BA%8E%E5%85%89%E7%85%A7%E6%A8%A1%E5%9E%8B%E7%9A%84%E4%BB%A3%E7%A0%81"><span class="nav-number">6.4.2.</span> <span class="nav-text">关于光照模型的代码</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9B%B4%E5%A4%9A%E5%AD%A6%E4%B9%A0%E7%82%B9"><span class="nav-number">7.</span> <span class="nav-text">更多学习点</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Chester.C</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">143</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">32</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">67</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Chester.C</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+if (document.querySelectorAll('pre.mermaid').length) {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mermaid@8/dist/mermaid.min.js', () => {
+    mermaid.initialize({
+      theme    : 'forest',
+      logLevel : 3,
+      flowchart: { curve     : 'linear' },
+      gantt    : { axisFormat: '%m/%d/%Y' },
+      sequence : { actorMargin: 50 }
+    });
+  }, window.mermaid);
+}
+</script>
+
+
+  
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'OQBlgU8H1seTDvVrgC3Dhni0-gzGzoHsz',
+      appKey     : 'wF7D3hVD9WjlV9V52bhlymHO',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : true,
+      lang       : 'zh-cn' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,2007 @@
+<!DOCTYPE html>
+<html ⚡>
+  <head>
+    <meta charset="utf-8">
+    <link rel="canonical" href="http://blog.rcant.com/2017/03/01/hexo/hexo-secordblog/" >
+    <title>Hexo更换博客样式 - Chester.Cao Blog</title>
+    <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
+    
+    <meta property="og:title" content="Hexo更换博客样式">
+	<meta property="og:type" content="article">
+	<meta property="og:url" content="http://blog.rcant.com/2017/03/01/hexo/hexo-secordblog/">
+	
+		<meta property="og:image" content="\amp-dist\sample\sample-substituteTitleImage.png">
+	
+	<meta property="og:site_name" content="Chester.Cao Blog">
+	
+		<meta property="og:description" content="&lt;h2 id=&#34;引子&#34;&gt;&lt;a href=&#34;#引子&#34; class=&#34;headerlink&#34; title=&#34;引子&#34;&gt;&lt;/a&gt;引子&lt;/h2&gt;&lt;p&gt;Hexo 默认的样式比较难看&lt;/p&gt;
+&lt;h2 id=&#34;搭建博客&#34;&gt;&lt;a href=&#34;#搭建博客&#34; class=&#34;headerlink&#34; title=&#34;搭建博客&#34;&gt;&lt;/a&gt;搭建博客&lt;/h2&gt;&lt;p&gt;看前章内容&lt;/p&gt;
+&lt;h2 id=&#34;Hexo配置&#34;&gt;&lt;a href=&#34;#Hexo配置&#34; class=&#34;headerlink&#34; title=&#34;Hexo配置&#34;&gt;&lt;/a&gt;Hexo配置&lt;/h2&gt;&lt;h3 id=&#34;hexo里面有两个常用到的配置文件-hexo-项目根文件夹&#34;&gt;&lt;a href=&#34;#hexo里面有两个常用到的配置文件-hexo-项目根文件夹&#34; class=&#34;headerlink&#34; title=&#34;hexo里面有两个常用到的配置文件 ${hexo} 项目根文件夹&#34;&gt;&lt;/a&gt;hexo里面有两个常用到的配置文件 ${hexo} 项目根文件夹&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;整个博客的配置文件 &lt;strong&gt;${hexo}_config.yml&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;主题的配置文件 &lt;strong&gt;${hexo}\themes\xxx_config.yml&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;hexo3.0的默认主题是landscape，就是 &lt;strong&gt;${hexo}\themes\landscape_config.yml&lt;/strong&gt;&lt;/p&gt;
+&lt;h3 id=&#34;替换主题&#34;&gt;&lt;a href=&#34;#替换主题&#34; class=&#34;headerlink&#34; title=&#34;替换主题&#34;&gt;&lt;/a&gt;替换主题&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;找到你需要的喜欢的主题，下载下来，我用的是&lt;a href=&#34;https://github.com/iissnan/hexo-theme-next&#34;&gt;Next&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;把主题文件放到${hexo}\themes 下&lt;/li&gt;
+&lt;li&gt;修改博客配置文件 ${hexo}_config.yml 中的theme名字改为自己下载的主题的文件夹名即可。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;接下来介绍整个博客的配置文件。&lt;/p&gt;">
+	
+	<meta name="twitter:card" content="summary_large_image" />
+	<meta name="twitter:site" content="Chester.Cao Blog">
+	<meta name="twitter:url" content="http://blog.rcant.com/2017/03/01/hexo/hexo-secordblog/">
+	<meta name="twitter:title" content="Hexo更换博客样式 - Chester.Cao Blog">
+	
+		<meta name="twitter:description" content="&lt;h2 id=&#34;引子&#34;&gt;&lt;a href=&#34;#引子&#34; class=&#34;headerlink&#34; title=&#34;引子&#34;&gt;&lt;/a&gt;引子&lt;/h2&gt;&lt;p&gt;Hexo 默认的样式比较难看&lt;/p&gt;
+&lt;h2 id=&#34;搭建博客&#34;&gt;&lt;a href=&#34;#搭建博客&#34; class=&#34;headerlink&#34; title=&#34;搭建博客&#34;&gt;&lt;/a&gt;搭建博客&lt;/h2&gt;&lt;p&gt;看前章内容&lt;/p&gt;
+&lt;h2 id=&#34;Hexo配置&#34;&gt;&lt;a href=&#34;#Hexo配置&#34; class=&#34;headerlink&#34; title=&#34;Hexo配置&#34;&gt;&lt;/a&gt;Hexo配置&lt;/h2&gt;&lt;h3 id=&#34;hexo里面有两个常用到的配置文件-hexo-项目根文件夹&#34;&gt;&lt;a href=&#34;#hexo里面有两个常用到的配置文件-hexo-项目根文件夹&#34; class=&#34;headerlink&#34; title=&#34;hexo里面有两个常用到的配置文件 ${hexo} 项目根文件夹&#34;&gt;&lt;/a&gt;hexo里面有两个常用到的配置文件 ${hexo} 项目根文件夹&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;整个博客的配置文件 &lt;strong&gt;${hexo}_config.yml&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;主题的配置文件 &lt;strong&gt;${hexo}\themes\xxx_config.yml&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;hexo3.0的默认主题是landscape，就是 &lt;strong&gt;${hexo}\themes\landscape_config.yml&lt;/strong&gt;&lt;/p&gt;
+&lt;h3 id=&#34;替换主题&#34;&gt;&lt;a href=&#34;#替换主题&#34; class=&#34;headerlink&#34; title=&#34;替换主题&#34;&gt;&lt;/a&gt;替换主题&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;找到你需要的喜欢的主题，下载下来，我用的是&lt;a href=&#34;https://github.com/iissnan/hexo-theme-next&#34;&gt;Next&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;把主题文件放到${hexo}\themes 下&lt;/li&gt;
+&lt;li&gt;修改博客配置文件 ${hexo}_config.yml 中的theme名字改为自己下载的主题的文件夹名即可。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;接下来介绍整个博客的配置文件。&lt;/p&gt;">
+	
+    
+    	<meta name="twitter:image" content="\amp-dist\sample\sample-substituteTitleImage.png">
+	
+	
+	
+    
+    <style amp-boilerplate>body{-webkit-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-moz-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-ms-animation:-amp-start 8s steps(1,end) 0s 1 normal both;animation:-amp-start 8s steps(1,end) 0s 1 normal both}@-webkit-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-moz-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-ms-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-o-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}</style>
+    <noscript><style amp-boilerplate>body{-webkit-animation:none;-moz-animation:none;-ms-animation:none;animation:none}</style></noscript>
+    <script async custom-element="amp-sidebar" src="https://cdn.ampproject.org/v0/amp-sidebar-0.1.js"></script>
+    <!--
+  	<script async custom-element="amp-social-share" src="https://cdn.ampproject.org/v0/amp-social-share-0.1.js"></script>
+    -->
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <script async src="https://cdn.ampproject.org/v0.js"></script>
+    <script type="application/ld+json">
+		{
+			"@context": "http://schema.org",
+			"@type": "BlogPosting",
+			"headline": "Hexo更换博客样式",
+			
+			"description": "&lt;h2 id=&#34;引子&#34;&gt;&lt;a href=&#34;#引子&#34; class=&#34;headerlink&#34; title=&#34;引子&#34;&gt;&lt;/a&gt;引子&lt;/h2&gt;&lt;p&gt;Hexo 默认的样式比较难看&lt;/p&gt;
+&lt;h2 id=&#34;搭建博客&#34;&gt;&lt;a href=&#34;#搭建博客&#34; class=&#34;headerlink&#34; title=&#34;搭建博客&#34;&gt;&lt;/a&gt;搭建博客&lt;/h2&gt;&lt;p&gt;看前章内容&lt;/p&gt;
+&lt;h2 id=&#34;Hexo配置&#34;&gt;&lt;a href=&#34;#Hexo配置&#34; class=&#34;headerlink&#34; title=&#34;Hexo配置&#34;&gt;&lt;/a&gt;Hexo配置&lt;/h2&gt;&lt;h3 id=&#34;hexo里面有两个常用到的配置文件-hexo-项目根文件夹&#34;&gt;&lt;a href=&#34;#hexo里面有两个常用到的配置文件-hexo-项目根文件夹&#34; class=&#34;headerlink&#34; title=&#34;hexo里面有两个常用到的配置文件 ${hexo} 项目根文件夹&#34;&gt;&lt;/a&gt;hexo里面有两个常用到的配置文件 ${hexo} 项目根文件夹&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;整个博客的配置文件 &lt;strong&gt;${hexo}_config.yml&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;主题的配置文件 &lt;strong&gt;${hexo}\themes\xxx_config.yml&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;hexo3.0的默认主题是landscape，就是 &lt;strong&gt;${hexo}\themes\landscape_config.yml&lt;/strong&gt;&lt;/p&gt;
+&lt;h3 id=&#34;替换主题&#34;&gt;&lt;a href=&#34;#替换主题&#34; class=&#34;headerlink&#34; title=&#34;替换主题&#34;&gt;&lt;/a&gt;替换主题&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;找到你需要的喜欢的主题，下载下来，我用的是&lt;a href=&#34;https://github.com/iissnan/hexo-theme-next&#34;&gt;Next&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;把主题文件放到${hexo}\themes 下&lt;/li&gt;
+&lt;li&gt;修改博客配置文件 ${hexo}_config.yml 中的theme名字改为自己下载的主题的文件夹名即可。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;接下来介绍整个博客的配置文件。&lt;/p&gt;",
+			
+			"mainEntityOfPage":{
+			    "@type":"WebPage",
+			    "@id":"http://blog.rcant.com/2017/03/01/hexo/hexo-secordblog/"
+			},
+			"datePublished": "2017-03-01T03:39:17.000Z",
+			"dateModified": "2023-01-06T09:38:16.281Z",
+			
+			"image": {
+				"@type": "ImageObject",
+				"url": "\amp-dist\sample\sample-substituteTitleImage.png",
+				"width" : "1024",
+				"height" : "800"
+			},
+			
+			"author": {
+			    "@type": "Person",
+			    "name": "Chester.C"
+			},
+			"publisher": {
+			    "@type": "Organization",
+			    "name": "Chester.Cao Blog"
+			    
+			    ,
+			    "logo": {
+			      "@type": "ImageObject",
+			      "url": "http://blog.rcant.com\amp-dist\sample\sample-logo.png",
+			      "width": 600,
+			      "height": 60
+			    }
+			    
+			}
+		}
+	</script>
+	<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+	
+	<style amp-custom>
+		
+abbr,
+acronym,
+address,
+applet,
+big,
+blockquote,
+body,
+caption,
+cite,
+code,
+dd,
+del,
+dfn,
+div,
+dl,
+dt,
+em,
+fieldset,
+form,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+html,
+iframe,
+img,
+ins,
+kbd,
+label,
+legend,
+li,
+object,
+ol,
+p,
+pre,
+q,
+s,
+samp,
+small,
+span,
+strike,
+strong,
+sub,
+sup,
+table,
+tbody,
+td,
+tfoot,
+th,
+thead,
+tr,
+tt,
+ul,
+var {
+  border: 0;
+  font-family: inherit;
+  font-size: 1rem;
+  font-style: inherit;
+  font-weight: inherit;
+  margin: 0;
+  outline: 0;
+  padding: 0;
+  vertical-align: baseline;
+}
+abbr {
+  cursor: help;
+  border-bottom: 1px dotted;
+  font-variant: normal;
+}
+acronym {
+  border-bottom: 1px dotted;
+  font-variant: normal;
+}
+body {
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  -webkit-text-size-adjust: 100%;
+  background: #fff;
+  color: #2d3d40;
+  font-family: sans-serif;
+  font-size: 1rem;
+  font-weight: 500;
+  line-height: 2rem;
+  text-rendering: optimizelegibility;
+}
+button::-moz-focus-inner,
+input::-moz-focus-inner,
+figure.highlight td,
+.post .entry-content figure.highlight th {
+  border: 0;
+  padding: 0;
+}
+caption,
+table,
+td,
+th {
+  vertical-align: middle;
+}
+caption,
+td,
+th,
+.table-align-left {
+  text-align: left;
+}
+del {
+  text-decoration: line-through;
+}
+html {
+  font-size: 14px;
+}
+:root sub,
+:root sup {
+  vertical-align: baseline;
+}
+table {
+  border-collapse: separate;
+  border-spacing: 0;
+}
+a {
+  color: #e91e63;
+  text-decoration: none;
+  -webkit-transition: 0.7s;
+  -ms-transition: 0.7s;
+  -moz-transition: 0.7s;
+  -o-transition: 0.7s;
+  -webkit-transition: 0.7s;
+  -moz-transition: 0.7s;
+  -o-transition: 0.7s;
+  -ms-transition: 0.7s;
+  transition: 0.7s;
+  border: 0;
+  font-family: inherit;
+  font-size: 1rem;
+  font-style: inherit;
+  font-weight: inherit;
+  margin: 0;
+  outline: 0;
+  padding: 0;
+  vertical-align: baseline;
+}
+a img {
+  border: none;
+}
+a:hover {
+  -webkit-transition: 0.2s;
+  -ms-transition: 0.2s;
+  -moz-transition: 0.2s;
+  -o-transition: 0.2s;
+  -webkit-transition: 0.2s;
+  -moz-transition: 0.2s;
+  -o-transition: 0.2s;
+  -ms-transition: 0.2s;
+  transition: 0.2s;
+  color: #930e3b;
+}
+@media (min-width: 481px) {
+  html {
+    font-size: 16px;
+  }
+}
+@media (min-width: 0px) and (max-width: 480px) {
+  html {
+    font-size: 14px;
+  }
+}
+.clearfix:after {
+  clear: both;
+  visibility: hidden;
+  content: ".";
+  display: block;
+  height: 0;
+}
+.left {
+  float: left;
+}
+.right {
+  float: right;
+}
+.circle {
+  -webkit-border-radius: 50%;
+  border-radius: 50%;
+}
+.thumbImg-w {
+  width: 100px;
+  height: 100px;
+  display: inline-block;
+  position: relative;
+  overflow: hidden;
+}
+.thumbImg {
+  top: 50%;
+  left: 50%;
+  position: absolute;
+  -webkit-transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  -webkit-transform: translate(-50%, -50%);
+  -moz-transform: translate(-50%, -50%);
+  -o-transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+}
+.__web-inspector-hide-shortcut__ {
+  visibility: hidden ;
+}
+button {
+  -webkit-box-align: start;
+  -moz-box-align: start;
+  -o-box-align: start;
+  -ms-flex-align: start;
+  -webkit-align-items: flex-start;
+  align-items: flex-start;
+  text-align: center;
+  cursor: default;
+  color: buttontext;
+  background-color: buttonface;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  padding: 2px 6px 3px;
+  border-width: 2px;
+  border-style: outset;
+  border-color: buttonface;
+  -webkit-border-image: initial;
+  -moz-border-image: initial;
+  -o-border-image: initial;
+  border-image: initial;
+  text-rendering: auto;
+  color: initial;
+  letter-spacing: normal;
+  word-spacing: normal;
+  text-transform: none;
+  text-indent: 0px;
+  text-shadow: none;
+  display: inline-block;
+  text-align: start;
+  margin: 0em 0em 0em 0em;
+  font: 11px system-ui;
+  -webkit-writing-mode: horizontal-tb;
+  -webkit-appearance: button;
+}
+.hamburger {
+  display: inline-block;
+  background-color: transparent;
+  background-image: url("data:image/svg+xmlutf8,<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"-3 -6 24 24\"><path fill=\"#4A4A4A\" d=\"M0 12h18v-2H0v2M0 7h18V5H0v2M0 0v2h18V0H0\"/></svg>");
+  background-repeat: no-repeat;
+  -webkit-background-size: 30px 24px;
+  -moz-background-size: 30px 24px;
+  background-size: 30px 24px;
+  background-position: center center;
+  border: none;
+  margin: 0;
+  padding: 0;
+  width: 60px;
+  height: 60px;
+  cursor: pointer;
+  -ms-flex-item-align: center;
+  -ms-grid-row-align: center;
+  -webkit-align-self: center;
+  align-self: center;
+  -ms-flex-item-align: center;
+}
+.nav ul:after {
+  clear: both;
+  visibility: hidden;
+}
+.nav,
+.nav-icon {
+  position: relative;
+}
+.nav ul {
+  display: block;
+}
+.nav ul li {
+  display: block;
+}
+.nav ul li a {
+  display: block;
+}
+.tab {
+  position: relative;
+  color: #424242;
+  padding: 6px;
+  margin: 0 4px;
+  text-decoration: none;
+  text-transform: uppercase;
+  font-weight: 400;
+  -webkit-transition: 0.1s ease color;
+  -webkit-transition: 0.1s ease color;
+  -moz-transition: 0.1s ease color;
+  -o-transition: 0.1s ease color;
+  -ms-transition: 0.1s ease color;
+  transition: 0.1s ease color;
+}
+amp-sidebar {
+  width: 200px;
+}
+amp-sidebar ul {
+  padding: 10px 0;
+}
+amp-sidebar li a {
+  display: block;
+  padding: 10px 20px;
+}
+header {
+  height: 60px;
+  background-color: #222f31;
+  -webkit-box-shadow: 0 -1px 0 #3c5155 inset, 0 -3px 0 #1e292b inset;
+  box-shadow: 0 -1px 0 #3c5155 inset, 0 -3px 0 #1e292b inset;
+  -webkit-box-shadow: 0 -1px 0 #3c5155 inset, 0 -3px 0 #1e292b inset;
+}
+header .header-title a {
+  padding: 0 0 0 20px;
+  height: 60px;
+  line-height: 60px;
+  font-size: 20px;
+  color: #fff;
+  letter-spacing: 0.2em;
+}
+header .nav-container {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: -webkit-box;
+  display: -moz-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: box;
+  display: flex;
+  -webkit-box-pack: justify;
+  -ms-flex-pack: justify;
+  -webkit-box-pack: justify;
+  -moz-box-pack: justify;
+  -o-box-pack: justify;
+  -ms-flex-pack: justify;
+  -webkit-justify-content: space-between;
+  justify-content: space-between;
+}
+header .left-nav {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: -webkit-box;
+  display: -moz-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: box;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  -webkit-box-align: center;
+  -moz-box-align: center;
+  -o-box-align: center;
+  -ms-flex-align: center;
+  -webkit-align-items: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -ms-flex-pack: start;
+  -webkit-box-pack: start;
+  -moz-box-pack: start;
+  -o-box-pack: start;
+  -ms-flex-pack: start;
+  -webkit-justify-content: flex-start;
+  justify-content: flex-start;
+  font-size: 20px;
+  margin-left: 0;
+  font-weight: 300;
+  -webkit-box-pack: start;
+  -ms-flex-pack: start;
+  -webkit-box-pack: start;
+  -moz-box-pack: start;
+  -o-box-pack: start;
+  -ms-flex-pack: start;
+  -webkit-justify-content: flex-start;
+  justify-content: flex-start;
+  -webkit-box-flex: 1;
+  -ms-flex: 1 1 auto;
+  -webkit-box-flex: 1;
+  -moz-box-flex: 1;
+  -o-box-flex: 1;
+  box-flex: 1;
+  -webkit-flex: 1 1 auto;
+  -ms-flex: 1 1 auto;
+  flex: 1 1 auto;
+  text-align: left;
+  width: auto;
+  font-size: 15px;
+}
+header .right {
+  font-size: 15px;
+}
+header .alt {
+  padding: 0;
+  text-align: right;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: -webkit-box;
+  display: -moz-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: box;
+  display: flex;
+  -webkit-box-align: stretch;
+  -ms-flex-align: stretch;
+  -webkit-box-align: stretch;
+  -moz-box-align: stretch;
+  -o-box-align: stretch;
+  -ms-flex-align: stretch;
+  -webkit-align-items: stretch;
+  align-items: stretch;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-box-pack: center;
+  -moz-box-pack: center;
+  -o-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+}
+.blog-title a {
+  position: relative;
+}
+button {
+  -webkit-box-align: start;
+  -moz-box-align: start;
+  -o-box-align: start;
+  -ms-flex-align: start;
+  -webkit-align-items: flex-start;
+  align-items: flex-start;
+  text-align: center;
+  cursor: default;
+  color: buttontext;
+  background-color: buttonface;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  padding: 2px 6px 3px;
+  border-width: 2px;
+  border-style: outset;
+  border-color: buttonface;
+  -webkit-border-image: initial;
+  -moz-border-image: initial;
+  -o-border-image: initial;
+  border-image: initial;
+  text-rendering: auto;
+  color: initial;
+  letter-spacing: normal;
+  word-spacing: normal;
+  text-transform: none;
+  text-indent: 0px;
+  text-shadow: none;
+  display: inline-block;
+  text-align: start;
+  margin: 0em 0em 0em 0em;
+  font: 11px system-ui;
+  -webkit-writing-mode: horizontal-tb;
+  -webkit-appearance: button;
+}
+.__web-inspector-hide-shortcut__ {
+  visibility: hidden ;
+}
+.hamburger {
+  display: inline-block;
+  background-color: transparent;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"-3 -6 24 24\"><path fill=\"#FFF\" d=\"M0 12h18v-2H0v2M0 7h18V5H0v2M0 0v2h18V0H0\"/></svg>");
+  background-repeat: no-repeat;
+  -webkit-background-size: 30px 24px;
+  -moz-background-size: 30px 24px;
+  background-size: 30px 24px;
+  background-position: center center;
+  border: none;
+  margin: 0;
+  padding: 0;
+  width: 60px;
+  height: 60px;
+  cursor: pointer;
+  -ms-flex-item-align: center;
+  -ms-grid-row-align: center;
+  -webkit-align-self: center;
+  align-self: center;
+  -ms-flex-item-align: center;
+}
+.tab {
+  position: relative;
+  color: #2d3d40;
+  padding: 6px;
+  margin: 0 4px;
+  text-decoration: none;
+  text-transform: uppercase;
+  font-weight: 400;
+  -webkit-transition: 0.1s ease color;
+  -webkit-transition: 0.1s ease color;
+  -moz-transition: 0.1s ease color;
+  -o-transition: 0.1s ease color;
+  -ms-transition: 0.1s ease color;
+  transition: 0.1s ease color;
+}
+amp-sidebar {
+  width: 250px;
+  background-color: #182022;
+}
+amp-sidebar ul {
+  padding: 10px 0;
+}
+amp-sidebar li {
+  border-top: 1px solid #2f4043;
+}
+amp-sidebar li:last-child {
+  border-bottom: 1px solid #2f4043;
+}
+amp-sidebar li a {
+  color: #fff;
+  font-weight: bold;
+  display: block;
+  padding: 10px 20px;
+}
+amp-sidebar li a:hover {
+  color: #ccc;
+  background-color: #030404;
+}
+.categories-header {
+  background-color: #2d3d40;
+  padding: 0rem 0.8rem;
+}
+.categories-header a {
+  color: #fff;
+}
+.categories-header a:hover {
+  color: #fff;
+}
+.categories-header .breadcrumb ol li {
+  list-style: none;
+  display: inline-block;
+  margin: 0;
+}
+.categories-header .breadcrumb ol li span {
+  font-size: 0.8rem;
+  font-weight: bold;
+}
+.categories-header .breadcrumb ol li:after {
+  content: "/";
+  color: #fff;
+  display: inline-block;
+  margin: 0 0.4rem;
+}
+.categories-header .breadcrumb ol li:last-child:after {
+  content: "";
+  margin: 0;
+}
+.entry-header {
+  display: -webkit-box;
+  display: -moz-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: box;
+  display: flex;
+  -webkit-box-pack: center;
+  -moz-box-pack: center;
+  -o-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -moz-box-align: center;
+  -o-box-align: center;
+  -ms-flex-align: center;
+  -webkit-align-items: center;
+  align-items: center;
+}
+.entry-header .flx:first-child {
+  margin: 0 1rem 0 0;
+}
+.header-cap {
+  -webkit-flex-grow: 3;
+  -webkit-box-flex: 3;
+  -moz-box-flex: 3;
+  -o-box-flex: 3;
+  -ms-box-flex: 3;
+  box-flex: 3;
+  -webkit-flex-grow: 3;
+  flex-grow: 3;
+}
+.title-cover {
+  background-color: #fff;
+  color: #2d3d40;
+  padding: 1.5rem 0.8rem 0 0.8rem;
+}
+.title-cover a {
+  font-size: 1.2rem;
+  color: #2d3d40;
+  text-align: left;
+  font-weight: bold;
+}
+.entry-title {
+  margin: 0;
+}
+.entry-meta-header {
+  font-size: 0.85rem;
+  text-align: center;
+}
+.entry-meta-header .date {
+  font-family: sans-serif;
+}
+h1 a,
+h2 a,
+h3 a,
+h4 a,
+h5 a,
+h6 a {
+  color: #2d3d40;
+  text-decoration: none;
+}
+h1 a:hover,
+h2 a:hover,
+h3 a:hover,
+h4 a:hover,
+h5 a:hover,
+h6 a:hover {
+  color: #e91e63;
+}
+#container {
+  margin-left: auto;
+  margin-right: auto;
+}
+#main {
+  margin-bottom: 3em;
+  padding-left: 0;
+}
+.post {
+  margin-bottom: 3rem;
+  position: relative;
+}
+.entry-content {
+  margin: 0 0.6rem;
+  font-size: 1rem;
+}
+.entry-content h1 {
+  font-size: 1.7rem;
+  line-height: 1.5;
+  margin: 1em 0 0.8em;
+}
+.entry-content h2,
+.entry-content h3,
+.entry-content h4,
+.entry-content h5,
+.entry-content h6,
+.entry-content h2 span,
+.entry-content h3 span,
+.entry-content h4 span,
+.entry-content h5 span,
+.entry-content h6 span {
+  color: #98b8be;
+  font-weight: bold;
+}
+.entry-content h2,
+.entry-content h2 span {
+  font-size: 1.8rem;
+  line-height: 2.6rem;
+  text-align: center;
+}
+.entry-content h2 {
+  border-bottom: 2px solid #cce4e8;
+  margin: 4.5rem 0 0.5em;
+  padding: 0.8em 0;
+}
+.entry-content h3,
+.entry-content h3 span {
+  font-size: 1.6rem;
+  line-height: 2.2rem;
+  text-align: center;
+}
+.entry-content h3 {
+  margin: 3.6rem 0.8rem 3rem 0.8rem;
+  padding: 0;
+}
+.entry-content h4,
+.entry-content h4 span {
+  font-size: 1.4rem;
+  line-height: 2rem;
+  text-align: center;
+}
+.entry-content h4 {
+  margin: 3.6rem 0.8rem 3rem 0.8rem;
+  padding: 0;
+}
+.entry-content h5,
+.entry-content h5 span {
+  font-size: 1.2rem;
+  line-height: 1.8rem;
+  text-align: center;
+}
+.entry-content h5 {
+  margin: 3.6rem 0.8rem 3rem 0.8rem;
+  padding: 0;
+}
+.entry-content h6,
+.entry-content h6 span {
+  font-size: 1.1rem;
+  line-height: 1.6rem;
+  text-align: center;
+}
+.entry-content h6 {
+  margin: 3.6rem 0.8rem 3rem 0.8rem;
+  padding: 0;
+}
+.entry-content p {
+  font-size: 1rem;
+  letter-spacing: 0.05rem;
+  line-height: 2.2rem;
+  margin: 3rem 0.8rem;
+}
+.entry-content p a {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  display: inline;
+  border-bottom: 1px dashed #f1729d;
+  padding-bottom: 0.3rem;
+}
+.entry-content p a:hover {
+  border-bottom: 1px dashed #9c0f3f;
+  padding-bottom: 0.4rem;
+}
+.entry-content em {
+  background-color: #f9f5d1;
+  color: #886d00;
+  font-style: normal;
+  margin: 0 2px;
+  padding: 0.4em;
+}
+.entry-content strong {
+  color: #871c1c;
+  font-style: normal;
+  margin: 0 2px;
+  padding: 0.4em;
+  background-color: #fadcdc;
+}
+.entry-content hr {
+  border: 0;
+  border-top: 3px solid #cce4e8;
+  margin: 3rem auto;
+  width: 20%;
+}
+.entry-content img,
+.entry-content video {
+  display: block;
+  height: auto;
+  margin: auto;
+  max-width: 100%;
+}
+.entry-content iframe {
+  width: 100% ;
+}
+.entry-content blockquote {
+  margin: 3rem 0.8rem;
+  padding: 1rem 1.8rem;
+  position: relative;
+  background-color: none;
+  border-left: 3px solid #98b8be;
+  font-style: italic;
+}
+.entry-content blockquote p {
+  margin: 0.5rem 0;
+}
+.entry-content blockquote blockquote {
+  border-left: none;
+}
+.entry-content .table-wrapper {
+  margin: 3rem 0.8rem;
+}
+.entry-content table {
+  border-collapse: collapse;
+  border-spacing: 0;
+  overflow: auto;
+  display: block;
+  font-size: 0.85rem;
+  margin: 0 auto;
+  width: auto;
+}
+.entry-content td,
+.entry-content th {
+  line-height: 1.8em;
+  padding: 0.8rem 0.8rem;
+  font-size: 0.85rem;
+}
+.entry-content td em,
+.entry-content th em,
+.entry-content td strong,
+.entry-content th strong,
+.entry-content td a,
+.entry-content th a {
+  font-size: 0.85rem;
+}
+.entry-content td {
+  border: 1px solid #c4c4c4;
+}
+.entry-content th {
+  background-color: #ecf5f7;
+  border: 1px solid #c4c4c4;
+}
+.entry-content .table-align-center {
+  text-align: center;
+}
+.entry-content .table-align-right {
+  text-align: right;
+}
+.entry-content ul,
+.entry-content ol,
+.entry-content dl {
+  margin: 3rem 0 3rem 1.6rem;
+  padding: 0;
+  list-style: none;
+  font-size: 1rem;
+}
+.entry-content ul li,
+.entry-content ol li,
+.entry-content dl li {
+  line-height: 2rem;
+  position: relative;
+  padding: 0;
+}
+.entry-content ul li p,
+.entry-content ol li p,
+.entry-content dl li p {
+  line-height: 2rem;
+  margin: 0;
+}
+.entry-content ul li p:not(:first-child),
+.entry-content ol li p:not(:first-child),
+.entry-content dl li p:not(:first-child) {
+  color: #57767c;
+  margin: 0.5rem;
+}
+.entry-content ul li ul,
+.entry-content ol li ul,
+.entry-content dl li ul,
+.entry-content ul li ol,
+.entry-content ol li ol,
+.entry-content dl li ol,
+.entry-content ul li dl,
+.entry-content ol li dl,
+.entry-content dl li dl {
+  margin: 1rem;
+}
+.entry-content ul li {
+  margin: 0.4rem 0 0.4rem 0.8rem;
+}
+.entry-content ul li::after {
+  position: absolute;
+  display: block;
+  content: '';
+  top: 0.75rem;
+  left: -1rem;
+  width: 0.5rem;
+  height: 0.5rem;
+  background-color: #cce4e8;
+  border-radius: 100%;
+}
+.entry-content ol {
+  counter-reset: number;
+}
+.entry-content ol li {
+  margin: 0.4rem 0 0.4rem 2rem;
+}
+.entry-content ol li p:first-child {
+  display: inline-block;
+  line-height: 1.6rem;
+  height: 1.6rem;
+}
+.entry-content ol li:before {
+  position: absolute;
+  display: inline-block;
+  float: left;
+  margin: 0 0.2rem 0 0;
+  padding: 0;
+  counter-increment: number;
+  content: counter(number);
+  left: -2.2rem;
+  top: 0.2rem;
+  background-color: #98b8be;
+  width: 1.6rem;
+  height: 1.6rem;
+  border-radius: 50%;
+  color: #fff;
+  text-align: center;
+  font-weight: bold;
+  font-size: 0.8rem;
+  line-height: 1.6rem;
+}
+kbd {
+  font-family: sans-serif;
+  text-align: center;
+  display: inline-block;
+  color: #425a5e;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-border-radius: 3px;
+  -webkit-box-shadow: 0 0 10px #e8e8e8 inset, 0 1px 0 #c3c3c3, 0 2px 0 #c9c9c9, 0 3px 3px #333;
+  box-shadow: 0 0 10px #e8e8e8 inset, 0 1px 0 #c3c3c3, 0 2px 0 #c9c9c9, 0 3px 3px #333;
+  -webkit-box-shadow: 0 0 10px #e2e2e2 inset, 0 1px 0 #c3c3c3, 0 2px 0 #c9c9c9, 0 3px 3px #333;
+  -webkit-font-smoothing: subpixel-antialiased;
+  background: #fff;
+  border-left: 1px solid #fff;
+  border-radius: 3px;
+  border-right: 1px solid #e6e6e6;
+  border-top: 1px solid #fff;
+  font-size: 0.85rem;
+  line-height: 1rem;
+  margin: 5px;
+  padding: 6px 8px 3px;
+  text-shadow: 0 1px 0 #fff;
+  vertical-align: baseline;
+  
+}
+img.responsive-img {
+  height: auto;
+  max-width: 100%;
+}
+video.responsive-video {
+  height: auto;
+  max-width: 100%;
+}
+amp-instagram,
+amp-vimeo,
+amp-video,
+amp-youtube,
+amp-twitter,
+.soundcloud-wrapper,
+.amp-img-wrapper,
+.googleAdPost,
+.ad-footer {
+  margin: 3rem 0.8rem;
+}
+code,
+figure.highlight .code,
+pre {
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: subpixel-antialiased;
+}
+code,
+pre,
+samp {
+  font-family: Menlo, Consolas, Monaco, Consolas, monospace;
+}
+p code {
+  font-size: 1rem;
+}
+code,
+pre {
+  font-size: 0.85rem;
+  letter-spacing: 0.05rem;
+  background-color: #ecf5f7;
+  color: #007e96;
+}
+code {
+  margin: 0 3px;
+  padding: 0.4em;
+}
+samp {
+  font-size: 0.85rem;
+  letter-spacing: 0.05rem;
+}
+sub,
+sup {
+  font-size: 0.75rem;
+  line-height: 0;
+  position: relative;
+}
+sub {
+  bottom: -0.2em;
+}
+sup {
+  top: -0.5em;
+}
+pre {
+  font-size: 1rem;
+  letter-spacing: 0.05rem;
+  margin: 0 3px;
+  padding: 15px;
+  -webkit-background-clip: padding;
+  -moz-background-clip: padding;
+  background-clip: padding-box;
+  border: 0;
+  line-height: 1.3rem;
+  overflow-x: auto;
+}
+pre .addition,
+pre .css .tag,
+pre .keyword,
+pre .method,
+pre .nginx .title,
+pre .request,
+pre .status,
+pre .winutils {
+  color: #66d9ef;
+}
+pre .attr_selector,
+pre .cdata,
+pre .clojure .title,
+pre .diff .change,
+pre .important {
+  color: #9882eb;
+}
+pre .preprocessor {
+  color: #9882eb;
+}
+pre .preprocessor .keyword {
+  color: #9882eb;
+}
+pre .shebang,
+pre .special,
+pre .subst {
+  color: #9882eb;
+}
+pre .symbol {
+  color: #9882eb;
+}
+pre .symbol .string {
+  color: #9882eb;
+}
+pre .attribute,
+pre .class .title,
+pre .constant,
+pre .haskell .type,
+pre .lisp .body,
+pre .parent,
+pre .smalltalk .number,
+pre .variable {
+  color: #a6e22e;
+}
+pre .built_in,
+pre .chunk,
+pre .decorator,
+pre .id,
+pre .identifier,
+pre .literal,
+pre .localvars,
+pre .title,
+pre .vhdl,
+pre .deletion {
+  color: #f92672;
+}
+pre .command,
+pre .hexcolor,
+pre .number,
+pre .phpdoc,
+pre .regexp,
+pre .string,
+pre .tag .value,
+pre .tex .formula {
+  color: #e6db74;
+}
+pre .comment,
+pre .diff .header,
+pre .doctype,
+pre .javadoc,
+pre .lisp .string,
+pre .pi,
+pre .template_comment {
+  color: #75715e;
+  font-weight: normal;
+}
+.line {
+  font-size: 0.85rem;
+  letter-spacing: 0.05rem;
+  line-height: 2rem;
+  color: #f8f8f2;
+}
+.line span {
+  font-size: 0.85rem;
+  letter-spacing: 0.05rem;
+}
+.gist {
+  background: #fff;
+  border: 1px solid color-gutter;
+  color: #f8f8f2;
+  line-height: 1.6rem;
+  margin-top: 15px;
+  overflow: auto;
+  padding: 7px 15px;
+}
+.gist .gist-file {
+  border: none;
+  font-family: inherit;
+  font-size: 1rem;
+  letter-spacing: 0;
+  margin: 0;
+}
+.gist .gist-file .gist-data {
+  background: 0 0;
+  border-bottom: none;
+}
+.gist .gist-file .gist-data pre {
+  font-family: Menlo, Consolas, Monaco, Consolas, monospace;
+  padding: 0 ;
+}
+.gist .gist-file .gist-meta {
+  background: 0 0;
+  color: #f8f8f2;
+  font-size: 1rem;
+  margin-top: 5px;
+  padding: 0;
+}
+.gist .gist-file .gist-meta a {
+  color: #f8f8f2;
+}
+.gist .gist-file .gist-meta a:visited {
+  color: #f8f8f2;
+}
+figure.highlight {
+  font-size: 0.95rem;
+  margin: 3rem 0.8rem;
+  background: #263338;
+  border: 1px solid color-gutter;
+  line-height: 2rem;
+  overflow: auto;
+  position: relative;
+}
+figure.highlight .code {
+  padding: 0 1em 1em 1em;
+  color: #f8f8f2;
+}
+figure.highlight .gutter {
+  display: none;
+}
+figure.highlight figcaption {
+  font-size: 1rem;
+  font-weight: bold;
+  color: #e9e9d6;
+  background-color: #1e282c;
+  padding: 0.6em 1em;
+}
+figure.highlight figcaption a {
+  position: absolute;
+  right: 1rem;
+}
+figure.highlight figcaption:before {
+  content: "\f121";
+  font-family: "fontawesome";
+  text-align: center;
+  display: inline-block;
+  margin-right: 0.6em;
+}
+figure.highlight pre {
+  background: 0 0;
+  border: none;
+  margin: 0;
+  padding: 0.5rem;
+}
+figure.highlight table {
+  border-spacing: 0;
+  margin: 0;
+}
+figure.highlight th {
+  border: 0;
+  font-weight: 400;
+  padding: 0;
+}
+figure.highlight td {
+  border: 0;
+  font-size: 1.1rem;
+  padding: 0;
+}
+.entry-content .toc {
+  background: #fff;
+  padding: 0.5rem;
+  margin: 3rem 0;
+  border: 1px solid #cce4e8;
+  border-radius: 2px;
+}
+.entry-content .toc ul {
+  margin-bottom: 0;
+  padding: 0;
+  margin: 0;
+  border-top: 1px solid #5d8b93;
+  border-radius: 2px;
+}
+.entry-content .toc ul:first-child {
+  border-top: none;
+}
+.entry-content .toc ul ul,
+.entry-content .toc ul ol {
+  margin-bottom: 0;
+  padding: 0;
+  margin: 0;
+}
+.entry-content .toc ul li {
+  padding: 0;
+  margin: 0;
+  border-top: 1px solid #5d8b93;
+}
+.entry-content .toc ul li:first-child {
+  border-top: none;
+}
+.entry-content .toc ul li::after,
+.entry-content .toc ul li::before {
+  content: normal;
+}
+.entry-content .toc ul li a {
+  font-size: 1.2rem;
+  font-weight: bold;
+  display: block;
+  padding: 1rem;
+  background-color: #3d5b61;
+  color: #fff;
+  -webkit-transition: 0.3s;
+  -ms-transition: 0.3s;
+  -moz-transition: 0.3s;
+  -o-transition: 0.3s;
+  -webkit-transition: 0.3s;
+  -moz-transition: 0.3s;
+  -o-transition: 0.3s;
+  -ms-transition: 0.3s;
+  transition: 0.3s;
+}
+.entry-content .toc ul li a:hover {
+  color: #fff;
+  background-color: #2c4145;
+}
+.entry-content .toc ul li a:before {
+  content: "\f02d";
+  font-family: "fontawesome";
+  display: inline-block;
+  padding: 0;
+  margin: 0;
+  margin-right: 0.8rem;
+}
+.entry-content .toc ul li ul,
+.entry-content .toc ul li ol {
+  margin-bottom: 0;
+  padding: 0;
+  margin: 0;
+}
+.entry-content .toc ul li ul li a,
+.entry-content .toc ul li ol li a {
+  padding: 0.5rem 0.75rem 0.5rem 2rem;
+  font-size: 0.9rem;
+  background-color: #416167;
+}
+.entry-content .toc ul li ul li a:before,
+.entry-content .toc ul li ol li a:before {
+  content: "\f0da";
+  font-family: "fontawesome";
+  display: inline-block;
+  padding: 0;
+  margin: 0;
+  margin-right: 0.6rem;
+}
+.entry-content .toc ul li ul li ul li a,
+.entry-content .toc ul li ol li ul li a {
+  padding: 0.5rem 0.75rem 0.5rem 4rem;
+}
+.entry-content .toc ul li ul li ul li a:before,
+.entry-content .toc ul li ol li ul li a:before {
+  content: none;
+}
+.meta-content {
+  background-color: #fff;
+  margin: 1.5rem 0.8rem;
+  padding: 0;
+  border-top: 1px dotted #cce4e8;
+  letter-spacing: 0.05rem;
+}
+.meta-wrapper {
+  margin: 3rem 0.8rem;
+  padding: 0;
+  background-color: #fff;
+}
+h6.tag,
+h6.categories {
+  color: #2d3d40;
+  font-size: 0.9rem;
+  font-weight: bold;
+}
+.article-tag-list {
+  padding: 0;
+}
+.article-tag,
+.article-tag-list,
+.article-categories,
+.article-categories-list {
+  padding: 0;
+  margin: 0;
+}
+.article-categories {
+  margin-bottom: 1.6em;
+}
+.article-tag-list li,
+.article-categories-list li {
+  list-style: none;
+  display: inline-block;
+  padding: 0;
+  margin: 0.2rem 0.1rem;
+}
+.article-tag-list li a,
+.article-categories-list li a {
+  font-size: 0.8rem;
+  font-weight: bold;
+  padding: 0.4rem 0.8rem;
+  margin: 0;
+  background-color: #ecf5f7;
+  color: #2d3d40;
+  border-radius: 2px;
+  display: block;
+}
+.article-tag-list li a:before,
+.article-categories-list li a:before {
+  content: "#";
+}
+.article-tag-list li a:hover,
+.article-categories-list li a:hover {
+  color: #fff;
+  background-color: #2d3d40;
+}
+.widget {
+  margin: 1.5rem 0.8rem;
+  padding: 0;
+}
+.widget-h {
+  text-align: center;
+  margin: 1.6rem 0;
+}
+.widget-h h6 {
+  color: #fff;
+  background-color: #2d3d40;
+  display: inline-block;
+  padding: 0.4rem 1rem;
+  font-size: 0.9rem;
+  font-weight: bold;
+}
+.posts-list li {
+  list-style: none;
+  margin: 0.8rem 0;
+  display: -webkit-box;
+  display: -moz-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: box;
+  display: flex;
+  -webkit-box-pack: center;
+  -moz-box-pack: center;
+  -o-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -moz-box-align: center;
+  -o-box-align: center;
+  -ms-flex-align: center;
+  -webkit-align-items: center;
+  align-items: center;
+}
+.posts-list li .posts-list-link {
+  -webkit-flex-grow: 3;
+  -webkit-box-flex: 3;
+  -moz-box-flex: 3;
+  -o-box-flex: 3;
+  -ms-box-flex: 3;
+  box-flex: 3;
+  -webkit-flex-grow: 3;
+  flex-grow: 3;
+}
+.posts-list li .posts-list-link a {
+  color: #2d3d40;
+  font-size: 1.1rem;
+  font-weight: bold;
+}
+.posts-list li .posts-list-link a:hover {
+  color: #e91e63;
+}
+.posts-list li .posts-list-meta {
+  font-size: 0.7rem;
+}
+.posts-list li .flx:first-child {
+  margin: 0 1rem 0 0;
+}
+.posts-list li amp-img {
+  border-radius: 2px;
+}
+#footer {
+  background-color: #2d3d40;
+  color: #fff;
+  display: block;
+  font-size: 1rem;
+  letter-spacing: 0.05rem;
+  line-height: 2rem;
+  margin: 3rem 0 0 0;
+  padding: 0;
+}
+.site-author-info {
+  margin: 0;
+  padding: 3rem 1.6rem;
+}
+.site-author-info h6 {
+  font-size: 1rem;
+  color: #fff;
+  font-weight: bold;
+  display: inline-block;
+  background-color: #222f31;
+  padding: 0.4rem 0.8rem;
+}
+.site-author-info-wrapper {
+  display: -webkit-box;
+  display: -moz-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: box;
+  display: flex;
+  -webkit-box-pack: center;
+  -moz-box-pack: center;
+  -o-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -moz-box-align: center;
+  -o-box-align: center;
+  -ms-flex-align: center;
+  -webkit-align-items: center;
+  align-items: center;
+}
+.site-author-info-wrapper .flx:first-child {
+  margin: 0 1rem 0 0;
+}
+.authorCap-wrapper {
+  -webkit-flex-grow: 3;
+  -webkit-box-flex: 3;
+  -moz-box-flex: 3;
+  -o-box-flex: 3;
+  -ms-box-flex: 3;
+  box-flex: 3;
+  -webkit-flex-grow: 3;
+  flex-grow: 3;
+}
+.authorCap {
+  font-size: 1.4rem;
+  font-weight: bold;
+}
+.authorReading {
+  font-size: 0.7rem;
+}
+.site-author-desc {
+  font-size: 0.8rem;
+  line-height: 1.6rem;
+  margin: 1.4rem 0;
+}
+.copyright-tool {
+  margin: 0;
+  padding: 1.5rem 1.6rem;
+  border-top: 1px solid #384b4f;
+}
+.copyright-notice p {
+  font-size: 0.6rem;
+  letter-spacing: 0.05rem;
+  line-height: 1.2rem;
+  color: #8ba8ae;
+}
+.copyright-title {
+  font-size: 1rem;
+  text-align: center;
+  margin: 0.8rem 0 0.4rem 0;
+}
+.copyright-license {
+  margin: 0.4rem 0 0.8rem 0;
+  font-size: 0.7rem;
+  text-align: center;
+}
+.copyright-license a {
+  color: #e6e6e6;
+  font-size: 0.7rem;
+}
+.copyright-license a:hover {
+  color: #b3b3b3;
+}
+.sns-link {
+  margin: 0;
+  text-align: center;
+}
+.sns-link a {
+  display: inline-block;
+  font-size: 1.6rem;
+  text-align: center;
+  width: 2rem;
+  height: 2rem;
+  line-height: 2rem;
+  padding: 0.6rem;
+  margin: 0 0.1rem;
+  background-color: #222f31;
+  color: #fff;
+  border-radius: 4px;
+}
+.sns-link a:hover {
+  color: #ccc;
+  background-color: #030404;
+}
+.footer-menu {
+  padding: 1.5rem 0.8rem;
+  border-top: 1px solid #384b4f;
+}
+.footer-menu ul li {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.footer-menu ul li a {
+  display: block;
+  padding: 0.6rem;
+  margin: 0.2rem 1.6rem;
+  font-size: 1rem;
+  color: #fff;
+  background-color: #222f31;
+  border-radius: 4px;
+  text-align: center;
+  font-weight: bold;
+}
+.footer-menu ul li a:hover {
+  color: #ccc;
+  background-color: #030404;
+}
+.social-share {
+  margin: 1.5rem 0.8rem;
+  display: -webkit-box;
+  display: -moz-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: box;
+  display: flex;
+  -webkit-box-pack: center;
+  -moz-box-pack: center;
+  -o-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+}
+.social-share amp-social-share,
+.social-share .sbtn {
+  margin: 5px;
+}
+.sbtn {
+  padding: 0;
+  width: 4rem;
+  height: 3rem;
+  line-height: 3rem;
+  color: #fff;
+  font-size: 1.2rem;
+  text-align: center;
+  border-radius: 4px;
+}
+.sbtn:hover {
+  color: #fff;
+}
+.tw {
+  background-color: #1cafe8;
+}
+.tw:hover {
+  background-color: #0f6b8f;
+}
+.fb {
+  background-color: #4f677f;
+}
+.fb:hover {
+  background-color: #283440;
+}
+.ht {
+  background-color: #35acda;
+}
+.ht:hover {
+  background-color: #1a6e8f;
+}
+.gp {
+  background-color: #d56153;
+}
+.gp:hover {
+  background-color: #9c3326;
+}
+.tb {
+  background-color: #465f79;
+}
+.tb:hover {
+  background-color: #212c38;
+}
+.icon-hatena:before {
+  content: "B";
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+#totop {
+  position: fixed;
+  bottom: 2rem;
+  right: 1.6rem;
+  font-size: 1.2rem;
+  z-index: 995;
+}
+#totop a {
+  background: rgba(152,184,190,0.6);
+  text-decoration: none;
+  color: #fff;
+  padding: 0.8rem;
+  border-radius: 50%;
+}
+#totop a:before {
+  content: "\f062";
+  font-family: "fontawesome";
+  font-size: 1.2rem;
+}
+#totop a:hover {
+  text-decoration: none;
+  background: #5d8b93;
+  color: #fff;
+  line-height: 2.3em;
+}
+@media (min-width: 800px) {
+  .title-cover,
+  .entry-content,
+  .categories,
+  .meta-content,
+  .site-author-info {
+    width: 780px;
+    margin: 0 auto;
+  }
+  .nav-container {
+    width: 800px;
+    margin: 0 auto;
+  }
+}
+@media (min-width: 0px) and (max-width: 480px) {
+  .site-author-info-wrapper {
+    display: block;
+  }
+  .gravatar-area {
+    text-align: center;
+  }
+  .gravatar-area amp-img {
+    display: inline-block;
+  }
+  .entry-content td,
+  .entry-content th {
+    line-height: 1.8em;
+    padding: 0.6rem 0.6rem;
+    font-size: 0.5rem;
+  }
+  .entry-content td em,
+  .entry-content th em,
+  .entry-content td strong,
+  .entry-content th strong,
+  .entry-content td a,
+  .entry-content th a {
+    font-size: 0.5rem;
+  }
+}
+
+	</style>
+	
+  </head>
+  <body>
+  	
+  	
+  	<!-- google analytics -->
+  	
+  	
+  	
+  	<!-- menu -->
+  	<header>
+  		<div class="nav-container">
+	  		<div class="left-nav">
+	  			<div class="header-title">
+	  				<a href="/">Chester.Cao Blog</a>
+	  			</div>
+	  		</div>
+	  		
+	  	</div>
+    </header>
+  	
+  	
+  	<!-- sidebar -->
+  	
+  	
+  	<!-- container -->
+  	<div id="container">
+	  	<div id="main">
+		    <article id="post-hexo/hexo-secordblog" class="post">
+		    
+		   		<!-- categories and bread crumb -->
+		    	
+				<div class="categories-header">
+					<div class="categories">
+						<div class="breadcrumb inline-icon">
+							<ol itemscope itemtype="http://schema.org/BreadcrumbList">
+							  <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+							    <a itemprop="item" href="/">
+							    	<span class="sns-icon home-icon"></span>
+							        <span itemprop="name"><span class="fa fa-fw fa-home"></span></span>
+							    </a>
+							    <meta itemprop="position" content="1" />
+							  </li>
+
+								
+						    		<li itemprop="itemListElement" itemscope
+									      itemtype="http://schema.org/ListItem">
+									    <a itemprop="item" href="/categories/hexo/">
+									      
+									      	<span class="sns-icon folder-icon"></span>
+									      
+									      <span itemprop="name">hexo</span>
+									    </a>
+									    <meta itemprop="position" content="2" />
+									</li>
+								
+							</ol>
+						</div>
+					</div>
+				</div>
+				
+		    
+		    	<!-- entry title -->
+				<div class="title-cover">
+					<div class="entry-header">
+						
+						
+						
+			          	<div class="header-thumb flx">
+			          		<div class="thumbImg-w circle">
+			          			<amp-img class="thumbImg" layout="fixed" width="128" height="100" src="\amp-dist\sample\sample-substituteTitleImage.png">
+			          			</amp-img>
+			          		</div>
+			          	</div>
+			            
+			            
+			            <div class="header-cap flx">
+							
+							  <h1 class="article-title entry-title" itemprop="name">
+							    <a href="http://blog.rcant.com/2017/03/01/hexo/hexo-secordblog/" target="_blank" itemprop="url">Hexo更换博客样式</a>
+							  </h1>
+							
+						</div>
+					</div>
+					
+					<!-- datePublished -->
+					<div class="entry-meta-header">
+						<span class="meta-elements date">
+							<span class="fa fa-fw fa-clock-o"></span>
+							<time datetime="2017-03-01" itemprop="datePublished">2017.03.01</time>
+						</span>
+					</div>
+				</div>
+				
+				
+				
+				<!-- entry content -->
+			    <div class="entry-content ecp">
+			    	<!-- social share button -->
+			    	
+			    	
+			    	
+                    <!-- google Adsense Matched content -->
+                    
+                    
+			    	<!-- content -->
+			  		<h2 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h2><p>Hexo 默认的样式比较难看</p>
+<h2 id="搭建博客"><a href="#搭建博客" class="headerlink" title="搭建博客"></a>搭建博客</h2><p>看前章内容</p>
+<h2 id="Hexo配置"><a href="#Hexo配置" class="headerlink" title="Hexo配置"></a>Hexo配置</h2><h3 id="hexo里面有两个常用到的配置文件-hexo-项目根文件夹"><a href="#hexo里面有两个常用到的配置文件-hexo-项目根文件夹" class="headerlink" title="hexo里面有两个常用到的配置文件 ${hexo} 项目根文件夹"></a>hexo里面有两个常用到的配置文件 ${hexo} 项目根文件夹</h3><ul>
+<li>整个博客的配置文件 <strong>${hexo}_config.yml</strong></li>
+<li>主题的配置文件 <strong>${hexo}\themes\xxx_config.yml</strong></li>
+</ul>
+<p>hexo3.0的默认主题是landscape，就是 <strong>${hexo}\themes\landscape_config.yml</strong></p>
+<h3 id="替换主题"><a href="#替换主题" class="headerlink" title="替换主题"></a>替换主题</h3><ul>
+<li>找到你需要的喜欢的主题，下载下来，我用的是<a href="https://github.com/iissnan/hexo-theme-next">Next</a></li>
+<li>把主题文件放到${hexo}\themes 下</li>
+<li>修改博客配置文件 ${hexo}_config.yml 中的theme名字改为自己下载的主题的文件夹名即可。</li>
+</ul>
+<p>接下来介绍整个博客的配置文件。</p>
+<span id="more"></span>
+<h3 id="博客配置文件"><a href="#博客配置文件" class="headerlink" title="博客配置文件"></a>博客配置文件</h3><figure class="highlight markdown"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br></pre></td><td class="code"><pre><span class="line"><span class="section"># Hexo Configuration</span></span><br><span class="line"><span class="section">## Docs: http://hexo.io/docs/configuration.html</span></span><br><span class="line"><span class="section">## Source: https://github.com/hexojs/hexo/</span></span><br><span class="line"></span><br><span class="line"><span class="section"># Site	ps:这下面的几项配置都很简单</span></span><br><span class="line">title: ryancao blog	# ps: 博客名</span><br><span class="line">subtitle: C# Develop	# ps:副标题</span><br><span class="line">description:  # ps:用于搜索，没有直观表现</span><br><span class="line">author: rc	# ps:作者</span><br><span class="line">language: zh-Hans	# ps:语言</span><br><span class="line">timezone: 	# ps:时区，此处不填写，hexo会以你目前电脑的时区为默认值</span><br><span class="line"></span><br><span class="line"><span class="section"># URL</span></span><br><span class="line">url: http://blog.rcant.com  # ps:域名</span><br><span class="line">root: /</span><br><span class="line">permalink: :year/:month/:day/:title/</span><br><span class="line">permalink<span class="emphasis">_defaults:</span></span><br><span class="line"><span class="emphasis"></span></span><br><span class="line"><span class="emphasis"># Directory		ps:暂不配置，使用默认值</span></span><br><span class="line"><span class="emphasis">source_</span>dir: source</span><br><span class="line">public<span class="emphasis">_dir: public</span></span><br><span class="line"><span class="emphasis">tag_</span>dir: tags</span><br><span class="line">archive<span class="emphasis">_dir: archives</span></span><br><span class="line"><span class="emphasis">category_</span>dir: categories</span><br><span class="line">code<span class="emphasis">_dir: downloads/code</span></span><br><span class="line"><span class="emphasis">i18n_</span>dir: :lang</span><br><span class="line">skip<span class="emphasis">_render:</span></span><br><span class="line"><span class="emphasis"></span></span><br><span class="line"><span class="emphasis"># Writing	ps:文章布局等，使用默认值</span></span><br><span class="line"><span class="emphasis">new_</span>post<span class="emphasis">_name: :title.md # File name of new posts</span></span><br><span class="line"><span class="emphasis">default_</span>layout: post</span><br><span class="line">titlecase: false # Transform title into titlecase</span><br><span class="line">external<span class="emphasis">_link: true # Open external links in new tab</span></span><br><span class="line"><span class="emphasis">filename_</span>case: 0</span><br><span class="line">render<span class="emphasis">_drafts: false</span></span><br><span class="line"><span class="emphasis">post_</span>asset<span class="emphasis">_folder: false</span></span><br><span class="line"><span class="emphasis">relative_</span>link: false</span><br><span class="line">future: true</span><br><span class="line">highlight:</span><br><span class="line">  enable: true</span><br><span class="line">  line<span class="emphasis">_number: true</span></span><br><span class="line"><span class="emphasis">  tab_</span>replace:</span><br><span class="line"></span><br><span class="line"><span class="section"># Category &amp; Tag	ps:暂不配置，使用默认值</span></span><br><span class="line">default<span class="emphasis">_category: uncategorized</span></span><br><span class="line"><span class="emphasis">category_</span>map:</span><br><span class="line">tag<span class="emphasis">_map:</span></span><br><span class="line"><span class="emphasis"></span></span><br><span class="line"><span class="emphasis"># Date / Time format	ps:时间格式，使用默认值</span></span><br><span class="line"><span class="emphasis">## Hexo uses Moment.js to parse and display date</span></span><br><span class="line"><span class="emphasis">## You can customize the date format as defined in</span></span><br><span class="line"><span class="emphasis">## http://momentjs.com/docs/#/displaying/format/</span></span><br><span class="line"><span class="emphasis">date_</span>format: YYYY-MM-DD</span><br><span class="line">time<span class="emphasis">_format: HH:mm:ss</span></span><br><span class="line"><span class="emphasis"></span></span><br><span class="line"><span class="emphasis"># Pagination	</span></span><br><span class="line"><span class="emphasis">## Set per_</span>page to 0 to disable pagination</span><br><span class="line">per<span class="emphasis">_page: 10	# ps:每页显示的文章数，0表示不分页</span></span><br><span class="line"><span class="emphasis">pagination_</span>dir: page</span><br><span class="line"></span><br><span class="line"><span class="section"># Extensions	ps:插件配置，暂时不配置</span></span><br><span class="line"><span class="section">## Plugins: http://hexo.io/plugins/</span></span><br><span class="line"><span class="section">## Themes: http://hexo.io/themes/</span></span><br><span class="line">plugins:</span><br><span class="line">  -hexo-generator-feed				# ps:这里需要你先安装插件  这个是RSS</span><br><span class="line">  -hexo-generator-baidu-sitemap		# ps:这里需要你先安装插件  这个是百度收录</span><br><span class="line">theme: next # ps:使用的主题，即：themes文件夹下的主题文件夹名</span><br><span class="line"></span><br><span class="line"><span class="section">#sitemap</span></span><br><span class="line"><span class="section"># 自动生成sitemap</span></span><br><span class="line">sitemap:</span><br><span class="line">  path: sitemap.xml</span><br><span class="line">baidusitemap:</span><br><span class="line">  path: baidusitemap.xml</span><br><span class="line"></span><br><span class="line">feed:	# ps:之后配置rss会用，使用如下配置即可</span><br><span class="line">  type: atom</span><br><span class="line">  path: atom.xml</span><br><span class="line">  limit: 20  </span><br><span class="line"></span><br><span class="line"><span class="section"># Deployment	ps:用于部署到github，之前已经配置过</span></span><br><span class="line"><span class="section">## Docs: http://hexo.io/docs/deployment.html</span></span><br><span class="line"></span><br><span class="line">deploy: </span><br><span class="line">  type: git</span><br><span class="line">  repository: http://github.com/xxx/xxx.github.io.git # ps:自己修改</span><br><span class="line">  branch: master</span><br></pre></td></tr></tbody></table></figure>
+<p>然后发布下看下效果吧</p>
+<figure class="highlight markdown"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">hexo g</span><br><span class="line">hexo s</span><br></pre></td></tr></tbody></table></figure>
+<h3 id="主题配置文件"><a href="#主题配置文件" class="headerlink" title="主题配置文件"></a>主题配置文件</h3><figure class="highlight markdown"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br><span class="line">238</span><br><span class="line">239</span><br><span class="line">240</span><br><span class="line">241</span><br><span class="line">242</span><br><span class="line">243</span><br><span class="line">244</span><br><span class="line">245</span><br><span class="line">246</span><br><span class="line">247</span><br><span class="line">248</span><br><span class="line">249</span><br><span class="line">250</span><br><span class="line">251</span><br><span class="line">252</span><br><span class="line">253</span><br><span class="line">254</span><br><span class="line">255</span><br><span class="line">256</span><br><span class="line">257</span><br><span class="line">258</span><br><span class="line">259</span><br><span class="line">260</span><br><span class="line">261</span><br><span class="line">262</span><br><span class="line">263</span><br><span class="line">264</span><br><span class="line">265</span><br><span class="line">266</span><br><span class="line">267</span><br><span class="line">268</span><br><span class="line">269</span><br><span class="line">270</span><br><span class="line">271</span><br><span class="line">272</span><br><span class="line">273</span><br><span class="line">274</span><br><span class="line">275</span><br><span class="line">276</span><br><span class="line">277</span><br><span class="line">278</span><br><span class="line">279</span><br><span class="line">280</span><br><span class="line">281</span><br><span class="line">282</span><br><span class="line">283</span><br><span class="line">284</span><br><span class="line">285</span><br><span class="line">286</span><br><span class="line">287</span><br><span class="line">288</span><br><span class="line">289</span><br><span class="line">290</span><br><span class="line">291</span><br><span class="line">292</span><br><span class="line">293</span><br><span class="line">294</span><br><span class="line">295</span><br><span class="line">296</span><br><span class="line">297</span><br><span class="line">298</span><br><span class="line">299</span><br><span class="line">300</span><br><span class="line">301</span><br><span class="line">302</span><br><span class="line">303</span><br><span class="line">304</span><br><span class="line">305</span><br><span class="line">306</span><br><span class="line">307</span><br><span class="line">308</span><br><span class="line">309</span><br><span class="line">310</span><br><span class="line">311</span><br><span class="line">312</span><br><span class="line">313</span><br><span class="line">314</span><br><span class="line">315</span><br><span class="line">316</span><br><span class="line">317</span><br><span class="line">318</span><br><span class="line">319</span><br><span class="line">320</span><br><span class="line">321</span><br><span class="line">322</span><br><span class="line">323</span><br><span class="line">324</span><br><span class="line">325</span><br><span class="line">326</span><br><span class="line">327</span><br><span class="line">328</span><br><span class="line">329</span><br><span class="line">330</span><br><span class="line">331</span><br><span class="line">332</span><br><span class="line">333</span><br><span class="line">334</span><br><span class="line">335</span><br><span class="line">336</span><br><span class="line">337</span><br><span class="line">338</span><br><span class="line">339</span><br><span class="line">340</span><br><span class="line">341</span><br><span class="line">342</span><br><span class="line">343</span><br><span class="line">344</span><br><span class="line">345</span><br><span class="line">346</span><br><span class="line">347</span><br><span class="line">348</span><br><span class="line">349</span><br><span class="line">350</span><br><span class="line">351</span><br><span class="line">352</span><br><span class="line">353</span><br><span class="line">354</span><br><span class="line">355</span><br><span class="line">356</span><br><span class="line">357</span><br><span class="line">358</span><br><span class="line">359</span><br><span class="line">360</span><br><span class="line">361</span><br><span class="line">362</span><br><span class="line">363</span><br><span class="line">364</span><br><span class="line">365</span><br><span class="line">366</span><br><span class="line">367</span><br><span class="line">368</span><br><span class="line">369</span><br><span class="line">370</span><br><span class="line">371</span><br><span class="line">372</span><br><span class="line">373</span><br><span class="line">374</span><br><span class="line">375</span><br><span class="line">376</span><br><span class="line">377</span><br><span class="line">378</span><br><span class="line">379</span><br><span class="line">380</span><br><span class="line">381</span><br><span class="line">382</span><br><span class="line">383</span><br><span class="line">384</span><br><span class="line">385</span><br><span class="line">386</span><br><span class="line">387</span><br><span class="line">388</span><br><span class="line">389</span><br><span class="line">390</span><br><span class="line">391</span><br><span class="line">392</span><br><span class="line">393</span><br><span class="line">394</span><br><span class="line">395</span><br><span class="line">396</span><br><span class="line">397</span><br><span class="line">398</span><br><span class="line">399</span><br><span class="line">400</span><br><span class="line">401</span><br><span class="line">402</span><br><span class="line">403</span><br><span class="line">404</span><br><span class="line">405</span><br><span class="line">406</span><br><span class="line">407</span><br><span class="line">408</span><br><span class="line">409</span><br><span class="line">410</span><br><span class="line">411</span><br><span class="line">412</span><br><span class="line">413</span><br><span class="line">414</span><br><span class="line">415</span><br><span class="line">416</span><br><span class="line">417</span><br><span class="line">418</span><br><span class="line">419</span><br><span class="line">420</span><br><span class="line">421</span><br><span class="line">422</span><br><span class="line">423</span><br><span class="line">424</span><br><span class="line">425</span><br><span class="line">426</span><br><span class="line">427</span><br><span class="line">428</span><br><span class="line">429</span><br><span class="line">430</span><br><span class="line">431</span><br><span class="line">432</span><br><span class="line">433</span><br><span class="line">434</span><br><span class="line">435</span><br><span class="line">436</span><br><span class="line">437</span><br><span class="line">438</span><br><span class="line">439</span><br><span class="line">440</span><br><span class="line">441</span><br><span class="line">442</span><br><span class="line">443</span><br><span class="line">444</span><br><span class="line">445</span><br><span class="line">446</span><br><span class="line">447</span><br><span class="line">448</span><br><span class="line">449</span><br><span class="line">450</span><br><span class="line">451</span><br><span class="line">452</span><br><span class="line">453</span><br><span class="line">454</span><br><span class="line">455</span><br><span class="line">456</span><br><span class="line">457</span><br><span class="line">458</span><br><span class="line">459</span><br><span class="line">460</span><br><span class="line">461</span><br><span class="line">462</span><br><span class="line">463</span><br><span class="line">464</span><br><span class="line">465</span><br><span class="line">466</span><br><span class="line">467</span><br><span class="line">468</span><br><span class="line">469</span><br><span class="line">470</span><br><span class="line">471</span><br><span class="line">472</span><br><span class="line">473</span><br><span class="line">474</span><br><span class="line">475</span><br><span class="line">476</span><br><span class="line">477</span><br><span class="line">478</span><br><span class="line">479</span><br><span class="line">480</span><br><span class="line">481</span><br><span class="line">482</span><br><span class="line">483</span><br><span class="line">484</span><br><span class="line">485</span><br><span class="line">486</span><br><span class="line">487</span><br><span class="line">488</span><br><span class="line">489</span><br><span class="line">490</span><br><span class="line">491</span><br><span class="line">492</span><br><span class="line">493</span><br><span class="line">494</span><br><span class="line">495</span><br><span class="line">496</span><br><span class="line">497</span><br><span class="line">498</span><br><span class="line">499</span><br><span class="line">500</span><br><span class="line">501</span><br><span class="line">502</span><br><span class="line">503</span><br><span class="line">504</span><br><span class="line">505</span><br><span class="line">506</span><br><span class="line">507</span><br><span class="line">508</span><br><span class="line">509</span><br><span class="line">510</span><br><span class="line">511</span><br><span class="line">512</span><br><span class="line">513</span><br><span class="line">514</span><br><span class="line">515</span><br><span class="line">516</span><br><span class="line">517</span><br><span class="line">518</span><br><span class="line">519</span><br><span class="line">520</span><br><span class="line">521</span><br><span class="line">522</span><br><span class="line">523</span><br><span class="line">524</span><br></pre></td><td class="code"><pre><span class="line"><span class="section"># ---------------------------------------------------------------</span></span><br><span class="line"><span class="section"># Site Information Settings</span></span><br><span class="line"><span class="section"># ---------------------------------------------------------------</span></span><br><span class="line"></span><br><span class="line"><span class="section"># Put your favicon.ico into `hexo-site/source/` directory.</span></span><br><span class="line">favicon: /favicon.ico   # ps:收藏图标</span><br><span class="line"></span><br><span class="line"><span class="section"># Set default keywords (Use a comma to separate)</span></span><br><span class="line">keywords: "Hexo, NexT"</span><br><span class="line"></span><br><span class="line"><span class="section"># Set rss to false to disable feed link.</span></span><br><span class="line"><span class="section"># Leave rss as empty to use site's feed link.</span></span><br><span class="line"><span class="section"># Set rss to specific value if you have burned your feed already.</span></span><br><span class="line">rss:</span><br><span class="line"></span><br><span class="line"><span class="section"># Specify the date when the site was setup</span></span><br><span class="line"><span class="section">#since: 2015</span></span><br><span class="line"></span><br><span class="line"><span class="section"># icon between year and author @Footer</span></span><br><span class="line">authoricon: heart</span><br><span class="line"></span><br><span class="line"><span class="section"># Footer `powered-by` and `theme-info` copyright</span></span><br><span class="line">copyright: false    # ps:是否显示主题的版权信息</span><br><span class="line"></span><br><span class="line"><span class="section"># Canonical, set a canonical link tag in your hexo, you could use it for your SEO of blog.</span></span><br><span class="line"><span class="section"># See: https://support.google.com/webmasters/answer/139066</span></span><br><span class="line"><span class="section"># Tips: Before you open this tag, remember set up your URL in hexo <span class="emphasis">_config.yml ( ex. url: http://yourdomain.com )</span></span></span><br><span class="line"><span class="emphasis"><span class="section">canonical: true</span></span></span><br><span class="line"><span class="emphasis"><span class="section"></span></span></span><br><span class="line"><span class="emphasis"><span class="section"># Change headers hierarchy on site-subtitle (will be main site description) and on all post/pages titles for better SEO-optimization.</span></span></span><br><span class="line"><span class="emphasis"><span class="section">seo: false</span></span></span><br><span class="line"><span class="emphasis"><span class="section"></span></span></span><br><span class="line"><span class="emphasis"><span class="section"># ---------------------------------------------------------------</span></span></span><br><span class="line"><span class="emphasis"><span class="section"># Menu Settings</span></span></span><br><span class="line"><span class="emphasis"><span class="section"># ---------------------------------------------------------------</span></span></span><br><span class="line"><span class="emphasis"><span class="section"></span></span></span><br><span class="line"><span class="emphasis"><span class="section"># When running the site in a subdirectory (e.g. domain.tld/blog), remove the leading slash (/archives -&gt; archives)</span></span></span><br><span class="line"><span class="emphasis"><span class="section">menu:              # ps:显示的菜单信息</span></span></span><br><span class="line"><span class="emphasis"><span class="section">  home: /</span></span></span><br><span class="line"><span class="emphasis"><span class="section">  #categories: /categories</span></span></span><br><span class="line"><span class="emphasis"><span class="section">  archives: /archives</span></span></span><br><span class="line"><span class="emphasis"><span class="section">  #about: /about</span></span></span><br><span class="line"><span class="emphasis"><span class="section">  #guestbook: /guestbook</span></span></span><br><span class="line"><span class="emphasis"><span class="section">  #tags: /tags</span></span></span><br><span class="line"><span class="emphasis"><span class="section">  #sitemap: /sitemap.xml</span></span></span><br><span class="line"><span class="emphasis"><span class="section">  #commonweal: /404.html</span></span></span><br><span class="line"><span class="emphasis"><span class="section"></span></span></span><br><span class="line"><span class="emphasis"><span class="section"></span></span></span><br><span class="line"><span class="emphasis"><span class="section"># Enable/Disable menu icons.</span></span></span><br><span class="line"><span class="emphasis"><span class="section"># Icon Mapping:</span></span></span><br><span class="line"><span class="emphasis"><span class="section">#   Map a menu item to a specific FontAwesome icon name.</span></span></span><br><span class="line"><span class="emphasis"><span class="section">#   Key is the name of menu item and value is the name of FontAwesome icon. Key is case-senstive.</span></span></span><br><span class="line"><span class="emphasis"><span class="section">#   When an question mask icon presenting up means that the item has no mapping icon.</span></span></span><br><span class="line"><span class="emphasis"><span class="section">menu_</span>icons:        # ps:显示的菜单图标信息</span></span><br><span class="line">  enable: true</span><br><span class="line">  #KeyMapsToMenuItemKey: NameOfTheIconFromFontAwesome</span><br><span class="line">  home: home</span><br><span class="line">  about: user</span><br><span class="line">  categories: th</span><br><span class="line">  schedule: calendar</span><br><span class="line">  tags: tags</span><br><span class="line">  archives: archive</span><br><span class="line">  sitemap: sitemap</span><br><span class="line">  commonweal: heartbeat</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="section"># ---------------------------------------------------------------</span></span><br><span class="line"><span class="section"># Scheme Settings  # ps:三种主题</span></span><br><span class="line"><span class="section"># ---------------------------------------------------------------</span></span><br><span class="line"></span><br><span class="line"><span class="section"># Schemes</span></span><br><span class="line"><span class="section">#scheme: Muse</span></span><br><span class="line">scheme: Mist</span><br><span class="line"><span class="section">#scheme: Pisces</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="section"># ---------------------------------------------------------------</span></span><br><span class="line"><span class="section"># Font Settings</span></span><br><span class="line"><span class="section"># - Find fonts on Google Fonts (https://www.google.com/fonts)</span></span><br><span class="line"><span class="section"># - All fonts set here will have the following styles:</span></span><br><span class="line"><span class="section">#     light, light italic, normal, normal italic, bold, bold italic</span></span><br><span class="line"><span class="section"># - Be aware that setting too much fonts will cause site running slowly</span></span><br><span class="line"><span class="section"># - Introduce in 5.0.1</span></span><br><span class="line"><span class="section"># ---------------------------------------------------------------</span></span><br><span class="line">font:</span><br><span class="line">  enable: true</span><br><span class="line"></span><br><span class="line">  # Uri of fonts host. E.g. //fonts.googleapis.com (Default)</span><br><span class="line">  host:</span><br><span class="line"></span><br><span class="line">  # Global font settings used on <span class="language-xml"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span> element.</span><br><span class="line">  global:</span><br><span class="line"><span class="code">    # external: true will load this font family from host.</span></span><br><span class="line"><span class="code">    external: true</span></span><br><span class="line"><span class="code">    family: Lato</span></span><br><span class="line"><span class="code"></span></span><br><span class="line">  # Font settings for Headlines (h1, h2, h3, h4, h5, h6)</span><br><span class="line">  # Fallback to <span class="code">`global`</span> font settings.</span><br><span class="line">  headings:</span><br><span class="line"><span class="code">    external: true</span></span><br><span class="line"><span class="code">    family:</span></span><br><span class="line"><span class="code"></span></span><br><span class="line">  # Font settings for posts</span><br><span class="line">  # Fallback to <span class="code">`global`</span> font settings.</span><br><span class="line">  posts:</span><br><span class="line"><span class="code">    external: true</span></span><br><span class="line"><span class="code">    family:</span></span><br><span class="line"><span class="code"></span></span><br><span class="line">  # Font settings for Logo</span><br><span class="line">  # Fallback to <span class="code">`global`</span> font settings.</span><br><span class="line">  # The <span class="code">`size`</span> option use <span class="code">`px`</span> as unit</span><br><span class="line">  logo:</span><br><span class="line"><span class="code">    external: true</span></span><br><span class="line"><span class="code">    family:</span></span><br><span class="line"><span class="code">    size:</span></span><br><span class="line"><span class="code"></span></span><br><span class="line">  # Font settings for <span class="language-xml"><span class="tag">&lt;<span class="name">code</span>&gt;</span></span> and code blocks.</span><br><span class="line">  codes:</span><br><span class="line"><span class="code">    external: true</span></span><br><span class="line"><span class="code">    family:</span></span><br><span class="line"><span class="code">    size:</span></span><br><span class="line"><span class="code"></span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="section"># ---------------------------------------------------------------</span></span><br><span class="line"><span class="section"># Sidebar Settings</span></span><br><span class="line"><span class="section"># ---------------------------------------------------------------</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="section"># Social Links</span></span><br><span class="line"><span class="section"># Key is the link label showing to end users.</span></span><br><span class="line"><span class="section"># Value is the target link (E.g. GitHub: https://github.com/iissnan)</span></span><br><span class="line"><span class="section">#social:</span></span><br><span class="line">  #LinkLabel: Link</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="section"># Social Links Icons</span></span><br><span class="line"><span class="section"># Icon Mapping:</span></span><br><span class="line"><span class="section">#   Map a menu item to a specific FontAwesome icon name.</span></span><br><span class="line"><span class="section">#   Key is the name of the item and value is the name of FontAwesome icon. Key is case-senstive.</span></span><br><span class="line"><span class="section">#   When an globe mask icon presenting up means that the item has no mapping icon.</span></span><br><span class="line">social<span class="emphasis">_icons:</span></span><br><span class="line"><span class="emphasis">  enable: true</span></span><br><span class="line"><span class="emphasis">  # Icon Mappings.</span></span><br><span class="line"><span class="emphasis">  # KeyMapsToSocialItemKey: NameOfTheIconFromFontAwesome</span></span><br><span class="line"><span class="emphasis">  GitHub: github</span></span><br><span class="line"><span class="emphasis">  Twitter: twitter</span></span><br><span class="line"><span class="emphasis">  Weibo: weibo</span></span><br><span class="line"><span class="emphasis"></span></span><br><span class="line"><span class="emphasis"></span></span><br><span class="line"><span class="emphasis"># Sidebar Avatar</span></span><br><span class="line"><span class="emphasis"># in theme directory(source/images): /images/avatar.jpg</span></span><br><span class="line"><span class="emphasis"># in site  directory(source/uploads): /uploads/avatar.jpg</span></span><br><span class="line"><span class="emphasis">#avatar:</span></span><br><span class="line"><span class="emphasis"></span></span><br><span class="line"><span class="emphasis"></span></span><br><span class="line"><span class="emphasis"># Table Of Contents in the Sidebar</span></span><br><span class="line"><span class="emphasis">toc:</span></span><br><span class="line"><span class="emphasis">  enable: true</span></span><br><span class="line"><span class="emphasis"></span></span><br><span class="line"><span class="emphasis">  # Automatically add list number to toc.</span></span><br><span class="line"><span class="emphasis">  number: true</span></span><br><span class="line"><span class="emphasis"></span></span><br><span class="line"><span class="emphasis"></span></span><br><span class="line"><span class="emphasis"># Creative Commons 4.0 International License.</span></span><br><span class="line"><span class="emphasis"># http://creativecommons.org/</span></span><br><span class="line"><span class="emphasis"># Available: by | by-nc | by-nc-nd | by-nc-sa | by-nd | by-sa | zero</span></span><br><span class="line"><span class="emphasis">#creative_</span>commons: by-nc-sa</span><br><span class="line"><span class="section">#creative<span class="emphasis">_commons:</span></span></span><br><span class="line"><span class="emphasis"><span class="section"></span></span></span><br><span class="line"><span class="emphasis"><span class="section"></span></span></span><br><span class="line"><span class="emphasis"><span class="section">sidebar:</span></span></span><br><span class="line"><span class="emphasis"><span class="section">  # Sidebar Position, available value: left | right</span></span></span><br><span class="line"><span class="emphasis"><span class="section">  position: left</span></span></span><br><span class="line"><span class="emphasis"><span class="section">  #position: right</span></span></span><br><span class="line"><span class="emphasis"><span class="section"></span></span></span><br><span class="line"><span class="emphasis"><span class="section">  # Sidebar Display, available value:</span></span></span><br><span class="line"><span class="emphasis"><span class="section">  #  - post    expand on posts automatically. Default.</span></span></span><br><span class="line"><span class="emphasis"><span class="section">  #  - always  expand for all pages automatically</span></span></span><br><span class="line"><span class="emphasis"><span class="section">  #  - hide    expand only when click on the sidebar toggle icon.</span></span></span><br><span class="line"><span class="emphasis"><span class="section">  #  - remove  Totally remove sidebar including sidebar toggle.</span></span></span><br><span class="line"><span class="emphasis"><span class="section">  display: post</span></span></span><br><span class="line"><span class="emphasis"><span class="section">  #display: always</span></span></span><br><span class="line"><span class="emphasis"><span class="section">  #display: hide</span></span></span><br><span class="line"><span class="emphasis"><span class="section">  #display: remove</span></span></span><br><span class="line"><span class="emphasis"><span class="section"></span></span></span><br><span class="line"><span class="emphasis"><span class="section">  # Sidebar offset from top menubar in pixels.</span></span></span><br><span class="line"><span class="emphasis"><span class="section">  offset: 12</span></span></span><br><span class="line"><span class="emphasis"><span class="section">  offset_</span>float: 0</span></span><br><span class="line"></span><br><span class="line">  # Back to top in sidebar</span><br><span class="line">  b2t: false</span><br><span class="line"></span><br><span class="line">  # Scroll percent label in b2t button</span><br><span class="line">  scrollpercent: false</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="section"># Blog rolls</span></span><br><span class="line"><span class="section">#links<span class="emphasis">_title: Links</span></span></span><br><span class="line"><span class="emphasis"><span class="section">#links_</span>layout: block</span></span><br><span class="line"><span class="section">#links<span class="emphasis">_layout: inline</span></span></span><br><span class="line"><span class="emphasis"><span class="section">#links:</span></span></span><br><span class="line"><span class="emphasis"><span class="section">  #Title: http://example.com/</span></span></span><br><span class="line"><span class="emphasis"><span class="section"></span></span></span><br><span class="line"><span class="emphasis"><span class="section"></span></span></span><br><span class="line"><span class="emphasis"><span class="section"># ---------------------------------------------------------------</span></span></span><br><span class="line"><span class="emphasis"><span class="section"># Post Settings</span></span></span><br><span class="line"><span class="emphasis"><span class="section"># ---------------------------------------------------------------</span></span></span><br><span class="line"><span class="emphasis"><span class="section"></span></span></span><br><span class="line"><span class="emphasis"><span class="section"># Automatically scroll page to section which is under &lt;!-- more --&gt; mark.</span></span></span><br><span class="line"><span class="emphasis"><span class="section">scroll_</span>to<span class="emphasis">_more: true</span></span></span><br><span class="line"><span class="emphasis"><span class="section"></span></span></span><br><span class="line"><span class="emphasis"><span class="section"># Automatically excerpt description in homepage as preamble text.</span></span></span><br><span class="line"><span class="emphasis"><span class="section">excerpt_</span>description: true</span></span><br><span class="line"></span><br><span class="line"><span class="section"># Automatically Excerpt. Not recommend.</span></span><br><span class="line"><span class="section"># Please use &lt;!-- more --&gt; in the post to control excerpt accurately.</span></span><br><span class="line">auto<span class="emphasis">_excerpt:</span></span><br><span class="line"><span class="emphasis">  enable: false</span></span><br><span class="line"><span class="emphasis">  length: 150</span></span><br><span class="line"><span class="emphasis"></span></span><br><span class="line"><span class="emphasis"># Post meta display settings</span></span><br><span class="line"><span class="emphasis">post_</span>meta:</span><br><span class="line">  item<span class="emphasis">_text: true</span></span><br><span class="line"><span class="emphasis">  created_</span>at: true</span><br><span class="line">  updated<span class="emphasis">_at: false</span></span><br><span class="line"><span class="emphasis">  categories: true</span></span><br><span class="line"><span class="emphasis"></span></span><br><span class="line"><span class="emphasis"># Post wordcount display settings</span></span><br><span class="line"><span class="emphasis"># Dependencies: https://github.com/willin/hexo-wordcount</span></span><br><span class="line"><span class="emphasis">post_</span>wordcount:</span><br><span class="line">  item<span class="emphasis">_text: true</span></span><br><span class="line"><span class="emphasis">  wordcount: false</span></span><br><span class="line"><span class="emphasis">  min2read: false</span></span><br><span class="line"><span class="emphasis"></span></span><br><span class="line"><span class="emphasis"># Wechat Subscriber</span></span><br><span class="line"><span class="emphasis">#wechat_</span>subscriber:</span><br><span class="line">  #enabled: true</span><br><span class="line">  #qcode: /path/to/your/wechatqcode ex. /uploads/wechat-qcode.jpg</span><br><span class="line">  #description: ex. subscribe to my blog by scanning my public wechat account</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="section"># ---------------------------------------------------------------</span></span><br><span class="line"><span class="section"># Misc Theme Settings</span></span><br><span class="line"><span class="section"># ---------------------------------------------------------------</span></span><br><span class="line"></span><br><span class="line"><span class="section"># Custom Logo.</span></span><br><span class="line"><span class="section"># !!Only available for Default Scheme currently.</span></span><br><span class="line"><span class="section"># Options:</span></span><br><span class="line"><span class="section">#   enabled: [true/false] - Replace with specific image</span></span><br><span class="line"><span class="section">#   image: url-of-image   - Images's url</span></span><br><span class="line">custom<span class="emphasis">_logo:</span></span><br><span class="line"><span class="emphasis">  enabled: false</span></span><br><span class="line"><span class="emphasis">  image:</span></span><br><span class="line"><span class="emphasis"></span></span><br><span class="line"><span class="emphasis"></span></span><br><span class="line"><span class="emphasis"># Code Highlight theme</span></span><br><span class="line"><span class="emphasis"># Available value:</span></span><br><span class="line"><span class="emphasis">#    normal | night | night eighties | night blue | night bright</span></span><br><span class="line"><span class="emphasis"># https://github.com/chriskempson/tomorrow-theme</span></span><br><span class="line"><span class="emphasis">highlight_</span>theme: normal</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="section"># ---------------------------------------------------------------</span></span><br><span class="line"><span class="section"># Third Party Services Settings  第三方插件</span></span><br><span class="line"><span class="section"># ---------------------------------------------------------------</span></span><br><span class="line"></span><br><span class="line"><span class="section"># MathJax Support  ps:数学公式插件</span></span><br><span class="line">mathjax:</span><br><span class="line">  enable: false</span><br><span class="line">  per<span class="emphasis">_page: false</span></span><br><span class="line"><span class="emphasis">  cdn: //cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_</span>HTMLorMML</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="section"># Swiftype Search API Key  ps:swiftype 站内搜索</span></span><br><span class="line"><span class="section">#swiftype<span class="emphasis">_key:</span></span></span><br><span class="line"><span class="emphasis"><span class="section"></span></span></span><br><span class="line"><span class="emphasis"><span class="section"># Baidu Analytics ID  ps:百度统计</span></span></span><br><span class="line"><span class="emphasis"><span class="section">#baidu_</span>analytics: </span></span><br><span class="line"></span><br><span class="line"><span class="section"># Duoshuo ShortName  ps:多说留言板插件</span></span><br><span class="line"><span class="section">#duoshuo<span class="emphasis">_shortname: </span></span></span><br><span class="line"><span class="emphasis"><span class="section"></span></span></span><br><span class="line"><span class="emphasis"><span class="section"># Disqus           ps:Disqus 评论插件</span></span></span><br><span class="line"><span class="emphasis"><span class="section">#disqus_</span>shortname:</span></span><br><span class="line"></span><br><span class="line"><span class="section"># Hypercomments     ps:评论插件</span></span><br><span class="line"><span class="section">#hypercomments<span class="emphasis">_id:</span></span></span><br><span class="line"><span class="emphasis"><span class="section"></span></span></span><br><span class="line"><span class="emphasis"><span class="section"># Gentie productKey   ps:评论插件</span></span></span><br><span class="line"><span class="emphasis"><span class="section">#gentie_</span>productKey:</span></span><br><span class="line"></span><br><span class="line"><span class="section"># Support for youyan comments system.   ps:友言评论插件</span></span><br><span class="line"><span class="section"># You can get your uid from http://www.uyan.cc</span></span><br><span class="line"><span class="section">#youyan<span class="emphasis">_uid: your uid</span></span></span><br><span class="line"><span class="emphasis"><span class="section"></span></span></span><br><span class="line"><span class="emphasis"><span class="section"># Support for LiveRe comments system.  </span></span></span><br><span class="line"><span class="emphasis"><span class="section"># You can get your uid from https://livere.com/insight/myCode (General web site)</span></span></span><br><span class="line"><span class="emphasis"><span class="section">#livere_</span>uid: your uid</span></span><br><span class="line"></span><br><span class="line"><span class="section"># Baidu Share    ps:百度分享</span></span><br><span class="line"><span class="section"># Available value:</span></span><br><span class="line"><span class="section">#    button | slide</span></span><br><span class="line"><span class="section"># Warning: Baidu Share does not support https.</span></span><br><span class="line">baidushare:</span><br><span class="line">  type: button</span><br><span class="line"></span><br><span class="line"><span class="section"># Share</span></span><br><span class="line"><span class="section">#jiathis:   ps:sharesdk 分享</span></span><br><span class="line"><span class="section"># Warning: JiaThis does not support https.</span></span><br><span class="line"><span class="section">#add<span class="emphasis">_this_</span>id:</span></span><br><span class="line"></span><br><span class="line"><span class="section"># Share ps:多说分享</span></span><br><span class="line"><span class="section">#duoshuo<span class="emphasis">_share: true</span></span></span><br><span class="line"><span class="emphasis"><span class="section"></span></span></span><br><span class="line"><span class="emphasis"><span class="section"># Google Webmaster tools verification setting</span></span></span><br><span class="line"><span class="emphasis"><span class="section"># See: https://www.google.com/webmasters/</span></span></span><br><span class="line"><span class="emphasis"><span class="section">#google_</span>site<span class="emphasis">_verification:</span></span></span><br><span class="line"><span class="emphasis"><span class="section"></span></span></span><br><span class="line"><span class="emphasis"><span class="section"># Google Analytics  ps:谷歌统计</span></span></span><br><span class="line"><span class="emphasis"><span class="section">#google_</span>analytics:</span></span><br><span class="line"></span><br><span class="line"><span class="section"># Yandex Webmaster tools verification setting</span></span><br><span class="line"><span class="section"># See: https://webmaster.yandex.ru/</span></span><br><span class="line"><span class="section">#yandex<span class="emphasis">_site_</span>verification:</span></span><br><span class="line"></span><br><span class="line"><span class="section"># CNZZ count</span></span><br><span class="line"><span class="section">#cnzz<span class="emphasis">_siteid:</span></span></span><br><span class="line"><span class="emphasis"><span class="section"></span></span></span><br><span class="line"><span class="emphasis"><span class="section"># Application Insights</span></span></span><br><span class="line"><span class="emphasis"><span class="section"># See https://azure.microsoft.com/en-us/services/application-insights/</span></span></span><br><span class="line"><span class="emphasis"><span class="section"># application_</span>insights:</span></span><br><span class="line"></span><br><span class="line"><span class="section"># Make duoshuo show UA</span></span><br><span class="line"><span class="section"># user<span class="emphasis">_id must NOT be null when admin_</span>enable is true!</span></span><br><span class="line"><span class="section"># you can visit http://dev.duoshuo.com get duoshuo user id.</span></span><br><span class="line">duoshuo<span class="emphasis">_info:</span></span><br><span class="line"><span class="emphasis">  ua_</span>enable: true</span><br><span class="line">  admin<span class="emphasis">_enable: false</span></span><br><span class="line"><span class="emphasis">  user_</span>id: 0</span><br><span class="line">  #admin<span class="emphasis">_nickname: Author</span></span><br><span class="line"><span class="emphasis"></span></span><br><span class="line"><span class="emphasis"></span></span><br><span class="line"><span class="emphasis"># Facebook SDK Support.</span></span><br><span class="line"><span class="emphasis"># https://github.com/iissnan/hexo-theme-next/pull/410</span></span><br><span class="line"><span class="emphasis">facebook_</span>sdk:</span><br><span class="line">  enable: false</span><br><span class="line">  app<span class="emphasis">_id:       #<span class="language-xml"><span class="tag">&lt;<span class="name">app_id</span>&gt;</span></span></span></span><br><span class="line"><span class="emphasis">  fb_</span>admin:     #<span class="language-xml"><span class="tag">&lt;<span class="name">user_id</span>&gt;</span></span></span><br><span class="line">  like<span class="emphasis">_button:  #true</span></span><br><span class="line"><span class="emphasis">  webmaster:    #true</span></span><br><span class="line"><span class="emphasis"></span></span><br><span class="line"><span class="emphasis"># Facebook comments plugin</span></span><br><span class="line"><span class="emphasis"># This plugin depends on Facebook SDK.</span></span><br><span class="line"><span class="emphasis"># If facebook_</span>sdk.enable is false, Facebook comments plugin is unavailable.</span><br><span class="line">facebook<span class="emphasis">_comments_</span>plugin:</span><br><span class="line">  enable: false</span><br><span class="line">  num<span class="emphasis">_of_</span>posts: 10  # min posts num is 1</span><br><span class="line">  width: 100%       # default width is 550px</span><br><span class="line">  scheme: light     # default scheme is light (light or dark)</span><br><span class="line"></span><br><span class="line"><span class="section"># VKontakte API Support.</span></span><br><span class="line"><span class="section"># To get your AppID visit https://vk.com/editapp?act=create</span></span><br><span class="line">vkontakte<span class="emphasis">_api:</span></span><br><span class="line"><span class="emphasis">  enable: false</span></span><br><span class="line"><span class="emphasis">  app_</span>id:       #<span class="language-xml"><span class="tag">&lt;<span class="name">app_id</span>&gt;</span></span></span><br><span class="line">  like:         true</span><br><span class="line">  comments:     true</span><br><span class="line">  num<span class="emphasis">_of_</span>posts: 10</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="section"># Show number of visitors to each article.  ps:文章统计插件</span></span><br><span class="line"><span class="section"># You can visit https://leancloud.cn get AppID and AppKey.</span></span><br><span class="line">leancloud<span class="emphasis">_visitors:</span></span><br><span class="line"><span class="emphasis">  enable: false</span></span><br><span class="line"><span class="emphasis">  app_</span>id: #<span class="language-xml"><span class="tag">&lt;<span class="name">app_id</span>&gt;</span></span></span><br><span class="line">  app<span class="emphasis">_key: #<span class="language-xml"><span class="tag">&lt;<span class="name">app_key</span>&gt;</span></span></span></span><br><span class="line"><span class="emphasis"></span></span><br><span class="line"><span class="emphasis"># Show PV/UV of the website/page with busuanzi.</span></span><br><span class="line"><span class="emphasis"># Get more information on http://ibruce.info/2015/04/04/busuanzi/</span></span><br><span class="line"><span class="emphasis">busuanzi_</span>count:</span><br><span class="line">  # count values only if the other configs are false</span><br><span class="line">  enable: false</span><br><span class="line">  # custom uv span for the whole site</span><br><span class="line">  site<span class="emphasis">_uv: true</span></span><br><span class="line"><span class="emphasis">  site_</span>uv<span class="emphasis">_header: <span class="language-xml"><span class="tag">&lt;<span class="name">i</span> <span class="attr">class</span>=<span class="string">"fa fa-user"</span>&gt;</span></span><span class="language-xml"><span class="tag">&lt;/<span class="name">i</span>&gt;</span></span></span></span><br><span class="line"><span class="emphasis">  site_</span>uv<span class="emphasis">_footer:</span></span><br><span class="line"><span class="emphasis">  # custom pv span for the whole site</span></span><br><span class="line"><span class="emphasis">  site_</span>pv: true</span><br><span class="line">  site<span class="emphasis">_pv_</span>header: <span class="language-xml"><span class="tag">&lt;<span class="name">i</span> <span class="attr">class</span>=<span class="string">"fa fa-eye"</span>&gt;</span></span><span class="language-xml"><span class="tag">&lt;/<span class="name">i</span>&gt;</span></span></span><br><span class="line">  site<span class="emphasis">_pv_</span>footer:</span><br><span class="line">  # custom pv span for one page only</span><br><span class="line">  page<span class="emphasis">_pv: true</span></span><br><span class="line"><span class="emphasis">  page_</span>pv<span class="emphasis">_header: <span class="language-xml"><span class="tag">&lt;<span class="name">i</span> <span class="attr">class</span>=<span class="string">"fa fa-file-o"</span>&gt;</span></span><span class="language-xml"><span class="tag">&lt;/<span class="name">i</span>&gt;</span></span></span></span><br><span class="line"><span class="emphasis">  page_</span>pv<span class="emphasis">_footer:</span></span><br><span class="line"><span class="emphasis"></span></span><br><span class="line"><span class="emphasis"></span></span><br><span class="line"><span class="emphasis"># Tencent analytics ID  ps:腾讯统计</span></span><br><span class="line"><span class="emphasis"># tencent_</span>analytics:</span><br><span class="line"></span><br><span class="line"><span class="section"># Tencent MTA ID</span></span><br><span class="line"><span class="section"># tencent<span class="emphasis">_mta:</span></span></span><br><span class="line"><span class="emphasis"><span class="section"></span></span></span><br><span class="line"><span class="emphasis"><span class="section"></span></span></span><br><span class="line"><span class="emphasis"><span class="section"># Enable baidu push so that the blog will push the url to baidu automatically which is very helpful for SEO  百度推送</span></span></span><br><span class="line"><span class="emphasis"><span class="section">baidu_</span>push: true</span></span><br><span class="line"></span><br><span class="line"><span class="section"># Google Calendar</span></span><br><span class="line"><span class="section"># Share your recent schedule to others via calendar page</span></span><br><span class="line"><span class="section">#</span></span><br><span class="line"><span class="section"># API Documentation:</span></span><br><span class="line"><span class="section"># https://developers.google.com/google-apps/calendar/v3/reference/events/list</span></span><br><span class="line">calendar:</span><br><span class="line">  enable: false</span><br><span class="line">  calendar<span class="emphasis">_id: <span class="language-xml"><span class="tag">&lt;<span class="name">required</span>&gt;</span></span></span></span><br><span class="line"><span class="emphasis">  api_</span>key: <span class="language-xml"><span class="tag">&lt;<span class="name">required</span>&gt;</span></span></span><br><span class="line">  orderBy: startTime</span><br><span class="line">  offsetMax: 24</span><br><span class="line">  offsetMin: 4</span><br><span class="line">  timeZone:</span><br><span class="line">  showDeleted: false</span><br><span class="line">  singleEvents: true</span><br><span class="line">  maxResults: 250</span><br><span class="line"></span><br><span class="line"><span class="section"># Algolia Search</span></span><br><span class="line">algolia<span class="emphasis">_search:</span></span><br><span class="line"><span class="emphasis">  enable: false</span></span><br><span class="line"><span class="emphasis">  hits:</span></span><br><span class="line"><span class="emphasis">    per_</span>page: 10</span><br><span class="line">  labels:</span><br><span class="line"><span class="code">    input_placeholder: Search for Posts</span></span><br><span class="line"><span class="code">    hits_empty: "We didn't find any results for the search: <!--figure2-->#123;query}"</span></span><br><span class="line"><span class="code">    hits_stats: "<!--figure2-->#123;hits} results found in <!--figure2-->#123;time} ms"</span></span><br><span class="line"><span class="code"></span></span><br><span class="line"></span><br><span class="line"><span class="section"># Local search</span></span><br><span class="line">local<span class="emphasis">_search:</span></span><br><span class="line"><span class="emphasis">  enable: false</span></span><br><span class="line"><span class="emphasis"></span></span><br><span class="line"><span class="emphasis"># External URL with BASE64 encrypt &amp; decrypt</span></span><br><span class="line"><span class="emphasis"># Usage: {% exturl text url "title" %}</span></span><br><span class="line"><span class="emphasis"># Alias: {% extlink text url "title" %}</span></span><br><span class="line"><span class="emphasis">exturl: false</span></span><br><span class="line"><span class="emphasis"></span></span><br><span class="line"><span class="emphasis"></span></span><br><span class="line"><span class="emphasis">#! ---------------------------------------------------------------</span></span><br><span class="line"><span class="emphasis">#! DO NOT EDIT THE FOLLOWING SETTINGS</span></span><br><span class="line"><span class="emphasis">#! UNLESS YOU KNOW WHAT YOU ARE DOING</span></span><br><span class="line"><span class="emphasis">#! ---------------------------------------------------------------</span></span><br><span class="line"><span class="emphasis"></span></span><br><span class="line"><span class="emphasis"># Motion</span></span><br><span class="line"><span class="emphasis">use_</span>motion: true</span><br><span class="line"></span><br><span class="line"><span class="section"># Fancybox</span></span><br><span class="line">fancybox: true</span><br><span class="line"></span><br><span class="line"><span class="section"># Canvas-nest</span></span><br><span class="line">canvas<span class="emphasis">_nest: false</span></span><br><span class="line"><span class="emphasis"></span></span><br><span class="line"><span class="emphasis"># Script Vendors.</span></span><br><span class="line"><span class="emphasis"># Set a CDN address for the vendor you want to customize.</span></span><br><span class="line"><span class="emphasis"># For example</span></span><br><span class="line"><span class="emphasis">#    jquery: https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js</span></span><br><span class="line"><span class="emphasis"># Be aware that you should use the same version as internal ones to avoid potential problems.</span></span><br><span class="line"><span class="emphasis"># Please use the https protocol of CDN files when you enable https on your site.</span></span><br><span class="line"><span class="emphasis">vendors:</span></span><br><span class="line"><span class="emphasis">  # Internal path prefix. Please do not edit it.</span></span><br><span class="line"><span class="emphasis">  _</span>internal: lib</span><br><span class="line"></span><br><span class="line">  # Internal version: 2.1.3</span><br><span class="line">  jquery:</span><br><span class="line"></span><br><span class="line">  # Internal version: 2.1.5</span><br><span class="line">  # See: http://fancyapps.com/fancybox/</span><br><span class="line">  fancybox:</span><br><span class="line">  fancybox<span class="emphasis">_css:</span></span><br><span class="line"><span class="emphasis"></span></span><br><span class="line"><span class="emphasis">  # Internal version: 1.0.6</span></span><br><span class="line"><span class="emphasis">  # See: https://github.com/ftlabs/fastclick</span></span><br><span class="line"><span class="emphasis">  fastclick:</span></span><br><span class="line"><span class="emphasis"></span></span><br><span class="line"><span class="emphasis">  # Internal version: 1.9.7</span></span><br><span class="line"><span class="emphasis">  # See: https://github.com/tuupola/jquery_</span>lazyload</span><br><span class="line">  lazyload:</span><br><span class="line"></span><br><span class="line">  # Internal version: 1.2.1</span><br><span class="line">  # See: http://VelocityJS.org</span><br><span class="line">  velocity:</span><br><span class="line"></span><br><span class="line">  # Internal version: 1.2.1</span><br><span class="line">  # See: http://VelocityJS.org</span><br><span class="line">  velocity<span class="emphasis">_ui:</span></span><br><span class="line"><span class="emphasis"></span></span><br><span class="line"><span class="emphasis">  # Internal version: 0.7.9</span></span><br><span class="line"><span class="emphasis">  # See: https://faisalman.github.io/ua-parser-js/</span></span><br><span class="line"><span class="emphasis">  ua_</span>parser:</span><br><span class="line"></span><br><span class="line">  # Internal version: 4.6.2</span><br><span class="line">  # See: http://fontawesome.io/</span><br><span class="line">  fontawesome:</span><br><span class="line"></span><br><span class="line">  # Internal version: 1</span><br><span class="line">  # https://www.algolia.com</span><br><span class="line">  algolia<span class="emphasis">_instant_</span>js:</span><br><span class="line">  algolia<span class="emphasis">_instant_</span>css:</span><br><span class="line"></span><br><span class="line">  # Internal version: 1.0.0</span><br><span class="line">  # https://github.com/hustcc/canvas-nest.js</span><br><span class="line">  canvas<span class="emphasis">_nest:</span></span><br><span class="line"><span class="emphasis"></span></span><br><span class="line"><span class="emphasis"></span></span><br><span class="line"><span class="emphasis"></span></span><br><span class="line"><span class="emphasis"># Assets</span></span><br><span class="line"><span class="emphasis">css: css</span></span><br><span class="line"><span class="emphasis">js: js</span></span><br><span class="line"><span class="emphasis">images: images</span></span><br><span class="line"><span class="emphasis"></span></span><br><span class="line"><span class="emphasis"># Theme version</span></span><br><span class="line"><span class="emphasis">version: 5.1.0</span></span><br><span class="line"><span class="emphasis"></span></span><br></pre></td></tr></tbody></table></figure>
+<p>第三方插件可能需要第三方的帐号信息</p>
+<ul>
+<li><a href="http://tongji.baidu.com">Baidu统计</a></li>
+<li><a href="http://zhanzhang.baidu.com">Baidu站长</a></li>
+<li><a href="http://www.duoshuo.com">多说</a></li>
+<li><a href="https://leancloud.cn">leancloud</a></li>
+</ul>
+<h2 id="Hexo博客系列"><a href="#Hexo博客系列" class="headerlink" title="Hexo博客系列"></a>Hexo博客系列</h2><ul>
+<li><a href="/2017/03/01/hexo/hexo-firstblog/" title="Hexo博客搭建">Hexo博客搭建</a>  </li>
+<li><a href="/2017/03/01/hexo/hexo-secordblog/" title="Hexo更换博客样式">Hexo更换博客样式</a>  </li>
+<li><a href="/2017/03/03/hexo/hexo-updatenode/" title="Hexo升级Node版本">Hexo升级Node版本</a>  </li>
+<li><a href="/2017/03/04/hexo/hexo-amp-enable/" title="Hexo AMP 支持">Hexo AMP 支持</a>  </li>
+<li><a href="/2017/03/03/others/markdown-first/" title="MarkDown语法">MarkDown语法</a></li>
+<li><a href="/2017/03/06/hexo/hexo-markdown-extends/" title="Hexo-MarkDown扩展">Hexo-MarkDown扩展</a>  </li>
+<li><a href="/2017/03/07/hexo/hexo-flags/" title="Hexo 标签插件的使用">Hexo 标签插件的使用</a>  </li>
+<li><a href="/2017/03/10/hexo/hexo-mermaid/" title="Mermaid 使用指南">Mermaid 使用指南</a>  </li>
+<li><a href="/2017/03/11/hexo/hexo-plugins/" title="Hexo 插件添加">Hexo 插件添加</a> </li>
+</ul>
+
+			  		
+			  		<!-- google Adsense -->
+			  		
+					
+					
+					
+					
+			    	
+					
+					<!-- google Adsense Matched content -->
+			  		
+			  	</div>
+				
+		  	</article>
+		  	
+		  	
+		  	<!-- TAGS -->
+		  	
+		  	<div class="meta-content">
+				
+				<div class="widget">
+				  	<h6 class="tag"><span class="fa fa-fw fa-tag"></span>TAGS</h6>
+				  	<div class="article-tag">
+						<ul class="article-tag-list">
+							
+					    		<li class="article-tag-list-item">
+					    			<a class="article-tag-list-link" href="/tags/hexo/">
+					    				hexo
+					    			</a>
+					    		</li>
+							
+						</ul>
+					</div>
+				</div>
+				
+			</div>
+		  	
+		  	
+		  	<!-- Categories posts -->
+		  	
+		  	
+		  	
+		  	<!-- Detailed categories  posts -->
+		  	
+		  	
+		  	
+		  	<!-- Latests -->
+		  	
+			
+		</div>
+		
+		
+		<footer id="footer">
+		
+			
+			
+			
+			
+			<div class="copyright-tool">
+				
+				
+				
+				<div class="copyright-title">
+					<span>
+					&copy; 2023&nbsp;Chester.Cao Blog
+					</span>
+				</div>
+				
+				<div class="copyright-license">
+					<aside>
+						Powered by <a href="https://hexo.io/">Hexo</a>. <a href="https://github.com/tea3/hexo-generator-amp">AMP-Theme</a> designed by <a href="https://github.com/tea3/">tea</a>.
+					</aside>
+				</div>
+			</div>
+			
+		</footer>
+
+
+  	<div id="totop"><a href="#"></a></div>
+
+
+  </body>
+</html>

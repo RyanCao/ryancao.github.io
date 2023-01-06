@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.2">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <link rel="amphtml" href="./amp/">
+  <meta name="baidu-site-verification" content="code-mUG0UNAPhR">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"blog.rcant.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="引子同于生成API文档记录 参考 Docfx Getting Started  安装DocFx使用 Chocolatey 安装1choco install docfx -y. 使用 Homebrew 安装1brew install docfx.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CSharp ApiDoc 自动生成API文档">
+<meta property="og:url" content="http://blog.rcant.com/2020/08/26/csharp/csharp-docfx/index.html">
+<meta property="og:site_name" content="Chester.Cao Blog">
+<meta property="og:description" content="引子同于生成API文档记录 参考 Docfx Getting Started  安装DocFx使用 Chocolatey 安装1choco install docfx -y. 使用 Homebrew 安装1brew install docfx.">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://blog.rcant.com/2020/08/26/csharp/csharp-docfx/1.png">
+<meta property="og:image" content="http://blog.rcant.com/2020/08/26/csharp/csharp-docfx/2.png">
+<meta property="og:image" content="http://blog.rcant.com/2020/08/26/csharp/csharp-docfx/3.png">
+<meta property="article:published_time" content="2020-08-26T03:39:17.000Z">
+<meta property="article:modified_time" content="2023-01-06T09:31:27.090Z">
+<meta property="article:author" content="Chester.C">
+<meta property="article:tag" content="CSharp">
+<meta property="article:tag" content="ApiDoc">
+<meta property="article:tag" content="DocFx">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://blog.rcant.com/2020/08/26/csharp/csharp-docfx/1.png">
+
+<link rel="canonical" href="http://blog.rcant.com/2020/08/26/csharp/csharp-docfx/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>CSharp ApiDoc 自动生成API文档 | Chester.Cao Blog</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?974592ac4c5733a52af2b871678a5334";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Chester.Cao Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Chester.Cao Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Devlopper in C#</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-topics">
+
+    <a href="/topics/" rel="section"><i class="fa fa-fw fa-pencil"></i>主题</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://blog.rcant.com/2020/08/26/csharp/csharp-docfx/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Chester.C">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chester.Cao Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          CSharp ApiDoc 自动生成API文档
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-08-26 11:39:17" itemprop="dateCreated datePublished" datetime="2020-08-26T11:39:17+08:00">2020-08-26</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-01-06 17:31:27" itemprop="dateModified" datetime="2023-01-06T17:31:27+08:00">2023-01-06</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/CSharp/" itemprop="url" rel="index"><span itemprop="name">CSharp</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2020/08/26/csharp/csharp-docfx/" class="post-meta-item leancloud_visitors" data-flag-title="CSharp ApiDoc 自动生成API文档" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2020/08/26/csharp/csharp-docfx/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/08/26/csharp/csharp-docfx/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h2><p>同于生成API文档记录</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://dotnet.github.io/docfx/tutorial/docfx_getting_started.html">Docfx Getting Started</a></li>
+</ul>
+<h2 id="安装DocFx"><a href="#安装DocFx" class="headerlink" title="安装DocFx"></a>安装DocFx</h2><h3 id="使用-Chocolatey-安装"><a href="#使用-Chocolatey-安装" class="headerlink" title="使用 Chocolatey 安装"></a>使用 <strong>Chocolatey</strong> 安装</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">choco install docfx -y.</span><br></pre></td></tr></table></figure>
+<h3 id="使用-Homebrew-安装"><a href="#使用-Homebrew-安装" class="headerlink" title="使用 Homebrew 安装"></a>使用 <strong>Homebrew</strong> 安装</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">brew install docfx.</span><br></pre></td></tr></table></figure>
+<span id="more"></span>
+<h3 id="去-GitHub-下载文件安装"><a href="#去-GitHub-下载文件安装" class="headerlink" title="去 GitHub 下载文件安装"></a>去 <strong>GitHub</strong> 下载文件安装</h3><ul>
+<li>从 <strong>GitHub</strong> <a target="_blank" rel="noopener" href="https://github.com/dotnet/docfx/releases">DocFx 下载</a> 文件 <em>docfx.zip</em></li>
+<li>解压文件 <em>docfx.zip</em> </li>
+<li>添加到环境变量 <strong>Path</strong> 中</li>
+</ul>
+<h2 id="验证安装是否成功"><a href="#验证安装是否成功" class="headerlink" title="验证安装是否成功"></a>验证安装是否成功</h2><p>使用命令行</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ docfx.exe --version</span><br><span class="line">docfx 2.56.2.0</span><br><span class="line">Copyright (C) 2020 ? Microsoft Corporation. All rights reserved.</span><br><span class="line">This is open-source software under MIT License.</span><br></pre></td></tr></table></figure>
+<h2 id="使用-DocFx"><a href="#使用-DocFx" class="headerlink" title="使用 DocFx"></a>使用 <strong>DocFx</strong></h2><h3 id="使用-Visual-Studio-集成-DocFx"><a href="#使用-Visual-Studio-集成-DocFx" class="headerlink" title="使用 Visual Studio 集成 DocFx"></a>使用 Visual Studio 集成 DocFx</h3><ol>
+<li>使用 <strong>Visual Studio</strong> 创建  <strong>Class Library (.NET Framework)</strong> 项目</li>
+<li>右键项目，选择 <strong>Manage NuGet Package</strong></li>
+<li>搜索并安装 <strong>docfx.console</strong> </li>
+<li><strong>Build</strong> the project, and a <em>_site</em> folder will be generated with the documentation.</li>
+</ol>
+<h3 id="单独创建-DocFx-项目"><a href="#单独创建-DocFx-项目" class="headerlink" title="单独创建 DocFx 项目"></a>单独创建 <strong>DocFx</strong> 项目</h3><ol>
+<li>创建 <em>docfx init -q</em> 项目</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">$ docfx init -q</span><br><span class="line">$ treee -L 2</span><br><span class="line"></span><br><span class="line">E:\projects\csharp\FmoLib</span><br><span class="line">├── Debugger</span><br><span class="line">├── docfx_project</span><br><span class="line">├── FmoLib</span><br><span class="line">├── FmoLib.sln</span><br><span class="line">├── FmoLibDemo</span><br><span class="line">├── link.cmd</span><br><span class="line">├── README.md</span><br><span class="line">└── ShareLibrary</span><br><span class="line"></span><br><span class="line">directory: 5 file: 3</span><br><span class="line"></span><br><span class="line">ignored</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">$ cd docfx_project</span><br><span class="line">$ treee -L 2</span><br><span class="line"></span><br><span class="line">E:\projects\csharp\FmoLib\docfx_project</span><br><span class="line">├── api</span><br><span class="line">├── apidoc</span><br><span class="line">├── articles</span><br><span class="line">├── docfx.json</span><br><span class="line">├── images</span><br><span class="line">├── index.md</span><br><span class="line">├── src</span><br><span class="line">└── toc.yml</span><br><span class="line"></span><br><span class="line">directory: 5 file: 3</span><br><span class="line"></span><br><span class="line">ignored</span><br></pre></td></tr></table></figure>
+<ol>
+<li>修改 <em>docfx.json</em> 添加代码文档</li>
+</ol>
+<p>原始 docfx.json<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  &quot;metadata&quot;: [</span><br><span class="line">    &#123;</span><br><span class="line">      &quot;src&quot;: [</span><br><span class="line">        &#123;</span><br><span class="line">          &quot;files&quot;: [</span><br><span class="line">            &quot;src/**.csproj&quot;</span><br><span class="line">          ]</span><br><span class="line">        &#125;</span><br><span class="line">      ],</span><br><span class="line">      &quot;dest&quot;: &quot;api&quot;,</span><br><span class="line">      &quot;disableGitFeatures&quot;: false,</span><br><span class="line">      &quot;disableDefaultFilter&quot;: false</span><br><span class="line">    &#125;</span><br><span class="line">  ],</span><br><span class="line">...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>修改为<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  &quot;metadata&quot;: [</span><br><span class="line">    &#123;</span><br><span class="line">      &quot;src&quot;: [</span><br><span class="line">        &#123;</span><br><span class="line">          &quot;files&quot;: [</span><br><span class="line">            &quot;FmoLib/**.csproj&quot;</span><br><span class="line">          ],</span><br><span class="line">          &quot;exclude&quot;: [</span><br><span class="line">            &quot;**/obj/**&quot;,</span><br><span class="line">            &quot;**/bin/**&quot;,</span><br><span class="line">            &quot;_site/**&quot;</span><br><span class="line">          ],</span><br><span class="line">          &quot;cwd&quot;: &quot;..&quot;</span><br><span class="line">        &#125;</span><br><span class="line">      ],</span><br><span class="line">      &quot;dest&quot;: &quot;api&quot;,</span><br><span class="line">      &quot;disableGitFeatures&quot;: false,</span><br><span class="line">      &quot;disableDefaultFilter&quot;: false</span><br><span class="line">    &#125;</span><br><span class="line">  ],</span><br><span class="line">...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<ol>
+<li><p>生成 <em>doc</em> 文件</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">$ docfx.exe docfx.json --serve</span><br><span class="line">$ treee -L 2</span><br><span class="line">E:\projects\csharp\FmoLib\docfx_project</span><br><span class="line">├── api</span><br><span class="line">|  ├── FmoLib.API.App.yml</span><br><span class="line">|  ├── ...</span><br><span class="line">|  ├── index.md</span><br><span class="line">|  └── toc.yml</span><br><span class="line">├── apidoc</span><br><span class="line">├── articles</span><br><span class="line">|  ├── intro.md</span><br><span class="line">|  └── toc.yml</span><br><span class="line">├── docfx.json</span><br><span class="line">├── images</span><br><span class="line">├── index.md</span><br><span class="line">├── obj</span><br><span class="line">├── src</span><br><span class="line">├── toc.yml</span><br><span class="line">└── _site</span><br><span class="line">   ├── api</span><br><span class="line">   ├── articles</span><br><span class="line">   ├── favicon.ico</span><br><span class="line">   ├── fonts</span><br><span class="line">   ├── index.html</span><br><span class="line">   ├── logo.svg</span><br><span class="line">   ├── manifest.json</span><br><span class="line">   ├── search-stopwords.json</span><br><span class="line">   ├── styles</span><br><span class="line">   ├── toc.html</span><br><span class="line">   └── xrefmap.yml</span><br><span class="line"></span><br><span class="line">directory: 11 file: 233</span><br><span class="line"></span><br><span class="line">ignored</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>访问 <em><a target="_blank" rel="noopener" href="http://localhost:8080">http://localhost:8080</a></em> </p>
+</li>
+</ol>
+<img src="/2020/08/26/csharp/csharp-docfx/1.png" class="" title="首页">  
+<img src="/2020/08/26/csharp/csharp-docfx/2.png" class="" title="articles">  
+<img src="/2020/08/26/csharp/csharp-docfx/3.png" class="" title="api">  
+<h2 id="filterConfig-yml-配置"><a href="#filterConfig-yml-配置" class="headerlink" title="filterConfig.yml 配置"></a><em>filterConfig.yml</em> 配置</h2><blockquote>
+<p>这个文件可以包含包括的文件和不包括的，包括的权限比不包括大，默认是包括所有文件</p>
+</blockquote>
+<p><strong>docfx.json</strong> 关联 <strong>filterConfig.yml</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  &quot;metadata&quot;: [</span><br><span class="line">    &#123;</span><br><span class="line">      &quot;src&quot;: [</span><br><span class="line">        ...</span><br><span class="line">      ],</span><br><span class="line">      &quot;dest&quot;: &quot;api&quot;,</span><br><span class="line">      &quot;disableGitFeatures&quot;: false,</span><br><span class="line">      &quot;disableDefaultFilter&quot;: false,</span><br><span class="line">      &quot;filter&quot;: &quot;filterConfig.yml&quot;</span><br><span class="line">    &#125;</span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>包括的文件使用include 不包括使用 exclude<br>文件示例<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">apiRules:</span><br><span class="line">- include:</span><br><span class="line">    uidRegex: ^Microsoft\.DevDiv\.SpecialCase</span><br><span class="line">- exclude:</span><br><span class="line">    uidRegex: ^Microsoft\.DevDiv</span><br></pre></td></tr></table></figure><br>因为 uidRegex 是匹配，所以对于.需要加上\</p>
+<p>强大的ms还可以匹配是什么类型，提供的：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">Namespace  </span><br><span class="line">Type  </span><br><span class="line">Class  </span><br><span class="line">Struct  </span><br><span class="line">Enum</span><br><span class="line">Interface</span><br><span class="line">Delegate</span><br><span class="line">Member</span><br><span class="line">Event</span><br><span class="line">Field</span><br><span class="line">Method</span><br><span class="line">Property</span><br></pre></td></tr></table></figure>
+<p>如果要忽略命名空间是 lindexi.laji 的代码，请看下面代码<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">apiRules:</span><br><span class="line">- exclude:</span><br><span class="line">    uidRegex: ^lindexi\.laji*</span><br><span class="line">    type: Namespace</span><br></pre></td></tr></table></figure></p>
+<h2 id="DocFx生成PDF文件"><a href="#DocFx生成PDF文件" class="headerlink" title="DocFx生成PDF文件"></a>DocFx生成PDF文件</h2><h3 id="安装必要的插件-wkhtmltopdf"><a href="#安装必要的插件-wkhtmltopdf" class="headerlink" title="安装必要的插件 wkhtmltopdf"></a>安装必要的插件 <strong>wkhtmltopdf</strong></h3><h4 id="使用-Chocolatey-安装-1"><a href="#使用-Chocolatey-安装-1" class="headerlink" title="使用 Chocolatey 安装"></a>使用 <strong>Chocolatey</strong> 安装</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">choco install wkhtmltopdf -y.</span><br></pre></td></tr></table></figure>
+<h4 id="手动安装"><a href="#手动安装" class="headerlink" title="手动安装"></a>手动安装</h4><ol>
+<li>下载 <a target="_blank" rel="noopener" href="https://wkhtmltopdf.org/downloads.html"><strong>wkhtmltopdf</strong></a></li>
+<li>安装 <strong>wkhtmltopdf</strong></li>
+<li>添加到环境变量 <strong>Path</strong> 中</li>
+</ol>
+<h3 id="修改-docfx-json"><a href="#修改-docfx-json" class="headerlink" title="修改 docfx.json"></a>修改 <strong>docfx.json</strong></h3><p>添加 <strong>pdf</strong> 信息<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  &quot;metadata&quot;: [</span><br><span class="line">      ...</span><br><span class="line">  ],</span><br><span class="line">  &quot;build&quot;: &#123;</span><br><span class="line">      ...</span><br><span class="line">  &#125;,</span><br><span class="line">  &quot;pdf&quot;: &#123;</span><br><span class="line">   &quot;content&quot;: [</span><br><span class="line">     &#123;</span><br><span class="line">       &quot;files&quot;: [</span><br><span class="line">         &quot;api/**.yml&quot;,</span><br><span class="line">         &quot;api-vb/**.yml&quot;</span><br><span class="line">       ],</span><br><span class="line">       &quot;exclude&quot;: [</span><br><span class="line">         &quot;**/toc.yml&quot;,</span><br><span class="line">         &quot;**/toc.md&quot;,</span><br><span class="line">         &quot;README.md&quot;,</span><br><span class="line">         &quot;source_codes/**&quot;</span><br><span class="line">       ]</span><br><span class="line">     &#125;,</span><br><span class="line">     &#123;</span><br><span class="line">       &quot;files&quot;: [</span><br><span class="line">         &quot;articles/**.md&quot;,</span><br><span class="line">         &quot;articles/**/toc.yml&quot;,</span><br><span class="line">         &quot;toc.yml&quot;,</span><br><span class="line">         &quot;*.md&quot;,</span><br><span class="line">         &quot;pdf/*&quot;</span><br><span class="line">       ],</span><br><span class="line">       &quot;exclude&quot;: [</span><br><span class="line">         &quot;**/bin/**&quot;,</span><br><span class="line">         &quot;**/obj/**&quot;,</span><br><span class="line">         &quot;_site_pdf/**&quot;,</span><br><span class="line">         &quot;**/toc.yml&quot;,</span><br><span class="line">         &quot;**/toc.md&quot;,</span><br><span class="line">         &quot;README.md&quot;,</span><br><span class="line">         &quot;source_codes/**&quot;</span><br><span class="line">       ]</span><br><span class="line">     &#125;,</span><br><span class="line">     &#123;</span><br><span class="line">       &quot;files&quot;: &quot;pdf/toc.yml&quot;</span><br><span class="line">     &#125;</span><br><span class="line">   ],</span><br><span class="line">   &quot;resource&quot;: [</span><br><span class="line">     &#123;</span><br><span class="line">       &quot;files&quot;: [</span><br><span class="line">         &quot;images/**&quot;</span><br><span class="line">       ],</span><br><span class="line">       &quot;exclude&quot;: [</span><br><span class="line">         &quot;**/bin/**&quot;,</span><br><span class="line">         &quot;**/obj/**&quot;,</span><br><span class="line">         &quot;_site_pdf/**&quot;,</span><br><span class="line">         &quot;README.md&quot;,</span><br><span class="line">         &quot;source_codes/**&quot;</span><br><span class="line">       ]</span><br><span class="line">     &#125;</span><br><span class="line">   ],</span><br><span class="line">   &quot;overwrite&quot;: [</span><br><span class="line">     &#123;</span><br><span class="line">       &quot;files&quot;: [</span><br><span class="line">         &quot;apidoc/**.md&quot;</span><br><span class="line">       ],</span><br><span class="line">       &quot;exclude&quot;: [</span><br><span class="line">         &quot;**/bin/**&quot;,</span><br><span class="line">         &quot;**/obj/**&quot;,</span><br><span class="line">         &quot;_site_pdf/**&quot;,</span><br><span class="line">         &quot;README.md&quot;,</span><br><span class="line">         &quot;source_codes/**&quot;</span><br><span class="line">       ]</span><br><span class="line">     &#125;</span><br><span class="line">   ],</span><br><span class="line">   &quot;dest&quot;: &quot;_site_pdf&quot;,</span><br><span class="line">   &quot;template&quot;: [&quot;pdf.default&quot;],</span><br><span class="line">   &quot;wkhtmltopdf&quot;: &#123;</span><br><span class="line">    &quot;additionalArguments&quot;: &quot;--enable-local-file-access&quot;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="添加-“pdf-toc-yml”-文件"><a href="#添加-“pdf-toc-yml”-文件" class="headerlink" title="添加 “pdf/toc.yml” 文件"></a>添加 <strong>“pdf/toc.yml”</strong> 文件</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">- name: Documentation</span><br><span class="line">  href: ../api/toc.yml</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line">$ treee -l 2</span><br><span class="line"></span><br><span class="line">E:\projects\csharp\FmoLib\docfx_project</span><br><span class="line">├── api</span><br><span class="line">|  ├── FmoLib.API.App.yml</span><br><span class="line">|  ├── ...</span><br><span class="line">|  ├── FmoLib.yml</span><br><span class="line">|  ├── index.md</span><br><span class="line">|  └── toc.yml</span><br><span class="line">├── apidoc</span><br><span class="line">├── articles</span><br><span class="line">|  ├── intro.md</span><br><span class="line">|  └── toc.yml</span><br><span class="line">├── docfx.json</span><br><span class="line">├── docfx_pdf.json</span><br><span class="line">├── filterConfig.yml</span><br><span class="line">├── images</span><br><span class="line">├── index.md</span><br><span class="line">├── obj</span><br><span class="line">├── pdf</span><br><span class="line">|  └── toc.yml</span><br><span class="line">├── src</span><br><span class="line">├── toc.yml</span><br><span class="line">├── _site</span><br><span class="line">|  ├── api</span><br><span class="line">|  ├── articles</span><br><span class="line">|  ├── favicon.ico</span><br><span class="line">|  ├── fonts</span><br><span class="line">|  ├── index.html</span><br><span class="line">|  ├── logo.svg</span><br><span class="line">|  ├── manifest.json</span><br><span class="line">|  ├── search-stopwords.json</span><br><span class="line">|  ├── styles</span><br><span class="line">|  ├── toc.html</span><br><span class="line">|  └── xrefmap.yml</span><br><span class="line">└── _site_pdf</span><br><span class="line">   ├── docfx_project.json</span><br><span class="line">   ├── docfx_project_pdf.pdf</span><br><span class="line">   └── _raw</span><br><span class="line"></span><br><span class="line">directory: 14 file: 157</span><br><span class="line"></span><br><span class="line">ignored</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+    </div>
+
+    
+    
+    
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/CSharp/" rel="tag"># CSharp</a>
+              <a href="/tags/ApiDoc/" rel="tag"># ApiDoc</a>
+              <a href="/tags/DocFx/" rel="tag"># DocFx</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/08/07/js/ant-design-pro-env/" rel="prev" title="ant-design-pro 环境配置">
+      <i class="fa fa-chevron-left"></i> ant-design-pro 环境配置
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/09/01/datastruct/datastruct-skiplist/" rel="next" title="数据结构-跳表">
+      数据结构-跳表 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%95%E5%AD%90"><span class="nav-number">1.</span> <span class="nav-text">引子</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83"><span class="nav-number">2.</span> <span class="nav-text">参考</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85DocFx"><span class="nav-number">3.</span> <span class="nav-text">安装DocFx</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8-Chocolatey-%E5%AE%89%E8%A3%85"><span class="nav-number">3.1.</span> <span class="nav-text">使用 Chocolatey 安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8-Homebrew-%E5%AE%89%E8%A3%85"><span class="nav-number">3.2.</span> <span class="nav-text">使用 Homebrew 安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8E%BB-GitHub-%E4%B8%8B%E8%BD%BD%E6%96%87%E4%BB%B6%E5%AE%89%E8%A3%85"><span class="nav-number">3.3.</span> <span class="nav-text">去 GitHub 下载文件安装</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%AA%8C%E8%AF%81%E5%AE%89%E8%A3%85%E6%98%AF%E5%90%A6%E6%88%90%E5%8A%9F"><span class="nav-number">4.</span> <span class="nav-text">验证安装是否成功</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8-DocFx"><span class="nav-number">5.</span> <span class="nav-text">使用 DocFx</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8-Visual-Studio-%E9%9B%86%E6%88%90-DocFx"><span class="nav-number">5.1.</span> <span class="nav-text">使用 Visual Studio 集成 DocFx</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8D%95%E7%8B%AC%E5%88%9B%E5%BB%BA-DocFx-%E9%A1%B9%E7%9B%AE"><span class="nav-number">5.2.</span> <span class="nav-text">单独创建 DocFx 项目</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#filterConfig-yml-%E9%85%8D%E7%BD%AE"><span class="nav-number">6.</span> <span class="nav-text">filterConfig.yml 配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#DocFx%E7%94%9F%E6%88%90PDF%E6%96%87%E4%BB%B6"><span class="nav-number">7.</span> <span class="nav-text">DocFx生成PDF文件</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85%E5%BF%85%E8%A6%81%E7%9A%84%E6%8F%92%E4%BB%B6-wkhtmltopdf"><span class="nav-number">7.1.</span> <span class="nav-text">安装必要的插件 wkhtmltopdf</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8-Chocolatey-%E5%AE%89%E8%A3%85-1"><span class="nav-number">7.1.1.</span> <span class="nav-text">使用 Chocolatey 安装</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%89%8B%E5%8A%A8%E5%AE%89%E8%A3%85"><span class="nav-number">7.1.2.</span> <span class="nav-text">手动安装</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BF%AE%E6%94%B9-docfx-json"><span class="nav-number">7.2.</span> <span class="nav-text">修改 docfx.json</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B7%BB%E5%8A%A0-%E2%80%9Cpdf-toc-yml%E2%80%9D-%E6%96%87%E4%BB%B6"><span class="nav-number">7.3.</span> <span class="nav-text">添加 “pdf&#x2F;toc.yml” 文件</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Chester.C</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">143</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">32</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">67</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Chester.C</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+if (document.querySelectorAll('pre.mermaid').length) {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mermaid@8/dist/mermaid.min.js', () => {
+    mermaid.initialize({
+      theme    : 'forest',
+      logLevel : 3,
+      flowchart: { curve     : 'linear' },
+      gantt    : { axisFormat: '%m/%d/%Y' },
+      sequence : { actorMargin: 50 }
+    });
+  }, window.mermaid);
+}
+</script>
+
+
+  
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'OQBlgU8H1seTDvVrgC3Dhni0-gzGzoHsz',
+      appKey     : 'wF7D3hVD9WjlV9V52bhlymHO',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : true,
+      lang       : 'zh-cn' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>

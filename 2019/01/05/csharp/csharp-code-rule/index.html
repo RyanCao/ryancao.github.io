@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.2">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <link rel="amphtml" href="./amp/">
+  <meta name="baidu-site-verification" content="code-mUG0UNAPhR">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"blog.rcant.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="引子1.规范目的： （1.1）增强代码可维护性。代码的编写不是一次性就能写得很完美的，需要不断的修复bug，修改或增加功能，重新设计整体架构等。这时就需要进入代码中去做修改，如果没有良好的代码规范，时间久了自己阅读起来就很费力。  （1.2）提高团队开发效率。大多数项目的代码都不是由一个人编写的，其他成员也许会因为项目的交接需要接手管理你所编写的代码，如果没有良好的代码规范，他人便无法快速轻松的理">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CSharp 代码和命令规范(Unity)">
+<meta property="og:url" content="http://blog.rcant.com/2019/01/05/csharp/csharp-code-rule/index.html">
+<meta property="og:site_name" content="Chester.Cao Blog">
+<meta property="og:description" content="引子1.规范目的： （1.1）增强代码可维护性。代码的编写不是一次性就能写得很完美的，需要不断的修复bug，修改或增加功能，重新设计整体架构等。这时就需要进入代码中去做修改，如果没有良好的代码规范，时间久了自己阅读起来就很费力。  （1.2）提高团队开发效率。大多数项目的代码都不是由一个人编写的，其他成员也许会因为项目的交接需要接手管理你所编写的代码，如果没有良好的代码规范，他人便无法快速轻松的理">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2019-01-05T03:39:17.000Z">
+<meta property="article:modified_time" content="2023-01-06T09:31:19.658Z">
+<meta property="article:author" content="Chester.C">
+<meta property="article:tag" content="CSharp">
+<meta property="article:tag" content="Unity">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://blog.rcant.com/2019/01/05/csharp/csharp-code-rule/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>CSharp 代码和命令规范(Unity) | Chester.Cao Blog</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?974592ac4c5733a52af2b871678a5334";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Chester.Cao Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Chester.Cao Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Devlopper in C#</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-topics">
+
+    <a href="/topics/" rel="section"><i class="fa fa-fw fa-pencil"></i>主题</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://blog.rcant.com/2019/01/05/csharp/csharp-code-rule/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Chester.C">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chester.Cao Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          CSharp 代码和命令规范(Unity)
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-01-05 11:39:17" itemprop="dateCreated datePublished" datetime="2019-01-05T11:39:17+08:00">2019-01-05</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-01-06 17:31:19" itemprop="dateModified" datetime="2023-01-06T17:31:19+08:00">2023-01-06</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/CSharp/" itemprop="url" rel="index"><span itemprop="name">CSharp</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2019/01/05/csharp/csharp-code-rule/" class="post-meta-item leancloud_visitors" data-flag-title="CSharp 代码和命令规范(Unity)" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2019/01/05/csharp/csharp-code-rule/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2019/01/05/csharp/csharp-code-rule/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h2><h2 id="1-规范目的："><a href="#1-规范目的：" class="headerlink" title="1.规范目的："></a>1.规范目的：</h2><ul>
+<li>（1.1）增强代码可维护性。代码的编写不是一次性就能写得很完美的，需要不断的修复bug，修改或增加功能，重新设计整体架构等。这时就需要进入代码中去做修改，如果没有良好的代码规范，时间久了自己阅读起来就很费力。 </li>
+<li>（1.2）提高团队开发效率。大多数项目的代码都不是由一个人编写的，其他成员也许会因为项目的交接需要接手管理你所编写的代码，如果没有良好的代码规范，他人便无法快速轻松的理解你的代码。 </li>
+<li>（1.3）提高个人编码效率。最开始可能会觉得被规范约束，后来反而会因为有规范而有依靠感，不必再为起什么名字而犹豫。</li>
+</ul>
+<h2 id="2-规范说明："><a href="#2-规范说明：" class="headerlink" title="2.规范说明："></a>2.规范说明：</h2><blockquote>
+<p>代码的规范不是绝对的，每个公司都会有自己的一套代码规范，每个新人刚进入都要最先学习代码规范，才能加入到团队的开发中来。<br><span id="more"></span></p>
+<h2 id="3-命名规范："><a href="#3-命名规范：" class="headerlink" title="3.命名规范："></a>3.命名规范：</h2></blockquote>
+<h3 id="（3-1）基本规则（对于类、字段、方法、参数、变量）："><a href="#（3-1）基本规则（对于类、字段、方法、参数、变量）：" class="headerlink" title="（3.1）基本规则（对于类、字段、方法、参数、变量）："></a>（3.1）基本规则（对于类、字段、方法、参数、变量）：</h3><ul>
+<li>【规则1-1】英文单词命名。禁止使用拼音或无意义的字母命名。 </li>
+<li>【规则1-2】直观易懂。使用能够描述其功能或意义的英文单词或词组。 </li>
+<li>【规则1-3】除了常量的命名以外，不要采用下划线命名法。</li>
+</ul>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//命名表示 汽车类型 的字段：</span></span><br><span class="line"><span class="built_in">int</span> carType <span class="comment">//正确：英文词组、能描述其意义。</span></span><br><span class="line"><span class="built_in">int</span> qicheleixing <span class="comment">//错误：拼音。</span></span><br><span class="line"><span class="built_in">int</span> akhj <span class="comment">//错误：无意义。</span></span><br><span class="line"><span class="built_in">int</span> car <span class="comment">//错误：不能描述其意义。</span></span><br><span class="line"><span class="built_in">int</span> car_type <span class="comment">//错误：下划线命名。</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>【规则1-4】约定俗成的变量可以 依次 简单命名。<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//命名循环里的递增（减）变量：</span></span><br><span class="line"><span class="built_in">int</span> i,j,k;</span><br></pre></td></tr></table></figure></li>
+<li>【规则1-5】命名空间名、类名、接口名、非私有字段名、枚举名及枚举值名、方法名采用 大驼峰式命名法 ，即每一个单词的首字母都大写。<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> <span class="title">Car</span> &#123;&#125; <span class="comment">//命名空间名</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">SendManager</span>; <span class="comment">//类名</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title">IState</span>; <span class="comment">//接口名</span></span><br><span class="line"><span class="keyword">public</span> <span class="built_in">string</span> FirstName; <span class="comment">//非私有字段名</span></span><br><span class="line"><span class="built_in">enum</span> CarDriveType &#123;FrontWheelDrive, RearWheelDrive, FourWheelDrive&#125;<span class="comment">//枚举名及枚举值名</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">SendMessage</span>(<span class="params"><span class="built_in">string</span> message</span>)</span> &#123;&#125; <span class="comment">//方法名</span></span><br></pre></td></tr></table></figure></li>
+<li><p>【规则1-6】私有字段名、方法参数名、局部变量名采用 小驼峰式命名法 ，即第一个单词首字母小写，其余单词首字母大写。</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="built_in">string</span> mFirstName; <span class="comment">//私有字段名</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">FindByFirstName</span>(<span class="params"><span class="built_in">string</span> firstName</span>)</span> &#123; <span class="comment">//方法参数名</span></span><br><span class="line">    <span class="built_in">string</span> firstName; <span class="comment">//局部变量名</span></span><br><span class="line">&#125; </span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h3 id="（3-2）特殊规则："><a href="#（3-2）特殊规则：" class="headerlink" title="（3.2）特殊规则："></a>（3.2）特殊规则：</h3></li>
+<li><p>【规则2-1】接口的命名要以“I”开头。</p>
+</li>
+</ul>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title">IState</span>;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>【规则2-2】类的私有变量命名以“m”开头。</li>
+</ul>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="built_in">string</span> mFirstName;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>【规则2-3】常量的命名单词之间用“_”隔开，所有字母均大写。</li>
+</ul>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">const</span> <span class="built_in">float</span> MAX_SPEED = <span class="number">180.0f</span>;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>【规则2-4】若方法返回一个成员变量的值，则方法名一般为Get + 成员变量名。</li>
+</ul>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="built_in">string</span> <span class="title">GetFirstName</span>()</span> </span><br><span class="line">&#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>【规则2-5】若方法修改一个成员变量的值，则方法名一般为Set + 成员变量名。<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">SetFirstName</span>(<span class="params"><span class="built_in">string</span> firstName</span>)</span> </span><br><span class="line">&#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li>【规则2-6】若方法返回的值是bool变量，则方法名一般根据含义以Is/Can/Has/Try作为前缀。<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="built_in">bool</span> <span class="title">IsEmpty</span>()</span> </span><br><span class="line">&#123;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="built_in">bool</span> <span class="title">CanEmpty</span>()</span> </span><br><span class="line">&#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li>【规则2-7】避免方法内的局部变量与类的字段命名相同。</li>
+</ul>
+<h3 id="4-编码规范："><a href="#4-编码规范：" class="headerlink" title="4.编码规范："></a>4.编码规范：</h3><p>【规则3-1】声明变量时，一行只声明一个变量。<br><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="built_in">string</span> mFirstName;</span><br><span class="line"><span class="keyword">private</span> <span class="built_in">string</span> mLastName;</span><br></pre></td></tr></table></figure></p>
+<p>【规则3-2】声明变量时，依次简单变量允许一行声明多个。</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">int</span> i,j,k;</span><br></pre></td></tr></table></figure>
+<p>【规则3-3】局部变量声明时，采用就近原则，即将使用该变量时再声明。<br>【规则3-4】“｛”与“｝”的位置如下所示，均独占一行。</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Example</span>()</span> </span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">int</span> i = <span class="number">5</span>;</span><br><span class="line">    <span class="built_in">int</span> j = <span class="number">6</span>;</span><br><span class="line">    i += j;</span><br><span class="line">    <span class="built_in">int</span> k = <span class="number">3</span>;</span><br><span class="line">    k = k * <span class="number">2</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>【规则3-5】 两个方法之间使用一个空行。</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">ExampleA</span>()</span> </span><br><span class="line">&#123;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">ExampleB</span>()</span> </span><br><span class="line">&#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>【规则3-6】 类的字段声明统一放置于类的最前端，并且最后一个声明与类的第一个方法之间使用一个空行。<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Student</span> </span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="built_in">string</span> mFirstName;</span><br><span class="line">    <span class="keyword">private</span> <span class="built_in">string</span> mLastName;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="built_in">string</span> <span class="title">GetFirstName</span>()</span> </span><br><span class="line">    &#123;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+【规则3-7】方法参数列表中的“，”后面使用一个空格。</li>
+</ul>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">SetName</span>(<span class="params"><span class="built_in">string</span> firstName, <span class="built_in">string</span> lastName</span>)</span> </span><br><span class="line">&#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>【规则3-8】二元操作符，除了“.”在其两边各使用一个空格。<br><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">a = c + d;</span><br></pre></td></tr></table></figure></p>
+<p>【规则3-9】for语句表达式子中“；”后面使用一个空格。<br><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span>(i = <span class="number">0</span>; i &lt;= <span class="number">3</span>; i++) </span><br><span class="line">&#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><br>【规则3-10】强制转换后面使用一个空格。<br><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">char</span> c;</span><br><span class="line"><span class="built_in">int</span> a = <span class="number">4</span>;</span><br><span class="line">c = (<span class="built_in">char</span>) a;</span><br></pre></td></tr></table></figure><br>【规则3-11】如果if、for、while语句内容只有一行，可以不加“｛｝”，但是必须和if、for、while语句位于同一行。<br><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(i &lt; <span class="number">5</span>) i = <span class="number">5</span>;</span><br></pre></td></tr></table></figure><br>【规则3-12】一行代码长度不要超过屏幕宽度。如果超过了，将超过部分换行。特殊情况下不强求，如定义了海量内容的常量数组（比如所有敏感词）或上下列整齐的公式。</p>
+<p>5.注释规范：<br>【规则4-1】代码头部注释，包含以下内容:<br>文件名称：文件的名称。<br>功能描述：文件的功能描述与大概流程说明。<br>作者：创建并编写的人员。<br>日期：创建并编写的日期。<br>修改记录：若类有所修改，则需要有修改人员的名字、修改日期及修改理由。<br><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 文件名称：UserInput.cs</span></span><br><span class="line"><span class="comment">// 功能描述：玩家输入按键的定义</span></span><br><span class="line"><span class="comment">// 编写作者：张三</span></span><br><span class="line"><span class="comment">// 编写日期：2017.7.16</span></span><br><span class="line"><span class="comment">// 修改记录：</span></span><br><span class="line"><span class="comment">//      R1:</span></span><br><span class="line"><span class="comment">//          修改作者：李四</span></span><br><span class="line"><span class="comment">//          修改日期：2017.7.17</span></span><br><span class="line"><span class="comment">//          修改理由：使玩家可以自定义输入按键</span></span><br><span class="line"></span><br><span class="line">Using System;</span><br></pre></td></tr></table></figure></p>
+<p>【规则4-2】方法注释，采用 /// 形式自动产生XML标签格式的注释。包括方法功能，参数含义，返回内容。<br><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line"><span class="comment"><span class="doctag">///</span> 设置场景的名字.</span></span><br><span class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;returns&gt;</span><span class="doctag">&lt;c&gt;</span>true<span class="doctag">&lt;/c&gt;</span>, 场景名字设置成功, <span class="doctag">&lt;c&gt;</span>false<span class="doctag">&lt;/c&gt;</span> 场景名字设置失败.<span class="doctag">&lt;/returns&gt;</span></span></span><br><span class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;param name=&quot;sceneName&quot;&gt;</span>场景名字.<span class="doctag">&lt;/param&gt;</span></span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="built_in">bool</span> <span class="title">SetSceneName</span>(<span class="params"><span class="built_in">string</span> sceneName</span>)</span> </span><br><span class="line">&#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><br>【规则4-3】类变量注释，采用 /// 形式自动产生XML标签格式的注释变量含义。<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">/// &lt;summary&gt;</span><br><span class="line">/// 场景的名字</span><br><span class="line">/// &lt;/summary&gt;</span><br><span class="line">private string mSceneName;</span><br></pre></td></tr></table></figure><br>【规则4-4】局部变量注释，在变量声明语句的后面注释，与前后行变量声明的注释左对齐，注释与代码间以Tab隔开。<br><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">string</span> firstName;   <span class="comment">//姓</span></span><br><span class="line"><span class="built_in">string</span> lastName;    <span class="comment">//名</span></span><br></pre></td></tr></table></figure><br>【规则4-5】代码行注释，注释位于代码上行，与代码开始处左对齐，双斜线与注释之间以空格分开。</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//设置场景的名字。</span></span><br><span class="line"><span class="keyword">this</span>.mSceneName = sceneName;</span><br></pre></td></tr></table></figure>
+
+    </div>
+
+    
+    
+    
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/CSharp/" rel="tag"># CSharp</a>
+              <a href="/tags/Unity/" rel="tag"># Unity</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2018/12/29/sublime/sublime-text3-used/" rel="prev" title="Sublime Text3 使用">
+      <i class="fa fa-chevron-left"></i> Sublime Text3 使用
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2019/02/13/python/python3-string/" rel="next" title="python 字符串处理">
+      python 字符串处理 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%95%E5%AD%90"><span class="nav-number">1.</span> <span class="nav-text">引子</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E8%A7%84%E8%8C%83%E7%9B%AE%E7%9A%84%EF%BC%9A"><span class="nav-number">2.</span> <span class="nav-text">1.规范目的：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E8%A7%84%E8%8C%83%E8%AF%B4%E6%98%8E%EF%BC%9A"><span class="nav-number">3.</span> <span class="nav-text">2.规范说明：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-%E5%91%BD%E5%90%8D%E8%A7%84%E8%8C%83%EF%BC%9A"><span class="nav-number">4.</span> <span class="nav-text">3.命名规范：</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%EF%BC%883-1%EF%BC%89%E5%9F%BA%E6%9C%AC%E8%A7%84%E5%88%99%EF%BC%88%E5%AF%B9%E4%BA%8E%E7%B1%BB%E3%80%81%E5%AD%97%E6%AE%B5%E3%80%81%E6%96%B9%E6%B3%95%E3%80%81%E5%8F%82%E6%95%B0%E3%80%81%E5%8F%98%E9%87%8F%EF%BC%89%EF%BC%9A"><span class="nav-number">4.1.</span> <span class="nav-text">（3.1）基本规则（对于类、字段、方法、参数、变量）：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%EF%BC%883-2%EF%BC%89%E7%89%B9%E6%AE%8A%E8%A7%84%E5%88%99%EF%BC%9A"><span class="nav-number">4.2.</span> <span class="nav-text">（3.2）特殊规则：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E7%BC%96%E7%A0%81%E8%A7%84%E8%8C%83%EF%BC%9A"><span class="nav-number">4.3.</span> <span class="nav-text">4.编码规范：</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Chester.C</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">143</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">32</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">67</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Chester.C</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+if (document.querySelectorAll('pre.mermaid').length) {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mermaid@8/dist/mermaid.min.js', () => {
+    mermaid.initialize({
+      theme    : 'forest',
+      logLevel : 3,
+      flowchart: { curve     : 'linear' },
+      gantt    : { axisFormat: '%m/%d/%Y' },
+      sequence : { actorMargin: 50 }
+    });
+  }, window.mermaid);
+}
+</script>
+
+
+  
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'OQBlgU8H1seTDvVrgC3Dhni0-gzGzoHsz',
+      appKey     : 'wF7D3hVD9WjlV9V52bhlymHO',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : true,
+      lang       : 'zh-cn' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>

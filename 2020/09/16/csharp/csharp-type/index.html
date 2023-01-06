@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.2">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <link rel="amphtml" href="./amp/">
+  <meta name="baidu-site-verification" content="code-mUG0UNAPhR">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"blog.rcant.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="引子Type 关键字CSharp 中所有的类型都是 Type 获取 Type 的方法有三种 使用 typeof 运算符   1Type t &#x3D; typeof(int);  使用 getType() 方法  12int i;Type t &#x3D; i.GetType();  使用Type类的静态方法 GetType()   1Type t &#x3D;Type.GetType(&quot;System.Double">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CSharp Type 类型反射调用">
+<meta property="og:url" content="http://blog.rcant.com/2020/09/16/csharp/csharp-type/index.html">
+<meta property="og:site_name" content="Chester.Cao Blog">
+<meta property="og:description" content="引子Type 关键字CSharp 中所有的类型都是 Type 获取 Type 的方法有三种 使用 typeof 运算符   1Type t &#x3D; typeof(int);  使用 getType() 方法  12int i;Type t &#x3D; i.GetType();  使用Type类的静态方法 GetType()   1Type t &#x3D;Type.GetType(&quot;System.Double">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://blog.rcant.com/2020/09/16/csharp/csharp-type/1.png">
+<meta property="og:image" content="http://blog.rcant.com/2020/09/16/csharp/csharp-type/2.png">
+<meta property="article:published_time" content="2020-09-16T04:12:25.000Z">
+<meta property="article:modified_time" content="2023-01-06T09:31:36.150Z">
+<meta property="article:author" content="Chester.C">
+<meta property="article:tag" content="CSharp">
+<meta property="article:tag" content="Reflect">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://blog.rcant.com/2020/09/16/csharp/csharp-type/1.png">
+
+<link rel="canonical" href="http://blog.rcant.com/2020/09/16/csharp/csharp-type/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>CSharp Type 类型反射调用 | Chester.Cao Blog</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?974592ac4c5733a52af2b871678a5334";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Chester.Cao Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Chester.Cao Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Devlopper in C#</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-topics">
+
+    <a href="/topics/" rel="section"><i class="fa fa-fw fa-pencil"></i>主题</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://blog.rcant.com/2020/09/16/csharp/csharp-type/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Chester.C">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chester.Cao Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          CSharp Type 类型反射调用
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-09-16 12:12:25" itemprop="dateCreated datePublished" datetime="2020-09-16T12:12:25+08:00">2020-09-16</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-01-06 17:31:36" itemprop="dateModified" datetime="2023-01-06T17:31:36+08:00">2023-01-06</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/CSharp/" itemprop="url" rel="index"><span itemprop="name">CSharp</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2020/09/16/csharp/csharp-type/" class="post-meta-item leancloud_visitors" data-flag-title="CSharp Type 类型反射调用" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2020/09/16/csharp/csharp-type/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/09/16/csharp/csharp-type/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h2><h2 id="Type-关键字"><a href="#Type-关键字" class="headerlink" title="Type 关键字"></a>Type 关键字</h2><p>CSharp 中所有的类型都是 Type</p>
+<h3 id="获取-Type-的方法有三种"><a href="#获取-Type-的方法有三种" class="headerlink" title="获取 Type 的方法有三种"></a>获取 Type 的方法有三种</h3><ol>
+<li>使用 <strong>typeof</strong> 运算符 </li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Type t = typeof(int);</span><br></pre></td></tr></table></figure>
+<ol>
+<li>使用 <strong>getType()</strong> 方法</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">int i;</span><br><span class="line">Type t = i.GetType();</span><br></pre></td></tr></table></figure>
+<ol>
+<li>使用Type类的静态方法 <strong>GetType()</strong> </li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Type t =Type.GetType(&quot;System.Double&quot;);</span><br></pre></td></tr></table></figure>
+<span id="more"></span>
+<h3 id="Type的属性"><a href="#Type的属性" class="headerlink" title="Type的属性"></a>Type的属性</h3><div class="table-container">
+<table>
+<thead>
+<tr>
+<th>属性名</th>
+<th>属性含义</th>
+<th>扩展</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Name</td>
+<td>类型名</td>
+<td>MyTestType</td>
+</tr>
+<tr>
+<td>FullName</td>
+<td>类型的完全限定名，包括命名空间</td>
+<td>ConsoleApp1.MyTestType</td>
+</tr>
+<tr>
+<td>Namespace</td>
+<td>类型的命名空间</td>
+<td>ConsoleApp1</td>
+</tr>
+<tr>
+<td>BaseType</td>
+<td>直接父类类型</td>
+<td>ConsoleApp1.MyTestParent</td>
+</tr>
+<tr>
+<td>UnderlyingSystemType</td>
+<td>映射类型</td>
+<td>ConsoleApp1.MyTestType</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h3 id="Type的主要方法"><a href="#Type的主要方法" class="headerlink" title="Type的主要方法"></a>Type的主要方法</h3><div class="table-container">
+<table>
+<thead>
+<tr>
+<th>方法名</th>
+<th>方法含义</th>
+<th>入口参数</th>
+<th>返回值</th>
+<th>扩展</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GetFields</td>
+<td>获取所有公共字段。</td>
+<td>-</td>
+<td>FieldInfo[]</td>
+<td><code>public int Size;</code></td>
+</tr>
+<tr>
+<td>GetField</td>
+<td>此方法用于搜索具有指定名称的公共字段。</td>
+<td>string</td>
+<td>FieldInfo</td>
+<td>-</td>
+</tr>
+<tr>
+<td>GetProperties</td>
+<td>获取所有公共属性 (get/set)</td>
+<td>-</td>
+<td>PropertyInfo[]</td>
+<td><code>public int Pos &#123; get; set; &#125;</code></td>
+</tr>
+<tr>
+<td>GetPropertie</td>
+<td>此方法用于搜索具有指定名称的公共属性 (get/set)</td>
+<td>string</td>
+<td>PropertyInfo</td>
+<td>-</td>
+</tr>
+<tr>
+<td>GetMethods</td>
+<td>获取所有公共方法[包含(get/set)]</td>
+<td>-</td>
+<td>MethodInfo[]</td>
+<td>包含Get/Set方法 如 get_Pos/set_Pos</td>
+</tr>
+<tr>
+<td>GetMethod</td>
+<td>此方法用于搜索具有指定名称的公共方法[包含get/set]</td>
+<td>string</td>
+<td>MethodInfo</td>
+<td>-</td>
+</tr>
+<tr>
+<td>GetMembers</td>
+<td>获取所有公共成员</td>
+<td>-</td>
+<td>MemberInfo[]</td>
+<td>包含Field / Propertie / Method</td>
+</tr>
+<tr>
+<td>GetMember</td>
+<td>此方法用于搜索具有指定名称的公共成员</td>
+<td>string</td>
+<td>MemberInfo</td>
+<td>-</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h3 id="Type-反射调用"><a href="#Type-反射调用" class="headerlink" title="Type 反射调用"></a>Type 反射调用</h3><h4 id="1-FiledInfo"><a href="#1-FiledInfo" class="headerlink" title="1. FiledInfo"></a>1. FiledInfo</h4><p>使用 <strong>GetValue/SetValue</strong><br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">public static void Test()</span><br><span class="line">&#123;</span><br><span class="line">    Type myTestType = typeof(MyTestType);</span><br><span class="line">    Object myTestInstance = new MyTestType();</span><br><span class="line"></span><br><span class="line">    FieldInfo fieldInfo1 = myTestType.GetField(&quot;Size&quot;);</span><br><span class="line"></span><br><span class="line">    object f1 = fieldInfo1.GetValue(myTestInstance);</span><br><span class="line">    Console.WriteLine(&quot;myTestInstance.Size:&quot; + f1);</span><br><span class="line"></span><br><span class="line">    fieldInfo1.SetValue(myTestInstance, 10);</span><br><span class="line"></span><br><span class="line">    object f2 = fieldInfo1.GetValue(myTestInstance);</span><br><span class="line">    Console.WriteLine(&quot;myTestInstance.Size:&quot; + f2);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h4 id="2-PropertyInfo"><a href="#2-PropertyInfo" class="headerlink" title="2. PropertyInfo"></a>2. PropertyInfo</h4><p>使用 <strong>GetValue/SetValue</strong><br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">public static void Test()</span><br><span class="line">&#123;</span><br><span class="line">    Type myTestType = typeof(MyTestType);</span><br><span class="line">    Object myTestInstance = new MyTestType();</span><br><span class="line"></span><br><span class="line">    PropertyInfo propertyInfo = myTestType.GetProperty(&quot;Pos&quot;);</span><br><span class="line"></span><br><span class="line">    object p1 = propertyInfo.GetValue(myTestInstance);</span><br><span class="line">    Console.WriteLine(&quot;myTestInstance.Pos:&quot;+ p1);</span><br><span class="line"></span><br><span class="line">    propertyInfo.SetValue(myTestInstance, 10);</span><br><span class="line">    </span><br><span class="line">    object p2 = propertyInfo.GetValue(myTestInstance);</span><br><span class="line">    Console.WriteLine(&quot;myTestInstance.Pos:&quot; + p2);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><br><strong>PropertyInfo</strong> 的 <strong>SetValue</strong> 实际调用的是 <strong>set_XXX</strong> 方法<br><strong>PropertyInfo</strong> 的 <strong>GetValue</strong> 实际调用的是 <strong>get_XXX</strong> 方法</p>
+<p>在一个类中如果定义了一个属性 <strong>XXX(PosParent)</strong> , 就不能再定义 <strong>get_XXX(get_PosParent)/set_XXX(set_PosParent)</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">public  class MyTestParent</span><br><span class="line">&#123;</span><br><span class="line">        public int SizeParent;</span><br><span class="line">        private int posParent;</span><br><span class="line">        public int PosParent &#123; get =&gt; posParent; set =&gt; posParent = value; &#125;</span><br><span class="line"></span><br><span class="line">        public int mRotationParent;</span><br><span class="line">        </span><br><span class="line">        public int get_PosParent()</span><br><span class="line">        &#123;</span><br><span class="line">            return posParent;</span><br><span class="line">        &#125;</span><br><span class="line">        public void set_PosParent(int v)</span><br><span class="line">        &#123;</span><br><span class="line">            posParent = v;</span><br><span class="line">        &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>编译器会报错</p>
+<img src="/2020/09/16/csharp/csharp-type/1.png" class="" title="CompileError">  
+<h4 id="3-MethodInfo"><a href="#3-MethodInfo" class="headerlink" title="3. MethodInfo"></a>3. MethodInfo</h4><p>使用 <strong>Invoke</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">public static void Test()</span><br><span class="line">&#123;</span><br><span class="line">    Type myTestType = typeof(MyTestType);</span><br><span class="line">    Object myTestInstance = new MyTestType();</span><br><span class="line"></span><br><span class="line">    MethodInfo getRotaionMethod = myTestType.GetMethod(&quot;GetRotation&quot;);</span><br><span class="line">    MethodInfo setRotationMethod = myTestType.GetMethod(&quot;SetRotation&quot;);</span><br><span class="line"></span><br><span class="line">    object getRotationRet1 = getRotaionMethod.Invoke(myTestInstance,new object[0]);</span><br><span class="line">    Console.WriteLine(&quot;myTestInstance.MethodInfo GetRotation:&quot; + getRotationRet1);</span><br><span class="line"></span><br><span class="line">    setRotationMethod.Invoke(myTestInstance, new object[1]&#123;10&#125;);</span><br><span class="line"></span><br><span class="line">    object getRotationRet2 = getRotaionMethod.Invoke(myTestInstance, new object[0]);</span><br><span class="line">    Console.WriteLine(&quot;myTestInstance.MethodInfo  GetRotation:&quot; + getRotationRet2);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="4-MethodInfo-Get-Set"><a href="#4-MethodInfo-Get-Set" class="headerlink" title="4. MethodInfo Get/Set"></a>4. MethodInfo Get/Set</h4><p>使用 <strong>Invoke</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">public static void Test()</span><br><span class="line">&#123;</span><br><span class="line">    Type myTestType = typeof(MyTestType);</span><br><span class="line">    Object myTestInstance = new MyTestType();</span><br><span class="line"></span><br><span class="line">    MethodInfo getPosParentMethod = myTestType.GetMethod(&quot;get_PosParent&quot;);</span><br><span class="line">    MethodInfo setPosParentMethod = myTestType.GetMethod(&quot;set_PosParent&quot;);</span><br><span class="line"></span><br><span class="line">    object getPosParentRet1 = getPosParentMethod.Invoke(myTestInstance, new object[0]);</span><br><span class="line">    Console.WriteLine(&quot;myTestInstance.MethodInfo PosParent:&quot; + getPosParentRet1);</span><br><span class="line"></span><br><span class="line">    setPosParentMethod.Invoke(myTestInstance, new object[1] &#123; 10 &#125;);</span><br><span class="line"></span><br><span class="line">    object getPosParentRet2 = getPosParentMethod.Invoke(myTestInstance, new object[0]);</span><br><span class="line">    Console.WriteLine(&quot;myTestInstance.MethodInfo  PosParent:&quot; + getPosParentRet2);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="例子代码"><a href="#例子代码" class="headerlink" title="例子代码"></a>例子代码</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br></pre></td><td class="code"><pre><span class="line">using System;</span><br><span class="line">using System.Reflection;</span><br><span class="line">using System.Text;</span><br><span class="line"></span><br><span class="line">namespace ConsoleApp1</span><br><span class="line">&#123;</span><br><span class="line">    public  class MyTestParent</span><br><span class="line">    &#123;</span><br><span class="line">        public int SizeParent;//FieldInfo 父类子类都可以获取，只要是public</span><br><span class="line">        private int posParent;//FieldInfo private 无法获取</span><br><span class="line">        public int PosParent &#123; get =&gt; posParent; set =&gt; posParent = value; &#125;// PropertyInfo  get_PosParent,set_PosParent</span><br><span class="line"></span><br><span class="line">        public int mRotationParent;//FieldInfo 父类子类都可以获取，只要是public</span><br><span class="line">        </span><br><span class="line">        //public int get_PosParent()</span><br><span class="line">        //&#123;</span><br><span class="line">        //    return posParent;</span><br><span class="line">        //&#125;</span><br><span class="line">        //public void set_PosParent(int v)</span><br><span class="line">        //&#123;</span><br><span class="line">        //    posParent = v;</span><br><span class="line">        //&#125;</span><br><span class="line"></span><br><span class="line">        public virtual void SetRotationParent(int r)// memberInfo  SetRotationParent</span><br><span class="line">        &#123;</span><br><span class="line">            mRotationParent = r;</span><br><span class="line">        &#125;</span><br><span class="line">        public virtual int GetRotationParent()// memberInfo  GetRotationParent</span><br><span class="line">        &#123;</span><br><span class="line">            return mRotationParent;</span><br><span class="line">        &#125;</span><br><span class="line">        public override string ToString()</span><br><span class="line">        &#123;</span><br><span class="line">            StringBuilder stringBuilder = new StringBuilder();</span><br><span class="line">            stringBuilder.Append(&quot;\nSizeParent:&quot;);</span><br><span class="line">            stringBuilder.Append(SizeParent);</span><br><span class="line">            stringBuilder.Append(&quot;\nPosParent:&quot;);</span><br><span class="line">            stringBuilder.Append(PosParent);</span><br><span class="line">            stringBuilder.Append(&quot;\nRotationParent&quot;);</span><br><span class="line">            stringBuilder.Append(mRotationParent);</span><br><span class="line"></span><br><span class="line">            return stringBuilder.ToString();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public class MyTestType:MyTestParent</span><br><span class="line">    &#123;</span><br><span class="line">        #region 使用字段访问 </span><br><span class="line">        public int Size;//FieldInfo     public 可以获取</span><br><span class="line">        #endregion</span><br><span class="line"></span><br><span class="line">        #region 使用系统提供的Get/Set 设置访问属性</span><br><span class="line">        public int Pos &#123; get; set; &#125;// PropertyInfo  get_Pos,set_Pos</span><br><span class="line">        #endregion</span><br><span class="line"></span><br><span class="line">        #region 使用自定义方法 设置属性</span><br><span class="line">        private int mRotation;//FieldInfo     private 获取不到</span><br><span class="line"></span><br><span class="line">        public void SetRotation(int r)      // memberInfo  SetRotation</span><br><span class="line">        &#123;</span><br><span class="line">            mRotation = r;</span><br><span class="line">        &#125;</span><br><span class="line">        public int GetRotation()             // memberInfo  GetRotation</span><br><span class="line">        &#123;</span><br><span class="line">            return mRotation;</span><br><span class="line">        &#125;</span><br><span class="line">        #endregion</span><br><span class="line"></span><br><span class="line">        public override string ToString()</span><br><span class="line">        &#123;</span><br><span class="line">            StringBuilder stringBuilder = new StringBuilder();</span><br><span class="line">            stringBuilder.Append(&quot;base.ToString:&quot;);</span><br><span class="line">            stringBuilder.Append(base.ToString());</span><br><span class="line">            stringBuilder.Append(&quot;\nSize:&quot;);</span><br><span class="line">            stringBuilder.Append(Size);</span><br><span class="line">            stringBuilder.Append(&quot;\nPos:&quot;);</span><br><span class="line">            stringBuilder.Append(Pos);</span><br><span class="line">            stringBuilder.Append(&quot;\nRotation&quot;);</span><br><span class="line">            stringBuilder.Append(mRotation);</span><br><span class="line"></span><br><span class="line">            return stringBuilder.ToString();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    public class TypeTest</span><br><span class="line">    &#123;</span><br><span class="line">        public static void Test()</span><br><span class="line">        &#123;</span><br><span class="line">            //Type类型</span><br><span class="line">            Type myTestType = typeof(MyTestType);</span><br><span class="line"></span><br><span class="line">            //一个不明类型的实例</span><br><span class="line">            Object myTestInstance = new MyTestType();</span><br><span class="line"></span><br><span class="line">            //如何使用这个实例访问 对象属性</span><br><span class="line"></span><br><span class="line">            Console.WriteLine(&quot;myTestType.Name:&quot; + myTestType.Name);</span><br><span class="line">            Console.WriteLine(&quot;myTestType.FullName:&quot; + myTestType.FullName);</span><br><span class="line">            Console.WriteLine(&quot;myTestType.Namespace:&quot; + myTestType.Namespace);</span><br><span class="line">            Console.WriteLine(&quot;myTestType.BaseType:&quot; + myTestType.BaseType);</span><br><span class="line">            Console.WriteLine(&quot;myTestType.UnderlyingSystemType:&quot; + myTestType.UnderlyingSystemType);</span><br><span class="line"></span><br><span class="line">            Console.WriteLine(&quot;=========fieldInfos=========&quot;);</span><br><span class="line">            FieldInfo[] fieldInfos = myTestType.GetFields();</span><br><span class="line">            for (int i = 0,length = fieldInfos.Length; i &lt; length; i++)</span><br><span class="line">            &#123;</span><br><span class="line">                FieldInfo fieldInfo = fieldInfos[i];</span><br><span class="line">                Console.WriteLine(fieldInfo);</span><br><span class="line">            &#125;</span><br><span class="line">            Console.WriteLine(&quot;==================&quot;);</span><br><span class="line">            </span><br><span class="line">            Console.WriteLine(&quot;=======FieldInfo Test===========&quot;);</span><br><span class="line">            FieldInfo fieldInfo1 = myTestType.GetField(&quot;Size&quot;);</span><br><span class="line">            object f1 = fieldInfo1.GetValue(myTestInstance);</span><br><span class="line">            Console.WriteLine(&quot;myTestInstance.Size:&quot; + f1);</span><br><span class="line">            fieldInfo1.SetValue(myTestInstance, 10);</span><br><span class="line">            object f2 = fieldInfo1.GetValue(myTestInstance);</span><br><span class="line">            Console.WriteLine(&quot;myTestInstance.Size:&quot; + f2);</span><br><span class="line">            Console.WriteLine(&quot;==================&quot;);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">            Console.WriteLine(&quot;=========memberInfos=========&quot;);</span><br><span class="line">            MemberInfo[] memberInfos = myTestType.GetMembers();</span><br><span class="line">            for (int i = 0, length = memberInfos.Length; i &lt; length; i++)</span><br><span class="line">            &#123;</span><br><span class="line">                MemberInfo fieldInfo = memberInfos[i];</span><br><span class="line">                Console.WriteLine(fieldInfo);</span><br><span class="line">            &#125;</span><br><span class="line">            Console.WriteLine(&quot;==================&quot;);</span><br><span class="line"></span><br><span class="line">            Console.WriteLine(&quot;=========propertyInfos=========&quot;);</span><br><span class="line">            PropertyInfo[] propertyInfos = myTestType.GetProperties();</span><br><span class="line">            for (int i = 0, length = propertyInfos.Length; i &lt; length; i++)</span><br><span class="line">            &#123;</span><br><span class="line">                PropertyInfo fieldInfo = propertyInfos[i];</span><br><span class="line">                Console.WriteLine(fieldInfo);</span><br><span class="line">            &#125;</span><br><span class="line">           </span><br><span class="line">            Console.WriteLine(&quot;==================&quot;);</span><br><span class="line"></span><br><span class="line">            Console.WriteLine(&quot;=======PropertyInfo Invoke===========&quot;);</span><br><span class="line">            PropertyInfo propertyInfo = myTestType.GetProperty(&quot;Pos&quot;);</span><br><span class="line">            </span><br><span class="line">            object p1 = propertyInfo.GetValue(myTestInstance);</span><br><span class="line">            Console.WriteLine(&quot;myTestInstance.Pos:&quot;+ p1);</span><br><span class="line">            propertyInfo.SetValue(myTestInstance, 10);</span><br><span class="line">            object p2 = propertyInfo.GetValue(myTestInstance);</span><br><span class="line">            Console.WriteLine(&quot;myTestInstance.Pos:&quot; + p2);</span><br><span class="line">            Console.WriteLine(&quot;==================&quot;);</span><br><span class="line"></span><br><span class="line">            Console.WriteLine(&quot;=========methodInfos=========&quot;);</span><br><span class="line">            MethodInfo[] methodInfos = myTestType.GetMethods();</span><br><span class="line">            for (int i = 0, length = methodInfos.Length; i &lt; length; i++)</span><br><span class="line">            &#123;</span><br><span class="line">                MethodInfo fieldInfo = methodInfos[i];</span><br><span class="line">                Console.WriteLine(fieldInfo);</span><br><span class="line">            &#125;</span><br><span class="line">            Console.WriteLine(&quot;==================&quot;);</span><br><span class="line"></span><br><span class="line">            Console.WriteLine(&quot;=======MethodInfo Invoke===========&quot;);</span><br><span class="line">            MethodInfo getRotaionMethod = myTestType.GetMethod(&quot;GetRotation&quot;);</span><br><span class="line">            MethodInfo setRotationMethod = myTestType.GetMethod(&quot;SetRotation&quot;);</span><br><span class="line"></span><br><span class="line">            object getRotationRet1 = getRotaionMethod.Invoke(myTestInstance,new object[0]);</span><br><span class="line">            Console.WriteLine(&quot;myTestInstance.MethodInfo GetRotation:&quot; + getRotationRet1);</span><br><span class="line"></span><br><span class="line">            setRotationMethod.Invoke(myTestInstance, new object[1]&#123;10&#125;);</span><br><span class="line"></span><br><span class="line">            object getRotationRet2 = getRotaionMethod.Invoke(myTestInstance, new object[0]);</span><br><span class="line">            Console.WriteLine(&quot;myTestInstance.MethodInfo  GetRotation:&quot; + getRotationRet2);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">            Console.WriteLine(&quot;==================&quot;);</span><br><span class="line"></span><br><span class="line">            Console.WriteLine(&quot;=======MethodInfo Get/Set Invoke===========&quot;);</span><br><span class="line">            MethodInfo getPosParentMethod = myTestType.GetMethod(&quot;get_PosParent&quot;);</span><br><span class="line">            MethodInfo setPosParentMethod = myTestType.GetMethod(&quot;set_PosParent&quot;);</span><br><span class="line"></span><br><span class="line">            object getPosParentRet1 = getPosParentMethod.Invoke(myTestInstance, new object[0]);</span><br><span class="line">            Console.WriteLine(&quot;myTestInstance.MethodInfo PosParent:&quot; + getPosParentRet1);</span><br><span class="line"></span><br><span class="line">            setPosParentMethod.Invoke(myTestInstance, new object[1] &#123; 10 &#125;);</span><br><span class="line"></span><br><span class="line">            object getPosParentRet2 = getPosParentMethod.Invoke(myTestInstance, new object[0]);</span><br><span class="line">            Console.WriteLine(&quot;myTestInstance.MethodInfo  PosParent:&quot; + getPosParentRet2);</span><br><span class="line"></span><br><span class="line">            Console.WriteLine(&quot;==================&quot;);</span><br><span class="line"></span><br><span class="line">            Console.WriteLine(&quot;myTestInstance:&quot; + myTestInstance);</span><br><span class="line"></span><br><span class="line">            </span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>执行结果</p>
+<img src="/2020/09/16/csharp/csharp-type/2.png" class="" title="Result">  
+    </div>
+
+    
+    
+    
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/CSharp/" rel="tag"># CSharp</a>
+              <a href="/tags/Reflect/" rel="tag"># Reflect</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/09/08/csharp/csharp-unitest/" rel="prev" title="CSharp 单元测试">
+      <i class="fa fa-chevron-left"></i> CSharp 单元测试
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/09/18/unity/unity-extends/" rel="next" title="Unity 编辑器扩展">
+      Unity 编辑器扩展 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%95%E5%AD%90"><span class="nav-number">1.</span> <span class="nav-text">引子</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Type-%E5%85%B3%E9%94%AE%E5%AD%97"><span class="nav-number">2.</span> <span class="nav-text">Type 关键字</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%8E%B7%E5%8F%96-Type-%E7%9A%84%E6%96%B9%E6%B3%95%E6%9C%89%E4%B8%89%E7%A7%8D"><span class="nav-number">2.1.</span> <span class="nav-text">获取 Type 的方法有三种</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Type%E7%9A%84%E5%B1%9E%E6%80%A7"><span class="nav-number">2.2.</span> <span class="nav-text">Type的属性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Type%E7%9A%84%E4%B8%BB%E8%A6%81%E6%96%B9%E6%B3%95"><span class="nav-number">2.3.</span> <span class="nav-text">Type的主要方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Type-%E5%8F%8D%E5%B0%84%E8%B0%83%E7%94%A8"><span class="nav-number">2.4.</span> <span class="nav-text">Type 反射调用</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-FiledInfo"><span class="nav-number">2.4.1.</span> <span class="nav-text">1. FiledInfo</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-PropertyInfo"><span class="nav-number">2.4.2.</span> <span class="nav-text">2. PropertyInfo</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-MethodInfo"><span class="nav-number">2.4.3.</span> <span class="nav-text">3. MethodInfo</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-MethodInfo-Get-Set"><span class="nav-number">2.4.4.</span> <span class="nav-text">4. MethodInfo Get&#x2F;Set</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BE%8B%E5%AD%90%E4%BB%A3%E7%A0%81"><span class="nav-number">3.</span> <span class="nav-text">例子代码</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Chester.C</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">143</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">32</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">67</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Chester.C</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+if (document.querySelectorAll('pre.mermaid').length) {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mermaid@8/dist/mermaid.min.js', () => {
+    mermaid.initialize({
+      theme    : 'forest',
+      logLevel : 3,
+      flowchart: { curve     : 'linear' },
+      gantt    : { axisFormat: '%m/%d/%Y' },
+      sequence : { actorMargin: 50 }
+    });
+  }, window.mermaid);
+}
+</script>
+
+
+  
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'OQBlgU8H1seTDvVrgC3Dhni0-gzGzoHsz',
+      appKey     : 'wF7D3hVD9WjlV9V52bhlymHO',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : true,
+      lang       : 'zh-cn' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>

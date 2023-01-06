@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.2">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <link rel="amphtml" href="./amp/">
+  <meta name="baidu-site-verification" content="code-mUG0UNAPhR">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"blog.rcant.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="如何使用ADB 1. 开启ADB服务1234$ adb devicesList of devices attached* daemon not running; starting now at tcp:5037* daemon started successfully 123$ adb start-server* daemon not running; starting now at tcp:50">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android ADB 使用">
+<meta property="og:url" content="http://blog.rcant.com/2018/09/19/android/android_adb_use/index.html">
+<meta property="og:site_name" content="Chester.Cao Blog">
+<meta property="og:description" content="如何使用ADB 1. 开启ADB服务1234$ adb devicesList of devices attached* daemon not running; starting now at tcp:5037* daemon started successfully 123$ adb start-server* daemon not running; starting now at tcp:50">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2018-09-19T06:40:07.000Z">
+<meta property="article:modified_time" content="2023-01-06T09:26:42.682Z">
+<meta property="article:author" content="Chester.C">
+<meta property="article:tag" content="android">
+<meta property="article:tag" content="adb">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://blog.rcant.com/2018/09/19/android/android_adb_use/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Android ADB 使用 | Chester.Cao Blog</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?974592ac4c5733a52af2b871678a5334";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Chester.Cao Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Chester.Cao Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Devlopper in C#</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-topics">
+
+    <a href="/topics/" rel="section"><i class="fa fa-fw fa-pencil"></i>主题</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://blog.rcant.com/2018/09/19/android/android_adb_use/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Chester.C">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chester.Cao Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Android ADB 使用
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2018-09-19 14:40:07" itemprop="dateCreated datePublished" datetime="2018-09-19T14:40:07+08:00">2018-09-19</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-01-06 17:26:42" itemprop="dateModified" datetime="2023-01-06T17:26:42+08:00">2023-01-06</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/android/" itemprop="url" rel="index"><span itemprop="name">android</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2018/09/19/android/android_adb_use/" class="post-meta-item leancloud_visitors" data-flag-title="Android ADB 使用" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2018/09/19/android/android_adb_use/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2018/09/19/android/android_adb_use/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>如何使用ADB</p>
+<h3 id="1-开启ADB服务"><a href="#1-开启ADB服务" class="headerlink" title="1. 开启ADB服务"></a>1. 开启ADB服务</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ adb devices</span><br><span class="line">List of devices attached</span><br><span class="line">* daemon not running; starting now at tcp:5037</span><br><span class="line">* daemon started successfully</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ adb start-server</span><br><span class="line">* daemon not running; starting now at tcp:5037</span><br><span class="line">* daemon started successfully</span><br></pre></td></tr></table></figure>
+<h3 id="2-停止ADB服务"><a href="#2-停止ADB服务" class="headerlink" title="2. 停止ADB服务"></a>2. 停止ADB服务</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">adb kill-server</span><br></pre></td></tr></table></figure>
+<span id="more"></span>
+<h3 id="3-连接ADB客户端"><a href="#3-连接ADB客户端" class="headerlink" title="3. 连接ADB客户端"></a>3. 连接ADB客户端</h3><p>默认连接<br>这句命令默认会连5555端口，谷歌官方模拟器就是用这个端口</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">adb connect 127.0.0.1</span><br></pre></td></tr></table></figure>
+<p>夜神模拟器   </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ adb connect 127.0.0.1:62001</span><br><span class="line">connected to 127.0.0.1:62001</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ adb devices</span><br><span class="line">List of devices attached</span><br><span class="line">127.0.0.1:62001 device</span><br></pre></td></tr></table></figure>
+<p>逍遥模拟器 </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">adb connect 127.0.0.1:21503</span><br></pre></td></tr></table></figure>
+<h3 id="4-模拟器开启Root权限"><a href="#4-模拟器开启Root权限" class="headerlink" title="4. 模拟器开启Root权限"></a>4. 模拟器开启Root权限</h3><h3 id="5-可能出现的问题"><a href="#5-可能出现的问题" class="headerlink" title="5. 可能出现的问题"></a>5. 可能出现的问题</h3><p>原因是本地有多个版本的ADB连接 ，检查是否有360等等，如果有的话，就关闭360</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">adb server version (36) doesn&#x27;t match this client (39); killing...</span><br></pre></td></tr></table></figure>
+<h3 id="6-使用adb-shell调试"><a href="#6-使用adb-shell调试" class="headerlink" title="6. 使用adb shell调试"></a>6. 使用<strong>adb shell</strong>调试</h3><h3 id="7-用GDB调试程序，dump内存"><a href="#7-用GDB调试程序，dump内存" class="headerlink" title="7. 用GDB调试程序，dump内存"></a>7. 用<strong>GDB</strong>调试程序，<strong>dump</strong>内存</h3><p>可以在网络上搜索适合你的手机CPU体系结构的gdb可执行程序，用<strong>adb push</strong>到手机上使用；</p>
+<p>Windows 上传，使用CMD</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">d:\android_sdk\platform-tools&gt;adb.exe push D:\app\android-ndk-r10e\prebuilt\andr</span><br><span class="line">oid-x86\gdbserver\gdbserver /data/local/tmp/</span><br><span class="line">D:\app\android-ndk-r10e\prebuilt\andro...hed. 3.0 MB/s (409940 bytes in 0.132s)</span><br></pre></td></tr></table></figure>
+<p>修改权限 755<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">chmod 755 /data/local/tmp/gdbserver</span><br></pre></td></tr></table></figure></p>
+<p>在<strong>Android</strong>系统上开启 <strong>gdbserver</strong> 服务 ，监听来自1234端口的消息<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/data/local/tmp/gdbserver :1234 --attach pid</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">root@android:/ # /data/local/tmp/gdbserver :1234 --attach 1905</span><br><span class="line">Attached; pid = 1905</span><br><span class="line">Listening on port 1234</span><br></pre></td></tr></table></figure>
+<p>开启新的Shell 脚本执行端口转发<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">adb forward tcp:1234 tcp:1234</span><br></pre></td></tr></table></figure></p>
+<p>在NDK目录 <strong>$NDKROOT/toolchains</strong>目录下查找 <strong>gdb</strong> 客户端程序，如我的 <strong>Android</strong> 设备是ARM体系的，然后要在X86体系的PC上使用gdb客户端，所以打开的客户端就是： <strong>$NDKROOT/toolchains/arm-linux-androideabi-4.9/prebuilt/windows-x86_64/bin</strong> 目录下的程序 <strong>arm-linux-androideabi-gdb.exe</strong>。<br>在gdb提示符下输入下面的命令：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">(gdb) target remote localhost:1234</span><br><span class="line">Remote debugging using localhost:1234</span><br><span class="line">warning: Could not load vsyscall page because no executable was specified</span><br><span class="line">try using the &quot;file&quot; command first.</span><br><span class="line">0xb769135b in  ()</span><br></pre></td></tr></table></figure>
+<p>首先编译<strong>arm-linux-androideabi-gdb</strong>，<strong>android-ndk-r9</strong>中自带了 <strong>gdbserver</strong> 和 <strong>arm-linux-androideabi-gdb</strong> ，但是使用 <strong>gdbserver</strong> 和 <strong>arm-linux-androideabi-gdb</strong> 调试手机的时候，用gcore出现Command notimplemented for this target，原因是ndk里面自带的<strong>arm-linux-androideabi-gdb</strong>把 <strong>gcore</strong> 移除了，所以需要自己编译一个 <strong>arm-linux-androideabi-gdb</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">(gdb) gcore</span><br><span class="line">warning: Signal SIGTRAP does not exist on this system.</span><br><span class="line">Target does not support core file generation.</span><br></pre></td></tr></table></figure>
+<p>重新编译<strong>gdb</strong></p>
+<h3 id="8-gdb-dump-破解源码"><a href="#8-gdb-dump-破解源码" class="headerlink" title="8. gdb dump 破解源码"></a>8. <strong>gdb dump</strong> 破解源码</h3>
+    </div>
+
+    
+    
+    
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/android/" rel="tag"># android</a>
+              <a href="/tags/adb/" rel="tag"># adb</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2018/09/11/git/gitlab-third/" rel="prev" title="Gitlab 学习">
+      <i class="fa fa-chevron-left"></i> Gitlab 学习
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2018/09/20/centos/centos-ShadowSocks/" rel="next" title="Centos 安装 ShadowSocks 并实现全局代理">
+      Centos 安装 ShadowSocks 并实现全局代理 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E5%BC%80%E5%90%AFADB%E6%9C%8D%E5%8A%A1"><span class="nav-number">1.</span> <span class="nav-text">1. 开启ADB服务</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E5%81%9C%E6%AD%A2ADB%E6%9C%8D%E5%8A%A1"><span class="nav-number">2.</span> <span class="nav-text">2. 停止ADB服务</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E8%BF%9E%E6%8E%A5ADB%E5%AE%A2%E6%88%B7%E7%AB%AF"><span class="nav-number">3.</span> <span class="nav-text">3. 连接ADB客户端</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E6%A8%A1%E6%8B%9F%E5%99%A8%E5%BC%80%E5%90%AFRoot%E6%9D%83%E9%99%90"><span class="nav-number">4.</span> <span class="nav-text">4. 模拟器开启Root权限</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-%E5%8F%AF%E8%83%BD%E5%87%BA%E7%8E%B0%E7%9A%84%E9%97%AE%E9%A2%98"><span class="nav-number">5.</span> <span class="nav-text">5. 可能出现的问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-%E4%BD%BF%E7%94%A8adb-shell%E8%B0%83%E8%AF%95"><span class="nav-number">6.</span> <span class="nav-text">6. 使用adb shell调试</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-%E7%94%A8GDB%E8%B0%83%E8%AF%95%E7%A8%8B%E5%BA%8F%EF%BC%8Cdump%E5%86%85%E5%AD%98"><span class="nav-number">7.</span> <span class="nav-text">7. 用GDB调试程序，dump内存</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-gdb-dump-%E7%A0%B4%E8%A7%A3%E6%BA%90%E7%A0%81"><span class="nav-number">8.</span> <span class="nav-text">8. gdb dump 破解源码</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Chester.C</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">143</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">32</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">67</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Chester.C</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+if (document.querySelectorAll('pre.mermaid').length) {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mermaid@8/dist/mermaid.min.js', () => {
+    mermaid.initialize({
+      theme    : 'forest',
+      logLevel : 3,
+      flowchart: { curve     : 'linear' },
+      gantt    : { axisFormat: '%m/%d/%Y' },
+      sequence : { actorMargin: 50 }
+    });
+  }, window.mermaid);
+}
+</script>
+
+
+  
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'OQBlgU8H1seTDvVrgC3Dhni0-gzGzoHsz',
+      appKey     : 'wF7D3hVD9WjlV9V52bhlymHO',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : true,
+      lang       : 'zh-cn' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>

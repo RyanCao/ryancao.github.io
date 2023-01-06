@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.2">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <link rel="amphtml" href="./amp/">
+  <meta name="baidu-site-verification" content="code-mUG0UNAPhR">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"blog.rcant.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="引子Hexo 默认的样式比较难看 搭建博客看前章内容 Hexo配置hexo里面有两个常用到的配置文件 ${hexo} 项目根文件夹 整个博客的配置文件 ${hexo}_config.yml 主题的配置文件 ${hexo}\themes\xxx_config.yml  hexo3.0的默认主题是landscape，就是 ${hexo}\themes\landscape_config.yml 替换主题">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hexo更换博客样式">
+<meta property="og:url" content="http://blog.rcant.com/2017/03/01/hexo/hexo-secordblog/index.html">
+<meta property="og:site_name" content="Chester.Cao Blog">
+<meta property="og:description" content="引子Hexo 默认的样式比较难看 搭建博客看前章内容 Hexo配置hexo里面有两个常用到的配置文件 ${hexo} 项目根文件夹 整个博客的配置文件 ${hexo}_config.yml 主题的配置文件 ${hexo}\themes\xxx_config.yml  hexo3.0的默认主题是landscape，就是 ${hexo}\themes\landscape_config.yml 替换主题">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2017-03-01T03:39:17.000Z">
+<meta property="article:modified_time" content="2023-01-06T09:38:16.281Z">
+<meta property="article:author" content="Chester.C">
+<meta property="article:tag" content="hexo">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://blog.rcant.com/2017/03/01/hexo/hexo-secordblog/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Hexo更换博客样式 | Chester.Cao Blog</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?974592ac4c5733a52af2b871678a5334";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Chester.Cao Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Chester.Cao Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Devlopper in C#</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-topics">
+
+    <a href="/topics/" rel="section"><i class="fa fa-fw fa-pencil"></i>主题</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://blog.rcant.com/2017/03/01/hexo/hexo-secordblog/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Chester.C">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chester.Cao Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Hexo更换博客样式
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2017-03-01 11:39:17" itemprop="dateCreated datePublished" datetime="2017-03-01T11:39:17+08:00">2017-03-01</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-01-06 17:38:16" itemprop="dateModified" datetime="2023-01-06T17:38:16+08:00">2023-01-06</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/hexo/" itemprop="url" rel="index"><span itemprop="name">hexo</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2017/03/01/hexo/hexo-secordblog/" class="post-meta-item leancloud_visitors" data-flag-title="Hexo更换博客样式" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2017/03/01/hexo/hexo-secordblog/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2017/03/01/hexo/hexo-secordblog/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h2><p>Hexo 默认的样式比较难看</p>
+<h2 id="搭建博客"><a href="#搭建博客" class="headerlink" title="搭建博客"></a>搭建博客</h2><p>看前章内容</p>
+<h2 id="Hexo配置"><a href="#Hexo配置" class="headerlink" title="Hexo配置"></a>Hexo配置</h2><h3 id="hexo里面有两个常用到的配置文件-hexo-项目根文件夹"><a href="#hexo里面有两个常用到的配置文件-hexo-项目根文件夹" class="headerlink" title="hexo里面有两个常用到的配置文件 ${hexo} 项目根文件夹"></a>hexo里面有两个常用到的配置文件 ${hexo} 项目根文件夹</h3><ul>
+<li>整个博客的配置文件 <strong>${hexo}_config.yml</strong></li>
+<li>主题的配置文件 <strong>${hexo}\themes\xxx_config.yml</strong></li>
+</ul>
+<p>hexo3.0的默认主题是landscape，就是 <strong>${hexo}\themes\landscape_config.yml</strong></p>
+<h3 id="替换主题"><a href="#替换主题" class="headerlink" title="替换主题"></a>替换主题</h3><ul>
+<li>找到你需要的喜欢的主题，下载下来，我用的是<a target="_blank" rel="noopener" href="https://github.com/iissnan/hexo-theme-next">Next</a></li>
+<li>把主题文件放到${hexo}\themes 下</li>
+<li>修改博客配置文件 ${hexo}_config.yml 中的theme名字改为自己下载的主题的文件夹名即可。</li>
+</ul>
+<p>接下来介绍整个博客的配置文件。</p>
+<span id="more"></span>
+<h3 id="博客配置文件"><a href="#博客配置文件" class="headerlink" title="博客配置文件"></a>博客配置文件</h3><figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br></pre></td><td class="code"><pre><span class="line"><span class="section"># Hexo Configuration</span></span><br><span class="line"><span class="section">## Docs: http://hexo.io/docs/configuration.html</span></span><br><span class="line"><span class="section">## Source: https://github.com/hexojs/hexo/</span></span><br><span class="line"></span><br><span class="line"><span class="section"># Site	ps:这下面的几项配置都很简单</span></span><br><span class="line">title: ryancao blog	# ps: 博客名</span><br><span class="line">subtitle: C# Develop	# ps:副标题</span><br><span class="line">description:  # ps:用于搜索，没有直观表现</span><br><span class="line">author: rc	# ps:作者</span><br><span class="line">language: zh-Hans	# ps:语言</span><br><span class="line">timezone: 	# ps:时区，此处不填写，hexo会以你目前电脑的时区为默认值</span><br><span class="line"></span><br><span class="line"><span class="section"># URL</span></span><br><span class="line">url: http://blog.rcant.com  # ps:域名</span><br><span class="line">root: /</span><br><span class="line">permalink: :year/:month/:day/:title/</span><br><span class="line">permalink<span class="emphasis">_defaults:</span></span><br><span class="line"><span class="emphasis"></span></span><br><span class="line"><span class="emphasis"># Directory		ps:暂不配置，使用默认值</span></span><br><span class="line"><span class="emphasis">source_</span>dir: source</span><br><span class="line">public<span class="emphasis">_dir: public</span></span><br><span class="line"><span class="emphasis">tag_</span>dir: tags</span><br><span class="line">archive<span class="emphasis">_dir: archives</span></span><br><span class="line"><span class="emphasis">category_</span>dir: categories</span><br><span class="line">code<span class="emphasis">_dir: downloads/code</span></span><br><span class="line"><span class="emphasis">i18n_</span>dir: :lang</span><br><span class="line">skip<span class="emphasis">_render:</span></span><br><span class="line"><span class="emphasis"></span></span><br><span class="line"><span class="emphasis"># Writing	ps:文章布局等，使用默认值</span></span><br><span class="line"><span class="emphasis">new_</span>post<span class="emphasis">_name: :title.md # File name of new posts</span></span><br><span class="line"><span class="emphasis">default_</span>layout: post</span><br><span class="line">titlecase: false # Transform title into titlecase</span><br><span class="line">external<span class="emphasis">_link: true # Open external links in new tab</span></span><br><span class="line"><span class="emphasis">filename_</span>case: 0</span><br><span class="line">render<span class="emphasis">_drafts: false</span></span><br><span class="line"><span class="emphasis">post_</span>asset<span class="emphasis">_folder: false</span></span><br><span class="line"><span class="emphasis">relative_</span>link: false</span><br><span class="line">future: true</span><br><span class="line">highlight:</span><br><span class="line">  enable: true</span><br><span class="line">  line<span class="emphasis">_number: true</span></span><br><span class="line"><span class="emphasis">  tab_</span>replace:</span><br><span class="line"></span><br><span class="line"><span class="section"># Category &amp; Tag	ps:暂不配置，使用默认值</span></span><br><span class="line">default<span class="emphasis">_category: uncategorized</span></span><br><span class="line"><span class="emphasis">category_</span>map:</span><br><span class="line">tag<span class="emphasis">_map:</span></span><br><span class="line"><span class="emphasis"></span></span><br><span class="line"><span class="emphasis"># Date / Time format	ps:时间格式，使用默认值</span></span><br><span class="line"><span class="emphasis">## Hexo uses Moment.js to parse and display date</span></span><br><span class="line"><span class="emphasis">## You can customize the date format as defined in</span></span><br><span class="line"><span class="emphasis">## http://momentjs.com/docs/#/displaying/format/</span></span><br><span class="line"><span class="emphasis">date_</span>format: YYYY-MM-DD</span><br><span class="line">time<span class="emphasis">_format: HH:mm:ss</span></span><br><span class="line"><span class="emphasis"></span></span><br><span class="line"><span class="emphasis"># Pagination	</span></span><br><span class="line"><span class="emphasis">## Set per_</span>page to 0 to disable pagination</span><br><span class="line">per<span class="emphasis">_page: 10	# ps:每页显示的文章数，0表示不分页</span></span><br><span class="line"><span class="emphasis">pagination_</span>dir: page</span><br><span class="line"></span><br><span class="line"><span class="section"># Extensions	ps:插件配置，暂时不配置</span></span><br><span class="line"><span class="section">## Plugins: http://hexo.io/plugins/</span></span><br><span class="line"><span class="section">## Themes: http://hexo.io/themes/</span></span><br><span class="line">plugins:</span><br><span class="line">  -hexo-generator-feed				# ps:这里需要你先安装插件  这个是RSS</span><br><span class="line">  -hexo-generator-baidu-sitemap		# ps:这里需要你先安装插件  这个是百度收录</span><br><span class="line">theme: next # ps:使用的主题，即：themes文件夹下的主题文件夹名</span><br><span class="line"></span><br><span class="line"><span class="section">#sitemap</span></span><br><span class="line"><span class="section"># 自动生成sitemap</span></span><br><span class="line">sitemap:</span><br><span class="line">  path: sitemap.xml</span><br><span class="line">baidusitemap:</span><br><span class="line">  path: baidusitemap.xml</span><br><span class="line"></span><br><span class="line">feed:	# ps:之后配置rss会用，使用如下配置即可</span><br><span class="line">  type: atom</span><br><span class="line">  path: atom.xml</span><br><span class="line">  limit: 20  </span><br><span class="line"></span><br><span class="line"><span class="section"># Deployment	ps:用于部署到github，之前已经配置过</span></span><br><span class="line"><span class="section">## Docs: http://hexo.io/docs/deployment.html</span></span><br><span class="line"></span><br><span class="line">deploy: </span><br><span class="line">  type: git</span><br><span class="line">  repository: http://github.com/xxx/xxx.github.io.git # ps:自己修改</span><br><span class="line">  branch: master</span><br></pre></td></tr></table></figure>
+<p>然后发布下看下效果吧</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">hexo g</span><br><span class="line">hexo s</span><br></pre></td></tr></table></figure>
+<h3 id="主题配置文件"><a href="#主题配置文件" class="headerlink" title="主题配置文件"></a>主题配置文件</h3><figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br><span class="line">238</span><br><span class="line">239</span><br><span class="line">240</span><br><span class="line">241</span><br><span class="line">242</span><br><span class="line">243</span><br><span class="line">244</span><br><span class="line">245</span><br><span class="line">246</span><br><span class="line">247</span><br><span class="line">248</span><br><span class="line">249</span><br><span class="line">250</span><br><span class="line">251</span><br><span class="line">252</span><br><span class="line">253</span><br><span class="line">254</span><br><span class="line">255</span><br><span class="line">256</span><br><span class="line">257</span><br><span class="line">258</span><br><span class="line">259</span><br><span class="line">260</span><br><span class="line">261</span><br><span class="line">262</span><br><span class="line">263</span><br><span class="line">264</span><br><span class="line">265</span><br><span class="line">266</span><br><span class="line">267</span><br><span class="line">268</span><br><span class="line">269</span><br><span class="line">270</span><br><span class="line">271</span><br><span class="line">272</span><br><span class="line">273</span><br><span class="line">274</span><br><span class="line">275</span><br><span class="line">276</span><br><span class="line">277</span><br><span class="line">278</span><br><span class="line">279</span><br><span class="line">280</span><br><span class="line">281</span><br><span class="line">282</span><br><span class="line">283</span><br><span class="line">284</span><br><span class="line">285</span><br><span class="line">286</span><br><span class="line">287</span><br><span class="line">288</span><br><span class="line">289</span><br><span class="line">290</span><br><span class="line">291</span><br><span class="line">292</span><br><span class="line">293</span><br><span class="line">294</span><br><span class="line">295</span><br><span class="line">296</span><br><span class="line">297</span><br><span class="line">298</span><br><span class="line">299</span><br><span class="line">300</span><br><span class="line">301</span><br><span class="line">302</span><br><span class="line">303</span><br><span class="line">304</span><br><span class="line">305</span><br><span class="line">306</span><br><span class="line">307</span><br><span class="line">308</span><br><span class="line">309</span><br><span class="line">310</span><br><span class="line">311</span><br><span class="line">312</span><br><span class="line">313</span><br><span class="line">314</span><br><span class="line">315</span><br><span class="line">316</span><br><span class="line">317</span><br><span class="line">318</span><br><span class="line">319</span><br><span class="line">320</span><br><span class="line">321</span><br><span class="line">322</span><br><span class="line">323</span><br><span class="line">324</span><br><span class="line">325</span><br><span class="line">326</span><br><span class="line">327</span><br><span class="line">328</span><br><span class="line">329</span><br><span class="line">330</span><br><span class="line">331</span><br><span class="line">332</span><br><span class="line">333</span><br><span class="line">334</span><br><span class="line">335</span><br><span class="line">336</span><br><span class="line">337</span><br><span class="line">338</span><br><span class="line">339</span><br><span class="line">340</span><br><span class="line">341</span><br><span class="line">342</span><br><span class="line">343</span><br><span class="line">344</span><br><span class="line">345</span><br><span class="line">346</span><br><span class="line">347</span><br><span class="line">348</span><br><span class="line">349</span><br><span class="line">350</span><br><span class="line">351</span><br><span class="line">352</span><br><span class="line">353</span><br><span class="line">354</span><br><span class="line">355</span><br><span class="line">356</span><br><span class="line">357</span><br><span class="line">358</span><br><span class="line">359</span><br><span class="line">360</span><br><span class="line">361</span><br><span class="line">362</span><br><span class="line">363</span><br><span class="line">364</span><br><span class="line">365</span><br><span class="line">366</span><br><span class="line">367</span><br><span class="line">368</span><br><span class="line">369</span><br><span class="line">370</span><br><span class="line">371</span><br><span class="line">372</span><br><span class="line">373</span><br><span class="line">374</span><br><span class="line">375</span><br><span class="line">376</span><br><span class="line">377</span><br><span class="line">378</span><br><span class="line">379</span><br><span class="line">380</span><br><span class="line">381</span><br><span class="line">382</span><br><span class="line">383</span><br><span class="line">384</span><br><span class="line">385</span><br><span class="line">386</span><br><span class="line">387</span><br><span class="line">388</span><br><span class="line">389</span><br><span class="line">390</span><br><span class="line">391</span><br><span class="line">392</span><br><span class="line">393</span><br><span class="line">394</span><br><span class="line">395</span><br><span class="line">396</span><br><span class="line">397</span><br><span class="line">398</span><br><span class="line">399</span><br><span class="line">400</span><br><span class="line">401</span><br><span class="line">402</span><br><span class="line">403</span><br><span class="line">404</span><br><span class="line">405</span><br><span class="line">406</span><br><span class="line">407</span><br><span class="line">408</span><br><span class="line">409</span><br><span class="line">410</span><br><span class="line">411</span><br><span class="line">412</span><br><span class="line">413</span><br><span class="line">414</span><br><span class="line">415</span><br><span class="line">416</span><br><span class="line">417</span><br><span class="line">418</span><br><span class="line">419</span><br><span class="line">420</span><br><span class="line">421</span><br><span class="line">422</span><br><span class="line">423</span><br><span class="line">424</span><br><span class="line">425</span><br><span class="line">426</span><br><span class="line">427</span><br><span class="line">428</span><br><span class="line">429</span><br><span class="line">430</span><br><span class="line">431</span><br><span class="line">432</span><br><span class="line">433</span><br><span class="line">434</span><br><span class="line">435</span><br><span class="line">436</span><br><span class="line">437</span><br><span class="line">438</span><br><span class="line">439</span><br><span class="line">440</span><br><span class="line">441</span><br><span class="line">442</span><br><span class="line">443</span><br><span class="line">444</span><br><span class="line">445</span><br><span class="line">446</span><br><span class="line">447</span><br><span class="line">448</span><br><span class="line">449</span><br><span class="line">450</span><br><span class="line">451</span><br><span class="line">452</span><br><span class="line">453</span><br><span class="line">454</span><br><span class="line">455</span><br><span class="line">456</span><br><span class="line">457</span><br><span class="line">458</span><br><span class="line">459</span><br><span class="line">460</span><br><span class="line">461</span><br><span class="line">462</span><br><span class="line">463</span><br><span class="line">464</span><br><span class="line">465</span><br><span class="line">466</span><br><span class="line">467</span><br><span class="line">468</span><br><span class="line">469</span><br><span class="line">470</span><br><span class="line">471</span><br><span class="line">472</span><br><span class="line">473</span><br><span class="line">474</span><br><span class="line">475</span><br><span class="line">476</span><br><span class="line">477</span><br><span class="line">478</span><br><span class="line">479</span><br><span class="line">480</span><br><span class="line">481</span><br><span class="line">482</span><br><span class="line">483</span><br><span class="line">484</span><br><span class="line">485</span><br><span class="line">486</span><br><span class="line">487</span><br><span class="line">488</span><br><span class="line">489</span><br><span class="line">490</span><br><span class="line">491</span><br><span class="line">492</span><br><span class="line">493</span><br><span class="line">494</span><br><span class="line">495</span><br><span class="line">496</span><br><span class="line">497</span><br><span class="line">498</span><br><span class="line">499</span><br><span class="line">500</span><br><span class="line">501</span><br><span class="line">502</span><br><span class="line">503</span><br><span class="line">504</span><br><span class="line">505</span><br><span class="line">506</span><br><span class="line">507</span><br><span class="line">508</span><br><span class="line">509</span><br><span class="line">510</span><br><span class="line">511</span><br><span class="line">512</span><br><span class="line">513</span><br><span class="line">514</span><br><span class="line">515</span><br><span class="line">516</span><br><span class="line">517</span><br><span class="line">518</span><br><span class="line">519</span><br><span class="line">520</span><br><span class="line">521</span><br><span class="line">522</span><br><span class="line">523</span><br><span class="line">524</span><br></pre></td><td class="code"><pre><span class="line"><span class="section"># ---------------------------------------------------------------</span></span><br><span class="line"><span class="section"># Site Information Settings</span></span><br><span class="line"><span class="section"># ---------------------------------------------------------------</span></span><br><span class="line"></span><br><span class="line"><span class="section"># Put your favicon.ico into `hexo-site/source/` directory.</span></span><br><span class="line">favicon: /favicon.ico   # ps:收藏图标</span><br><span class="line"></span><br><span class="line"><span class="section"># Set default keywords (Use a comma to separate)</span></span><br><span class="line">keywords: &quot;Hexo, NexT&quot;</span><br><span class="line"></span><br><span class="line"><span class="section"># Set rss to false to disable feed link.</span></span><br><span class="line"><span class="section"># Leave rss as empty to use site&#x27;s feed link.</span></span><br><span class="line"><span class="section"># Set rss to specific value if you have burned your feed already.</span></span><br><span class="line">rss:</span><br><span class="line"></span><br><span class="line"><span class="section"># Specify the date when the site was setup</span></span><br><span class="line"><span class="section">#since: 2015</span></span><br><span class="line"></span><br><span class="line"><span class="section"># icon between year and author @Footer</span></span><br><span class="line">authoricon: heart</span><br><span class="line"></span><br><span class="line"><span class="section"># Footer `powered-by` and `theme-info` copyright</span></span><br><span class="line">copyright: false    # ps:是否显示主题的版权信息</span><br><span class="line"></span><br><span class="line"><span class="section"># Canonical, set a canonical link tag in your hexo, you could use it for your SEO of blog.</span></span><br><span class="line"><span class="section"># See: https://support.google.com/webmasters/answer/139066</span></span><br><span class="line"><span class="section"># Tips: Before you open this tag, remember set up your URL in hexo <span class="emphasis">_config.yml ( ex. url: http://yourdomain.com )</span></span></span><br><span class="line"><span class="emphasis"><span class="section">canonical: true</span></span></span><br><span class="line"><span class="emphasis"><span class="section"></span></span></span><br><span class="line"><span class="emphasis"><span class="section"># Change headers hierarchy on site-subtitle (will be main site description) and on all post/pages titles for better SEO-optimization.</span></span></span><br><span class="line"><span class="emphasis"><span class="section">seo: false</span></span></span><br><span class="line"><span class="emphasis"><span class="section"></span></span></span><br><span class="line"><span class="emphasis"><span class="section"># ---------------------------------------------------------------</span></span></span><br><span class="line"><span class="emphasis"><span class="section"># Menu Settings</span></span></span><br><span class="line"><span class="emphasis"><span class="section"># ---------------------------------------------------------------</span></span></span><br><span class="line"><span class="emphasis"><span class="section"></span></span></span><br><span class="line"><span class="emphasis"><span class="section"># When running the site in a subdirectory (e.g. domain.tld/blog), remove the leading slash (/archives -&gt; archives)</span></span></span><br><span class="line"><span class="emphasis"><span class="section">menu:              # ps:显示的菜单信息</span></span></span><br><span class="line"><span class="emphasis"><span class="section">  home: /</span></span></span><br><span class="line"><span class="emphasis"><span class="section">  #categories: /categories</span></span></span><br><span class="line"><span class="emphasis"><span class="section">  archives: /archives</span></span></span><br><span class="line"><span class="emphasis"><span class="section">  #about: /about</span></span></span><br><span class="line"><span class="emphasis"><span class="section">  #guestbook: /guestbook</span></span></span><br><span class="line"><span class="emphasis"><span class="section">  #tags: /tags</span></span></span><br><span class="line"><span class="emphasis"><span class="section">  #sitemap: /sitemap.xml</span></span></span><br><span class="line"><span class="emphasis"><span class="section">  #commonweal: /404.html</span></span></span><br><span class="line"><span class="emphasis"><span class="section"></span></span></span><br><span class="line"><span class="emphasis"><span class="section"></span></span></span><br><span class="line"><span class="emphasis"><span class="section"># Enable/Disable menu icons.</span></span></span><br><span class="line"><span class="emphasis"><span class="section"># Icon Mapping:</span></span></span><br><span class="line"><span class="emphasis"><span class="section">#   Map a menu item to a specific FontAwesome icon name.</span></span></span><br><span class="line"><span class="emphasis"><span class="section">#   Key is the name of menu item and value is the name of FontAwesome icon. Key is case-senstive.</span></span></span><br><span class="line"><span class="emphasis"><span class="section">#   When an question mask icon presenting up means that the item has no mapping icon.</span></span></span><br><span class="line"><span class="emphasis"><span class="section">menu_</span>icons:        # ps:显示的菜单图标信息</span></span><br><span class="line">  enable: true</span><br><span class="line">  #KeyMapsToMenuItemKey: NameOfTheIconFromFontAwesome</span><br><span class="line">  home: home</span><br><span class="line">  about: user</span><br><span class="line">  categories: th</span><br><span class="line">  schedule: calendar</span><br><span class="line">  tags: tags</span><br><span class="line">  archives: archive</span><br><span class="line">  sitemap: sitemap</span><br><span class="line">  commonweal: heartbeat</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="section"># ---------------------------------------------------------------</span></span><br><span class="line"><span class="section"># Scheme Settings  # ps:三种主题</span></span><br><span class="line"><span class="section"># ---------------------------------------------------------------</span></span><br><span class="line"></span><br><span class="line"><span class="section"># Schemes</span></span><br><span class="line"><span class="section">#scheme: Muse</span></span><br><span class="line">scheme: Mist</span><br><span class="line"><span class="section">#scheme: Pisces</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="section"># ---------------------------------------------------------------</span></span><br><span class="line"><span class="section"># Font Settings</span></span><br><span class="line"><span class="section"># - Find fonts on Google Fonts (https://www.google.com/fonts)</span></span><br><span class="line"><span class="section"># - All fonts set here will have the following styles:</span></span><br><span class="line"><span class="section">#     light, light italic, normal, normal italic, bold, bold italic</span></span><br><span class="line"><span class="section"># - Be aware that setting too much fonts will cause site running slowly</span></span><br><span class="line"><span class="section"># - Introduce in 5.0.1</span></span><br><span class="line"><span class="section"># ---------------------------------------------------------------</span></span><br><span class="line">font:</span><br><span class="line">  enable: true</span><br><span class="line"></span><br><span class="line">  # Uri of fonts host. E.g. //fonts.googleapis.com (Default)</span><br><span class="line">  host:</span><br><span class="line"></span><br><span class="line">  # Global font settings used on <span class="language-xml"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span> element.</span><br><span class="line">  global:</span><br><span class="line"><span class="code">    # external: true will load this font family from host.</span></span><br><span class="line"><span class="code">    external: true</span></span><br><span class="line"><span class="code">    family: Lato</span></span><br><span class="line"><span class="code"></span></span><br><span class="line">  # Font settings for Headlines (h1, h2, h3, h4, h5, h6)</span><br><span class="line">  # Fallback to <span class="code">`global`</span> font settings.</span><br><span class="line">  headings:</span><br><span class="line"><span class="code">    external: true</span></span><br><span class="line"><span class="code">    family:</span></span><br><span class="line"><span class="code"></span></span><br><span class="line">  # Font settings for posts</span><br><span class="line">  # Fallback to <span class="code">`global`</span> font settings.</span><br><span class="line">  posts:</span><br><span class="line"><span class="code">    external: true</span></span><br><span class="line"><span class="code">    family:</span></span><br><span class="line"><span class="code"></span></span><br><span class="line">  # Font settings for Logo</span><br><span class="line">  # Fallback to <span class="code">`global`</span> font settings.</span><br><span class="line">  # The <span class="code">`size`</span> option use <span class="code">`px`</span> as unit</span><br><span class="line">  logo:</span><br><span class="line"><span class="code">    external: true</span></span><br><span class="line"><span class="code">    family:</span></span><br><span class="line"><span class="code">    size:</span></span><br><span class="line"><span class="code"></span></span><br><span class="line">  # Font settings for <span class="language-xml"><span class="tag">&lt;<span class="name">code</span>&gt;</span></span> and code blocks.</span><br><span class="line">  codes:</span><br><span class="line"><span class="code">    external: true</span></span><br><span class="line"><span class="code">    family:</span></span><br><span class="line"><span class="code">    size:</span></span><br><span class="line"><span class="code"></span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="section"># ---------------------------------------------------------------</span></span><br><span class="line"><span class="section"># Sidebar Settings</span></span><br><span class="line"><span class="section"># ---------------------------------------------------------------</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="section"># Social Links</span></span><br><span class="line"><span class="section"># Key is the link label showing to end users.</span></span><br><span class="line"><span class="section"># Value is the target link (E.g. GitHub: https://github.com/iissnan)</span></span><br><span class="line"><span class="section">#social:</span></span><br><span class="line">  #LinkLabel: Link</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="section"># Social Links Icons</span></span><br><span class="line"><span class="section"># Icon Mapping:</span></span><br><span class="line"><span class="section">#   Map a menu item to a specific FontAwesome icon name.</span></span><br><span class="line"><span class="section">#   Key is the name of the item and value is the name of FontAwesome icon. Key is case-senstive.</span></span><br><span class="line"><span class="section">#   When an globe mask icon presenting up means that the item has no mapping icon.</span></span><br><span class="line">social<span class="emphasis">_icons:</span></span><br><span class="line"><span class="emphasis">  enable: true</span></span><br><span class="line"><span class="emphasis">  # Icon Mappings.</span></span><br><span class="line"><span class="emphasis">  # KeyMapsToSocialItemKey: NameOfTheIconFromFontAwesome</span></span><br><span class="line"><span class="emphasis">  GitHub: github</span></span><br><span class="line"><span class="emphasis">  Twitter: twitter</span></span><br><span class="line"><span class="emphasis">  Weibo: weibo</span></span><br><span class="line"><span class="emphasis"></span></span><br><span class="line"><span class="emphasis"></span></span><br><span class="line"><span class="emphasis"># Sidebar Avatar</span></span><br><span class="line"><span class="emphasis"># in theme directory(source/images): /images/avatar.jpg</span></span><br><span class="line"><span class="emphasis"># in site  directory(source/uploads): /uploads/avatar.jpg</span></span><br><span class="line"><span class="emphasis">#avatar:</span></span><br><span class="line"><span class="emphasis"></span></span><br><span class="line"><span class="emphasis"></span></span><br><span class="line"><span class="emphasis"># Table Of Contents in the Sidebar</span></span><br><span class="line"><span class="emphasis">toc:</span></span><br><span class="line"><span class="emphasis">  enable: true</span></span><br><span class="line"><span class="emphasis"></span></span><br><span class="line"><span class="emphasis">  # Automatically add list number to toc.</span></span><br><span class="line"><span class="emphasis">  number: true</span></span><br><span class="line"><span class="emphasis"></span></span><br><span class="line"><span class="emphasis"></span></span><br><span class="line"><span class="emphasis"># Creative Commons 4.0 International License.</span></span><br><span class="line"><span class="emphasis"># http://creativecommons.org/</span></span><br><span class="line"><span class="emphasis"># Available: by | by-nc | by-nc-nd | by-nc-sa | by-nd | by-sa | zero</span></span><br><span class="line"><span class="emphasis">#creative_</span>commons: by-nc-sa</span><br><span class="line"><span class="section">#creative<span class="emphasis">_commons:</span></span></span><br><span class="line"><span class="emphasis"><span class="section"></span></span></span><br><span class="line"><span class="emphasis"><span class="section"></span></span></span><br><span class="line"><span class="emphasis"><span class="section">sidebar:</span></span></span><br><span class="line"><span class="emphasis"><span class="section">  # Sidebar Position, available value: left | right</span></span></span><br><span class="line"><span class="emphasis"><span class="section">  position: left</span></span></span><br><span class="line"><span class="emphasis"><span class="section">  #position: right</span></span></span><br><span class="line"><span class="emphasis"><span class="section"></span></span></span><br><span class="line"><span class="emphasis"><span class="section">  # Sidebar Display, available value:</span></span></span><br><span class="line"><span class="emphasis"><span class="section">  #  - post    expand on posts automatically. Default.</span></span></span><br><span class="line"><span class="emphasis"><span class="section">  #  - always  expand for all pages automatically</span></span></span><br><span class="line"><span class="emphasis"><span class="section">  #  - hide    expand only when click on the sidebar toggle icon.</span></span></span><br><span class="line"><span class="emphasis"><span class="section">  #  - remove  Totally remove sidebar including sidebar toggle.</span></span></span><br><span class="line"><span class="emphasis"><span class="section">  display: post</span></span></span><br><span class="line"><span class="emphasis"><span class="section">  #display: always</span></span></span><br><span class="line"><span class="emphasis"><span class="section">  #display: hide</span></span></span><br><span class="line"><span class="emphasis"><span class="section">  #display: remove</span></span></span><br><span class="line"><span class="emphasis"><span class="section"></span></span></span><br><span class="line"><span class="emphasis"><span class="section">  # Sidebar offset from top menubar in pixels.</span></span></span><br><span class="line"><span class="emphasis"><span class="section">  offset: 12</span></span></span><br><span class="line"><span class="emphasis"><span class="section">  offset_</span>float: 0</span></span><br><span class="line"></span><br><span class="line">  # Back to top in sidebar</span><br><span class="line">  b2t: false</span><br><span class="line"></span><br><span class="line">  # Scroll percent label in b2t button</span><br><span class="line">  scrollpercent: false</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="section"># Blog rolls</span></span><br><span class="line"><span class="section">#links<span class="emphasis">_title: Links</span></span></span><br><span class="line"><span class="emphasis"><span class="section">#links_</span>layout: block</span></span><br><span class="line"><span class="section">#links<span class="emphasis">_layout: inline</span></span></span><br><span class="line"><span class="emphasis"><span class="section">#links:</span></span></span><br><span class="line"><span class="emphasis"><span class="section">  #Title: http://example.com/</span></span></span><br><span class="line"><span class="emphasis"><span class="section"></span></span></span><br><span class="line"><span class="emphasis"><span class="section"></span></span></span><br><span class="line"><span class="emphasis"><span class="section"># ---------------------------------------------------------------</span></span></span><br><span class="line"><span class="emphasis"><span class="section"># Post Settings</span></span></span><br><span class="line"><span class="emphasis"><span class="section"># ---------------------------------------------------------------</span></span></span><br><span class="line"><span class="emphasis"><span class="section"></span></span></span><br><span class="line"><span class="emphasis"><span class="section"># Automatically scroll page to section which is under &lt;!-- more --&gt; mark.</span></span></span><br><span class="line"><span class="emphasis"><span class="section">scroll_</span>to<span class="emphasis">_more: true</span></span></span><br><span class="line"><span class="emphasis"><span class="section"></span></span></span><br><span class="line"><span class="emphasis"><span class="section"># Automatically excerpt description in homepage as preamble text.</span></span></span><br><span class="line"><span class="emphasis"><span class="section">excerpt_</span>description: true</span></span><br><span class="line"></span><br><span class="line"><span class="section"># Automatically Excerpt. Not recommend.</span></span><br><span class="line"><span class="section"># Please use &lt;!-- more --&gt; in the post to control excerpt accurately.</span></span><br><span class="line">auto<span class="emphasis">_excerpt:</span></span><br><span class="line"><span class="emphasis">  enable: false</span></span><br><span class="line"><span class="emphasis">  length: 150</span></span><br><span class="line"><span class="emphasis"></span></span><br><span class="line"><span class="emphasis"># Post meta display settings</span></span><br><span class="line"><span class="emphasis">post_</span>meta:</span><br><span class="line">  item<span class="emphasis">_text: true</span></span><br><span class="line"><span class="emphasis">  created_</span>at: true</span><br><span class="line">  updated<span class="emphasis">_at: false</span></span><br><span class="line"><span class="emphasis">  categories: true</span></span><br><span class="line"><span class="emphasis"></span></span><br><span class="line"><span class="emphasis"># Post wordcount display settings</span></span><br><span class="line"><span class="emphasis"># Dependencies: https://github.com/willin/hexo-wordcount</span></span><br><span class="line"><span class="emphasis">post_</span>wordcount:</span><br><span class="line">  item<span class="emphasis">_text: true</span></span><br><span class="line"><span class="emphasis">  wordcount: false</span></span><br><span class="line"><span class="emphasis">  min2read: false</span></span><br><span class="line"><span class="emphasis"></span></span><br><span class="line"><span class="emphasis"># Wechat Subscriber</span></span><br><span class="line"><span class="emphasis">#wechat_</span>subscriber:</span><br><span class="line">  #enabled: true</span><br><span class="line">  #qcode: /path/to/your/wechatqcode ex. /uploads/wechat-qcode.jpg</span><br><span class="line">  #description: ex. subscribe to my blog by scanning my public wechat account</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="section"># ---------------------------------------------------------------</span></span><br><span class="line"><span class="section"># Misc Theme Settings</span></span><br><span class="line"><span class="section"># ---------------------------------------------------------------</span></span><br><span class="line"></span><br><span class="line"><span class="section"># Custom Logo.</span></span><br><span class="line"><span class="section"># !!Only available for Default Scheme currently.</span></span><br><span class="line"><span class="section"># Options:</span></span><br><span class="line"><span class="section">#   enabled: [true/false] - Replace with specific image</span></span><br><span class="line"><span class="section">#   image: url-of-image   - Images&#x27;s url</span></span><br><span class="line">custom<span class="emphasis">_logo:</span></span><br><span class="line"><span class="emphasis">  enabled: false</span></span><br><span class="line"><span class="emphasis">  image:</span></span><br><span class="line"><span class="emphasis"></span></span><br><span class="line"><span class="emphasis"></span></span><br><span class="line"><span class="emphasis"># Code Highlight theme</span></span><br><span class="line"><span class="emphasis"># Available value:</span></span><br><span class="line"><span class="emphasis">#    normal | night | night eighties | night blue | night bright</span></span><br><span class="line"><span class="emphasis"># https://github.com/chriskempson/tomorrow-theme</span></span><br><span class="line"><span class="emphasis">highlight_</span>theme: normal</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="section"># ---------------------------------------------------------------</span></span><br><span class="line"><span class="section"># Third Party Services Settings  第三方插件</span></span><br><span class="line"><span class="section"># ---------------------------------------------------------------</span></span><br><span class="line"></span><br><span class="line"><span class="section"># MathJax Support  ps:数学公式插件</span></span><br><span class="line">mathjax:</span><br><span class="line">  enable: false</span><br><span class="line">  per<span class="emphasis">_page: false</span></span><br><span class="line"><span class="emphasis">  cdn: //cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_</span>HTMLorMML</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="section"># Swiftype Search API Key  ps:swiftype 站内搜索</span></span><br><span class="line"><span class="section">#swiftype<span class="emphasis">_key:</span></span></span><br><span class="line"><span class="emphasis"><span class="section"></span></span></span><br><span class="line"><span class="emphasis"><span class="section"># Baidu Analytics ID  ps:百度统计</span></span></span><br><span class="line"><span class="emphasis"><span class="section">#baidu_</span>analytics: </span></span><br><span class="line"></span><br><span class="line"><span class="section"># Duoshuo ShortName  ps:多说留言板插件</span></span><br><span class="line"><span class="section">#duoshuo<span class="emphasis">_shortname: </span></span></span><br><span class="line"><span class="emphasis"><span class="section"></span></span></span><br><span class="line"><span class="emphasis"><span class="section"># Disqus           ps:Disqus 评论插件</span></span></span><br><span class="line"><span class="emphasis"><span class="section">#disqus_</span>shortname:</span></span><br><span class="line"></span><br><span class="line"><span class="section"># Hypercomments     ps:评论插件</span></span><br><span class="line"><span class="section">#hypercomments<span class="emphasis">_id:</span></span></span><br><span class="line"><span class="emphasis"><span class="section"></span></span></span><br><span class="line"><span class="emphasis"><span class="section"># Gentie productKey   ps:评论插件</span></span></span><br><span class="line"><span class="emphasis"><span class="section">#gentie_</span>productKey:</span></span><br><span class="line"></span><br><span class="line"><span class="section"># Support for youyan comments system.   ps:友言评论插件</span></span><br><span class="line"><span class="section"># You can get your uid from http://www.uyan.cc</span></span><br><span class="line"><span class="section">#youyan<span class="emphasis">_uid: your uid</span></span></span><br><span class="line"><span class="emphasis"><span class="section"></span></span></span><br><span class="line"><span class="emphasis"><span class="section"># Support for LiveRe comments system.  </span></span></span><br><span class="line"><span class="emphasis"><span class="section"># You can get your uid from https://livere.com/insight/myCode (General web site)</span></span></span><br><span class="line"><span class="emphasis"><span class="section">#livere_</span>uid: your uid</span></span><br><span class="line"></span><br><span class="line"><span class="section"># Baidu Share    ps:百度分享</span></span><br><span class="line"><span class="section"># Available value:</span></span><br><span class="line"><span class="section">#    button | slide</span></span><br><span class="line"><span class="section"># Warning: Baidu Share does not support https.</span></span><br><span class="line">baidushare:</span><br><span class="line">  type: button</span><br><span class="line"></span><br><span class="line"><span class="section"># Share</span></span><br><span class="line"><span class="section">#jiathis:   ps:sharesdk 分享</span></span><br><span class="line"><span class="section"># Warning: JiaThis does not support https.</span></span><br><span class="line"><span class="section">#add<span class="emphasis">_this_</span>id:</span></span><br><span class="line"></span><br><span class="line"><span class="section"># Share ps:多说分享</span></span><br><span class="line"><span class="section">#duoshuo<span class="emphasis">_share: true</span></span></span><br><span class="line"><span class="emphasis"><span class="section"></span></span></span><br><span class="line"><span class="emphasis"><span class="section"># Google Webmaster tools verification setting</span></span></span><br><span class="line"><span class="emphasis"><span class="section"># See: https://www.google.com/webmasters/</span></span></span><br><span class="line"><span class="emphasis"><span class="section">#google_</span>site<span class="emphasis">_verification:</span></span></span><br><span class="line"><span class="emphasis"><span class="section"></span></span></span><br><span class="line"><span class="emphasis"><span class="section"># Google Analytics  ps:谷歌统计</span></span></span><br><span class="line"><span class="emphasis"><span class="section">#google_</span>analytics:</span></span><br><span class="line"></span><br><span class="line"><span class="section"># Yandex Webmaster tools verification setting</span></span><br><span class="line"><span class="section"># See: https://webmaster.yandex.ru/</span></span><br><span class="line"><span class="section">#yandex<span class="emphasis">_site_</span>verification:</span></span><br><span class="line"></span><br><span class="line"><span class="section"># CNZZ count</span></span><br><span class="line"><span class="section">#cnzz<span class="emphasis">_siteid:</span></span></span><br><span class="line"><span class="emphasis"><span class="section"></span></span></span><br><span class="line"><span class="emphasis"><span class="section"># Application Insights</span></span></span><br><span class="line"><span class="emphasis"><span class="section"># See https://azure.microsoft.com/en-us/services/application-insights/</span></span></span><br><span class="line"><span class="emphasis"><span class="section"># application_</span>insights:</span></span><br><span class="line"></span><br><span class="line"><span class="section"># Make duoshuo show UA</span></span><br><span class="line"><span class="section"># user<span class="emphasis">_id must NOT be null when admin_</span>enable is true!</span></span><br><span class="line"><span class="section"># you can visit http://dev.duoshuo.com get duoshuo user id.</span></span><br><span class="line">duoshuo<span class="emphasis">_info:</span></span><br><span class="line"><span class="emphasis">  ua_</span>enable: true</span><br><span class="line">  admin<span class="emphasis">_enable: false</span></span><br><span class="line"><span class="emphasis">  user_</span>id: 0</span><br><span class="line">  #admin<span class="emphasis">_nickname: Author</span></span><br><span class="line"><span class="emphasis"></span></span><br><span class="line"><span class="emphasis"></span></span><br><span class="line"><span class="emphasis"># Facebook SDK Support.</span></span><br><span class="line"><span class="emphasis"># https://github.com/iissnan/hexo-theme-next/pull/410</span></span><br><span class="line"><span class="emphasis">facebook_</span>sdk:</span><br><span class="line">  enable: false</span><br><span class="line">  app<span class="emphasis">_id:       #<span class="language-xml"><span class="tag">&lt;<span class="name">app_id</span>&gt;</span></span></span></span><br><span class="line"><span class="emphasis">  fb_</span>admin:     #<span class="language-xml"><span class="tag">&lt;<span class="name">user_id</span>&gt;</span></span></span><br><span class="line">  like<span class="emphasis">_button:  #true</span></span><br><span class="line"><span class="emphasis">  webmaster:    #true</span></span><br><span class="line"><span class="emphasis"></span></span><br><span class="line"><span class="emphasis"># Facebook comments plugin</span></span><br><span class="line"><span class="emphasis"># This plugin depends on Facebook SDK.</span></span><br><span class="line"><span class="emphasis"># If facebook_</span>sdk.enable is false, Facebook comments plugin is unavailable.</span><br><span class="line">facebook<span class="emphasis">_comments_</span>plugin:</span><br><span class="line">  enable: false</span><br><span class="line">  num<span class="emphasis">_of_</span>posts: 10  # min posts num is 1</span><br><span class="line">  width: 100%       # default width is 550px</span><br><span class="line">  scheme: light     # default scheme is light (light or dark)</span><br><span class="line"></span><br><span class="line"><span class="section"># VKontakte API Support.</span></span><br><span class="line"><span class="section"># To get your AppID visit https://vk.com/editapp?act=create</span></span><br><span class="line">vkontakte<span class="emphasis">_api:</span></span><br><span class="line"><span class="emphasis">  enable: false</span></span><br><span class="line"><span class="emphasis">  app_</span>id:       #<span class="language-xml"><span class="tag">&lt;<span class="name">app_id</span>&gt;</span></span></span><br><span class="line">  like:         true</span><br><span class="line">  comments:     true</span><br><span class="line">  num<span class="emphasis">_of_</span>posts: 10</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="section"># Show number of visitors to each article.  ps:文章统计插件</span></span><br><span class="line"><span class="section"># You can visit https://leancloud.cn get AppID and AppKey.</span></span><br><span class="line">leancloud<span class="emphasis">_visitors:</span></span><br><span class="line"><span class="emphasis">  enable: false</span></span><br><span class="line"><span class="emphasis">  app_</span>id: #<span class="language-xml"><span class="tag">&lt;<span class="name">app_id</span>&gt;</span></span></span><br><span class="line">  app<span class="emphasis">_key: #<span class="language-xml"><span class="tag">&lt;<span class="name">app_key</span>&gt;</span></span></span></span><br><span class="line"><span class="emphasis"></span></span><br><span class="line"><span class="emphasis"># Show PV/UV of the website/page with busuanzi.</span></span><br><span class="line"><span class="emphasis"># Get more information on http://ibruce.info/2015/04/04/busuanzi/</span></span><br><span class="line"><span class="emphasis">busuanzi_</span>count:</span><br><span class="line">  # count values only if the other configs are false</span><br><span class="line">  enable: false</span><br><span class="line">  # custom uv span for the whole site</span><br><span class="line">  site<span class="emphasis">_uv: true</span></span><br><span class="line"><span class="emphasis">  site_</span>uv<span class="emphasis">_header: <span class="language-xml"><span class="tag">&lt;<span class="name">i</span> <span class="attr">class</span>=<span class="string">&quot;fa fa-user&quot;</span>&gt;</span></span><span class="language-xml"><span class="tag">&lt;/<span class="name">i</span>&gt;</span></span></span></span><br><span class="line"><span class="emphasis">  site_</span>uv<span class="emphasis">_footer:</span></span><br><span class="line"><span class="emphasis">  # custom pv span for the whole site</span></span><br><span class="line"><span class="emphasis">  site_</span>pv: true</span><br><span class="line">  site<span class="emphasis">_pv_</span>header: <span class="language-xml"><span class="tag">&lt;<span class="name">i</span> <span class="attr">class</span>=<span class="string">&quot;fa fa-eye&quot;</span>&gt;</span></span><span class="language-xml"><span class="tag">&lt;/<span class="name">i</span>&gt;</span></span></span><br><span class="line">  site<span class="emphasis">_pv_</span>footer:</span><br><span class="line">  # custom pv span for one page only</span><br><span class="line">  page<span class="emphasis">_pv: true</span></span><br><span class="line"><span class="emphasis">  page_</span>pv<span class="emphasis">_header: <span class="language-xml"><span class="tag">&lt;<span class="name">i</span> <span class="attr">class</span>=<span class="string">&quot;fa fa-file-o&quot;</span>&gt;</span></span><span class="language-xml"><span class="tag">&lt;/<span class="name">i</span>&gt;</span></span></span></span><br><span class="line"><span class="emphasis">  page_</span>pv<span class="emphasis">_footer:</span></span><br><span class="line"><span class="emphasis"></span></span><br><span class="line"><span class="emphasis"></span></span><br><span class="line"><span class="emphasis"># Tencent analytics ID  ps:腾讯统计</span></span><br><span class="line"><span class="emphasis"># tencent_</span>analytics:</span><br><span class="line"></span><br><span class="line"><span class="section"># Tencent MTA ID</span></span><br><span class="line"><span class="section"># tencent<span class="emphasis">_mta:</span></span></span><br><span class="line"><span class="emphasis"><span class="section"></span></span></span><br><span class="line"><span class="emphasis"><span class="section"></span></span></span><br><span class="line"><span class="emphasis"><span class="section"># Enable baidu push so that the blog will push the url to baidu automatically which is very helpful for SEO  百度推送</span></span></span><br><span class="line"><span class="emphasis"><span class="section">baidu_</span>push: true</span></span><br><span class="line"></span><br><span class="line"><span class="section"># Google Calendar</span></span><br><span class="line"><span class="section"># Share your recent schedule to others via calendar page</span></span><br><span class="line"><span class="section">#</span></span><br><span class="line"><span class="section"># API Documentation:</span></span><br><span class="line"><span class="section"># https://developers.google.com/google-apps/calendar/v3/reference/events/list</span></span><br><span class="line">calendar:</span><br><span class="line">  enable: false</span><br><span class="line">  calendar<span class="emphasis">_id: <span class="language-xml"><span class="tag">&lt;<span class="name">required</span>&gt;</span></span></span></span><br><span class="line"><span class="emphasis">  api_</span>key: <span class="language-xml"><span class="tag">&lt;<span class="name">required</span>&gt;</span></span></span><br><span class="line">  orderBy: startTime</span><br><span class="line">  offsetMax: 24</span><br><span class="line">  offsetMin: 4</span><br><span class="line">  timeZone:</span><br><span class="line">  showDeleted: false</span><br><span class="line">  singleEvents: true</span><br><span class="line">  maxResults: 250</span><br><span class="line"></span><br><span class="line"><span class="section"># Algolia Search</span></span><br><span class="line">algolia<span class="emphasis">_search:</span></span><br><span class="line"><span class="emphasis">  enable: false</span></span><br><span class="line"><span class="emphasis">  hits:</span></span><br><span class="line"><span class="emphasis">    per_</span>page: 10</span><br><span class="line">  labels:</span><br><span class="line"><span class="code">    input_placeholder: Search for Posts</span></span><br><span class="line"><span class="code">    hits_empty: &quot;We didn&#x27;t find any results for the search: $&#123;query&#125;&quot;</span></span><br><span class="line"><span class="code">    hits_stats: &quot;$&#123;hits&#125; results found in $&#123;time&#125; ms&quot;</span></span><br><span class="line"><span class="code"></span></span><br><span class="line"></span><br><span class="line"><span class="section"># Local search</span></span><br><span class="line">local<span class="emphasis">_search:</span></span><br><span class="line"><span class="emphasis">  enable: false</span></span><br><span class="line"><span class="emphasis"></span></span><br><span class="line"><span class="emphasis"># External URL with BASE64 encrypt &amp; decrypt</span></span><br><span class="line"><span class="emphasis"># Usage: &#123;% exturl text url &quot;title&quot; %&#125;</span></span><br><span class="line"><span class="emphasis"># Alias: &#123;% extlink text url &quot;title&quot; %&#125;</span></span><br><span class="line"><span class="emphasis">exturl: false</span></span><br><span class="line"><span class="emphasis"></span></span><br><span class="line"><span class="emphasis"></span></span><br><span class="line"><span class="emphasis">#! ---------------------------------------------------------------</span></span><br><span class="line"><span class="emphasis">#! DO NOT EDIT THE FOLLOWING SETTINGS</span></span><br><span class="line"><span class="emphasis">#! UNLESS YOU KNOW WHAT YOU ARE DOING</span></span><br><span class="line"><span class="emphasis">#! ---------------------------------------------------------------</span></span><br><span class="line"><span class="emphasis"></span></span><br><span class="line"><span class="emphasis"># Motion</span></span><br><span class="line"><span class="emphasis">use_</span>motion: true</span><br><span class="line"></span><br><span class="line"><span class="section"># Fancybox</span></span><br><span class="line">fancybox: true</span><br><span class="line"></span><br><span class="line"><span class="section"># Canvas-nest</span></span><br><span class="line">canvas<span class="emphasis">_nest: false</span></span><br><span class="line"><span class="emphasis"></span></span><br><span class="line"><span class="emphasis"># Script Vendors.</span></span><br><span class="line"><span class="emphasis"># Set a CDN address for the vendor you want to customize.</span></span><br><span class="line"><span class="emphasis"># For example</span></span><br><span class="line"><span class="emphasis">#    jquery: https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js</span></span><br><span class="line"><span class="emphasis"># Be aware that you should use the same version as internal ones to avoid potential problems.</span></span><br><span class="line"><span class="emphasis"># Please use the https protocol of CDN files when you enable https on your site.</span></span><br><span class="line"><span class="emphasis">vendors:</span></span><br><span class="line"><span class="emphasis">  # Internal path prefix. Please do not edit it.</span></span><br><span class="line"><span class="emphasis">  _</span>internal: lib</span><br><span class="line"></span><br><span class="line">  # Internal version: 2.1.3</span><br><span class="line">  jquery:</span><br><span class="line"></span><br><span class="line">  # Internal version: 2.1.5</span><br><span class="line">  # See: http://fancyapps.com/fancybox/</span><br><span class="line">  fancybox:</span><br><span class="line">  fancybox<span class="emphasis">_css:</span></span><br><span class="line"><span class="emphasis"></span></span><br><span class="line"><span class="emphasis">  # Internal version: 1.0.6</span></span><br><span class="line"><span class="emphasis">  # See: https://github.com/ftlabs/fastclick</span></span><br><span class="line"><span class="emphasis">  fastclick:</span></span><br><span class="line"><span class="emphasis"></span></span><br><span class="line"><span class="emphasis">  # Internal version: 1.9.7</span></span><br><span class="line"><span class="emphasis">  # See: https://github.com/tuupola/jquery_</span>lazyload</span><br><span class="line">  lazyload:</span><br><span class="line"></span><br><span class="line">  # Internal version: 1.2.1</span><br><span class="line">  # See: http://VelocityJS.org</span><br><span class="line">  velocity:</span><br><span class="line"></span><br><span class="line">  # Internal version: 1.2.1</span><br><span class="line">  # See: http://VelocityJS.org</span><br><span class="line">  velocity<span class="emphasis">_ui:</span></span><br><span class="line"><span class="emphasis"></span></span><br><span class="line"><span class="emphasis">  # Internal version: 0.7.9</span></span><br><span class="line"><span class="emphasis">  # See: https://faisalman.github.io/ua-parser-js/</span></span><br><span class="line"><span class="emphasis">  ua_</span>parser:</span><br><span class="line"></span><br><span class="line">  # Internal version: 4.6.2</span><br><span class="line">  # See: http://fontawesome.io/</span><br><span class="line">  fontawesome:</span><br><span class="line"></span><br><span class="line">  # Internal version: 1</span><br><span class="line">  # https://www.algolia.com</span><br><span class="line">  algolia<span class="emphasis">_instant_</span>js:</span><br><span class="line">  algolia<span class="emphasis">_instant_</span>css:</span><br><span class="line"></span><br><span class="line">  # Internal version: 1.0.0</span><br><span class="line">  # https://github.com/hustcc/canvas-nest.js</span><br><span class="line">  canvas<span class="emphasis">_nest:</span></span><br><span class="line"><span class="emphasis"></span></span><br><span class="line"><span class="emphasis"></span></span><br><span class="line"><span class="emphasis"></span></span><br><span class="line"><span class="emphasis"># Assets</span></span><br><span class="line"><span class="emphasis">css: css</span></span><br><span class="line"><span class="emphasis">js: js</span></span><br><span class="line"><span class="emphasis">images: images</span></span><br><span class="line"><span class="emphasis"></span></span><br><span class="line"><span class="emphasis"># Theme version</span></span><br><span class="line"><span class="emphasis">version: 5.1.0</span></span><br><span class="line"><span class="emphasis"></span></span><br></pre></td></tr></table></figure>
+<p>第三方插件可能需要第三方的帐号信息</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="http://tongji.baidu.com">Baidu统计</a></li>
+<li><a target="_blank" rel="noopener" href="http://zhanzhang.baidu.com">Baidu站长</a></li>
+<li><a target="_blank" rel="noopener" href="http://www.duoshuo.com">多说</a></li>
+<li><a target="_blank" rel="noopener" href="https://leancloud.cn">leancloud</a></li>
+</ul>
+<h2 id="Hexo博客系列"><a href="#Hexo博客系列" class="headerlink" title="Hexo博客系列"></a>Hexo博客系列</h2><ul>
+<li><a href="/2017/03/01/hexo/hexo-firstblog/" title="Hexo博客搭建">Hexo博客搭建</a>  </li>
+<li><a href="/2017/03/01/hexo/hexo-secordblog/" title="Hexo更换博客样式">Hexo更换博客样式</a>  </li>
+<li><a href="/2017/03/03/hexo/hexo-updatenode/" title="Hexo升级Node版本">Hexo升级Node版本</a>  </li>
+<li><a href="/2017/03/04/hexo/hexo-amp-enable/" title="Hexo AMP 支持">Hexo AMP 支持</a>  </li>
+<li><a href="/2017/03/03/others/markdown-first/" title="MarkDown语法">MarkDown语法</a></li>
+<li><a href="/2017/03/06/hexo/hexo-markdown-extends/" title="Hexo-MarkDown扩展">Hexo-MarkDown扩展</a>  </li>
+<li><a href="/2017/03/07/hexo/hexo-flags/" title="Hexo 标签插件的使用">Hexo 标签插件的使用</a>  </li>
+<li><a href="/2017/03/10/hexo/hexo-mermaid/" title="Mermaid 使用指南">Mermaid 使用指南</a>  </li>
+<li><a href="/2017/03/11/hexo/hexo-plugins/" title="Hexo 插件添加">Hexo 插件添加</a> </li>
+</ul>
+
+    </div>
+
+    
+    
+    
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/hexo/" rel="tag"># hexo</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2017/03/01/hexo/hexo-firstblog/" rel="prev" title="Hexo博客搭建">
+      <i class="fa fa-chevron-left"></i> Hexo博客搭建
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2017/03/03/others/markdown-first/" rel="next" title="Markdown——入门指南">
+      Markdown——入门指南 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%95%E5%AD%90"><span class="nav-number">1.</span> <span class="nav-text">引子</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%90%AD%E5%BB%BA%E5%8D%9A%E5%AE%A2"><span class="nav-number">2.</span> <span class="nav-text">搭建博客</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Hexo%E9%85%8D%E7%BD%AE"><span class="nav-number">3.</span> <span class="nav-text">Hexo配置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#hexo%E9%87%8C%E9%9D%A2%E6%9C%89%E4%B8%A4%E4%B8%AA%E5%B8%B8%E7%94%A8%E5%88%B0%E7%9A%84%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6-hexo-%E9%A1%B9%E7%9B%AE%E6%A0%B9%E6%96%87%E4%BB%B6%E5%A4%B9"><span class="nav-number">3.1.</span> <span class="nav-text">hexo里面有两个常用到的配置文件 ${hexo} 项目根文件夹</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9B%BF%E6%8D%A2%E4%B8%BB%E9%A2%98"><span class="nav-number">3.2.</span> <span class="nav-text">替换主题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8D%9A%E5%AE%A2%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="nav-number">3.3.</span> <span class="nav-text">博客配置文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BB%E9%A2%98%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="nav-number">3.4.</span> <span class="nav-text">主题配置文件</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Hexo%E5%8D%9A%E5%AE%A2%E7%B3%BB%E5%88%97"><span class="nav-number">4.</span> <span class="nav-text">Hexo博客系列</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Chester.C</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">143</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">32</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">67</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Chester.C</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+if (document.querySelectorAll('pre.mermaid').length) {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mermaid@8/dist/mermaid.min.js', () => {
+    mermaid.initialize({
+      theme    : 'forest',
+      logLevel : 3,
+      flowchart: { curve     : 'linear' },
+      gantt    : { axisFormat: '%m/%d/%Y' },
+      sequence : { actorMargin: 50 }
+    });
+  }, window.mermaid);
+}
+</script>
+
+
+  
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'OQBlgU8H1seTDvVrgC3Dhni0-gzGzoHsz',
+      appKey     : 'wF7D3hVD9WjlV9V52bhlymHO',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : true,
+      lang       : 'zh-cn' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>

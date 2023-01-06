@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.2">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <link rel="amphtml" href="./amp/">
+  <meta name="baidu-site-verification" content="code-mUG0UNAPhR">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"blog.rcant.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="引子GDB 调试程序 给个例子程序12345678910111213#include&quot;stdio.h&quot;int add(int x,int y)&amp;#123;        return x+y;&amp;#125;int main()&amp;#123;        int p &#x3D; add(6,5);        printf(&quot;%d\n&quot;,p);        retu">
+<meta property="og:type" content="article">
+<meta property="og:title" content="GDB 调试">
+<meta property="og:url" content="http://blog.rcant.com/2020/10/17/cpp/cpp-gdb/index.html">
+<meta property="og:site_name" content="Chester.Cao Blog">
+<meta property="og:description" content="引子GDB 调试程序 给个例子程序12345678910111213#include&quot;stdio.h&quot;int add(int x,int y)&amp;#123;        return x+y;&amp;#125;int main()&amp;#123;        int p &#x3D; add(6,5);        printf(&quot;%d\n&quot;,p);        retu">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-10-17T03:39:17.000Z">
+<meta property="article:modified_time" content="2023-01-06T09:29:10.651Z">
+<meta property="article:author" content="Chester.C">
+<meta property="article:tag" content="gdb">
+<meta property="article:tag" content="c++">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://blog.rcant.com/2020/10/17/cpp/cpp-gdb/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>GDB 调试 | Chester.Cao Blog</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?974592ac4c5733a52af2b871678a5334";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Chester.Cao Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Chester.Cao Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Devlopper in C#</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-topics">
+
+    <a href="/topics/" rel="section"><i class="fa fa-fw fa-pencil"></i>主题</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://blog.rcant.com/2020/10/17/cpp/cpp-gdb/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Chester.C">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chester.Cao Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          GDB 调试
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-10-17 11:39:17" itemprop="dateCreated datePublished" datetime="2020-10-17T11:39:17+08:00">2020-10-17</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-01-06 17:29:10" itemprop="dateModified" datetime="2023-01-06T17:29:10+08:00">2023-01-06</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/C/" itemprop="url" rel="index"><span itemprop="name">C++</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2020/10/17/cpp/cpp-gdb/" class="post-meta-item leancloud_visitors" data-flag-title="GDB 调试" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2020/10/17/cpp/cpp-gdb/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/10/17/cpp/cpp-gdb/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h2><p>GDB 调试程序</p>
+<h2 id="给个例子程序"><a href="#给个例子程序" class="headerlink" title="给个例子程序"></a>给个例子程序</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">#include&quot;stdio.h&quot;</span><br><span class="line">int add(int x,int y)</span><br><span class="line">&#123;</span><br><span class="line">        return x+y;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int main()</span><br><span class="line">&#123;</span><br><span class="line">        int p = add(6,5);</span><br><span class="line">        printf(&quot;%d\n&quot;,p);</span><br><span class="line">        return 0;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h2 id="编译-gcc"><a href="#编译-gcc" class="headerlink" title="编译 gcc"></a>编译 gcc</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost cpp]# gcc add.cpp -o add.o</span><br><span class="line">[root@localhost cpp]# ll -al</span><br><span class="line">total 20</span><br><span class="line">drwxr-xr-x. 2 root root    34 Oct 15 02:14 .</span><br><span class="line">drwxr-xr-x. 4 root root    39 Oct 15 00:41 ..</span><br><span class="line">-rw-r--r--. 1 root root   121 Oct 15 00:43 add.cpp</span><br><span class="line">-rwxr-xr-x. 1 root root 12776 Oct 15 02:14 add.o</span><br><span class="line">[root@localhost cpp]#</span><br></pre></td></tr></table></figure>
+<span id="more"></span>
+<h2 id="进入gdb调试"><a href="#进入gdb调试" class="headerlink" title="进入gdb调试"></a>进入gdb调试</h2><h3 id="1-方法一"><a href="#1-方法一" class="headerlink" title="1. 方法一"></a>1. 方法一</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gdb $file</span><br></pre></td></tr></table></figure>
+<p>如下</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost cpp]# gdb add.o</span><br><span class="line">GNU gdb (GDB) Red Hat Enterprise Linux 8.2-11.el8</span><br><span class="line">Copyright (C) 2018 Free Software Foundation, Inc.</span><br><span class="line">License GPLv3+: GNU GPL version 3 or later &lt;http://gnu.org/licenses/gpl.html&gt;</span><br><span class="line">This is free software: you are free to change and redistribute it.</span><br><span class="line">There is NO WARRANTY, to the extent permitted by law.</span><br><span class="line">Type &quot;show copying&quot; and &quot;show warranty&quot; for details.</span><br><span class="line">This GDB was configured as &quot;x86_64-redhat-linux-gnu&quot;.</span><br><span class="line">Type &quot;show configuration&quot; for configuration details.</span><br><span class="line">For bug reporting instructions, please see:</span><br><span class="line">&lt;http://www.gnu.org/software/gdb/bugs/&gt;.</span><br><span class="line">Find the GDB manual and other documentation resources online at:</span><br><span class="line">    &lt;http://www.gnu.org/software/gdb/documentation/&gt;.</span><br><span class="line"></span><br><span class="line">For help, type &quot;help&quot;.</span><br><span class="line">Type &quot;apropos word&quot; to search for commands related to &quot;word&quot;...</span><br><span class="line">Reading symbols from add.o...(no debugging symbols found)...done.</span><br><span class="line">(gdb)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h3 id="2-方法二"><a href="#2-方法二" class="headerlink" title="2. 方法二"></a>2. 方法二</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">gdb </span><br><span class="line">file $file</span><br></pre></td></tr></table></figure>
+<p>先进入 <strong>gdb</strong> 程序，然后调用 <strong>file</strong> 打开文件</p>
+<p>如下</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost cpp]# gdb</span><br><span class="line">GNU gdb (GDB) Red Hat Enterprise Linux 8.2-11.el8</span><br><span class="line">Copyright (C) 2018 Free Software Foundation, Inc.</span><br><span class="line">License GPLv3+: GNU GPL version 3 or later &lt;http://gnu.org/licenses/gpl.html&gt;</span><br><span class="line">This is free software: you are free to change and redistribute it.</span><br><span class="line">There is NO WARRANTY, to the extent permitted by law.</span><br><span class="line">Type &quot;show copying&quot; and &quot;show warranty&quot; for details.</span><br><span class="line">This GDB was configured as &quot;x86_64-redhat-linux-gnu&quot;.</span><br><span class="line">Type &quot;show configuration&quot; for configuration details.</span><br><span class="line">For bug reporting instructions, please see:</span><br><span class="line">&lt;http://www.gnu.org/software/gdb/bugs/&gt;.</span><br><span class="line">Find the GDB manual and other documentation resources online at:</span><br><span class="line">    &lt;http://www.gnu.org/software/gdb/documentation/&gt;.</span><br><span class="line"></span><br><span class="line">For help, type &quot;help&quot;.</span><br><span class="line">Type &quot;apropos word&quot; to search for commands related to &quot;word&quot;.</span><br><span class="line">(gdb) file add.o</span><br><span class="line">Reading symbols from add.o...(no debugging symbols found)...done.</span><br><span class="line">(gdb)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>使用gdb打开文件后 ，使用 <strong>run</strong> 或者 <strong>r</strong> 开始程序的执行，<br>也可以使用 <strong>run parameter</strong> 将参数传递给该程序 </p>
+<h2 id="GDB-命令列表"><a href="#GDB-命令列表" class="headerlink" title="GDB 命令列表"></a>GDB 命令列表</h2><div class="table-container">
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>缩写</th>
+<th>命令说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>list</td>
+<td>l</td>
+<td>显示多行源代码 编译选项需要 gcc -g</td>
+</tr>
+<tr>
+<td>break</td>
+<td>b</td>
+<td>设置断点 b main</td>
+</tr>
+<tr>
+<td>info</td>
+<td>i</td>
+<td>描述程序的状态</td>
+</tr>
+<tr>
+<td>run</td>
+<td>r</td>
+<td>开始运行程序</td>
+</tr>
+<tr>
+<td>display</td>
+<td>disp</td>
+<td>跟踪查看某个变量，每次停下来都显示它的值</td>
+</tr>
+<tr>
+<td>step</td>
+<td>s</td>
+<td>执行下一条语句，如果该语句为函数调用，则进入函数执行第一条语句s;相当于其它调试器中的“Step Into (单步跟踪进入)”</td>
+</tr>
+<tr>
+<td>next</td>
+<td>n</td>
+<td>执行下一条语句，如果该语句为函数调用，不会进入函数内部执行(即不会一步步调试函数内部语句);相当于其它调试器中的“Step Over (单步跟踪)”</td>
+</tr>
+<tr>
+<td>print</td>
+<td>p</td>
+<td>打印内部变量值</td>
+</tr>
+<tr>
+<td>continue</td>
+<td>c</td>
+<td>继续程序的运行，直到遇到下一个断点</td>
+</tr>
+<tr>
+<td>set var name =v</td>
+<td></td>
+<td>设置变量值</td>
+</tr>
+<tr>
+<td>start</td>
+<td>st</td>
+<td>开始执行程序,在main函数的第一条语句前停下来</td>
+</tr>
+<tr>
+<td>file</td>
+<td></td>
+<td>装载需要调试的程序</td>
+</tr>
+<tr>
+<td>kill</td>
+<td>k</td>
+<td>终止正在调试的程序</td>
+</tr>
+<tr>
+<td>watch</td>
+<td></td>
+<td>监视变量值的变化</td>
+</tr>
+<tr>
+<td>backtrace</td>
+<td>bt</td>
+<td>查看函数调用的信息(堆栈)</td>
+</tr>
+<tr>
+<td>frame</td>
+<td>f</td>
+<td>查看栈帧</td>
+</tr>
+<tr>
+<td>quit</td>
+<td>q</td>
+<td>退出gdb环境</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h3 id="list"><a href="#list" class="headerlink" title="list"></a>list</h3><p>注意：显示多行源代码 编译选项需要 <strong>gcc -g</strong> </p>
+<p>不要忘了 -g 选项或其它相应的选项，才能将调试信息加到你要调试的程序中</p>
+<p>使用 <strong>gcc -o</strong> 编译 <strong>add.cpp</strong><br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost cpp]# gcc -o add.o add.cpp</span><br><span class="line">[root@localhost cpp]# gdb add.o</span><br><span class="line">GNU gdb (GDB) Red Hat Enterprise Linux 8.2-11.el8</span><br><span class="line">Copyright (C) 2018 Free Software Foundation, Inc.</span><br><span class="line">License GPLv3+: GNU GPL version 3 or later &lt;http://gnu.org/licenses/gpl.html&gt;</span><br><span class="line">This is free software: you are free to change and redistribute it.</span><br><span class="line">There is NO WARRANTY, to the extent permitted by law.</span><br><span class="line">Type &quot;show copying&quot; and &quot;show warranty&quot; for details.</span><br><span class="line">This GDB was configured as &quot;x86_64-redhat-linux-gnu&quot;.</span><br><span class="line">Type &quot;show configuration&quot; for configuration details.</span><br><span class="line">For bug reporting instructions, please see:</span><br><span class="line">&lt;http://www.gnu.org/software/gdb/bugs/&gt;.</span><br><span class="line">Find the GDB manual and other documentation resources online at:</span><br><span class="line">    &lt;http://www.gnu.org/software/gdb/documentation/&gt;.</span><br><span class="line"></span><br><span class="line">For help, type &quot;help&quot;.</span><br><span class="line">Type &quot;apropos word&quot; to search for commands related to &quot;word&quot;...</span><br><span class="line">Reading symbols from add.o...(no debugging symbols found)...done.</span><br><span class="line">(gdb) list</span><br><span class="line">No symbol table is loaded.  Use the &quot;file&quot; command.</span><br><span class="line">(gdb)</span><br><span class="line"></span><br></pre></td></tr></table></figure></p>
+<p>使用 <strong>gcc -g</strong> 编译<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost cpp]# gcc -g -o add.o add.cpp</span><br><span class="line">[root@localhost cpp]# gdb add.o</span><br><span class="line">GNU gdb (GDB) Red Hat Enterprise Linux 8.2-11.el8</span><br><span class="line">Copyright (C) 2018 Free Software Foundation, Inc.</span><br><span class="line">License GPLv3+: GNU GPL version 3 or later &lt;http://gnu.org/licenses/gpl.html&gt;</span><br><span class="line">This is free software: you are free to change and redistribute it.</span><br><span class="line">There is NO WARRANTY, to the extent permitted by law.</span><br><span class="line">Type &quot;show copying&quot; and &quot;show warranty&quot; for details.</span><br><span class="line">This GDB was configured as &quot;x86_64-redhat-linux-gnu&quot;.</span><br><span class="line">Type &quot;show configuration&quot; for configuration details.</span><br><span class="line">For bug reporting instructions, please see:</span><br><span class="line">&lt;http://www.gnu.org/software/gdb/bugs/&gt;.</span><br><span class="line">Find the GDB manual and other documentation resources online at:</span><br><span class="line">    &lt;http://www.gnu.org/software/gdb/documentation/&gt;.</span><br><span class="line"></span><br><span class="line">For help, type &quot;help&quot;.</span><br><span class="line">Type &quot;apropos word&quot; to search for commands related to &quot;word&quot;...</span><br><span class="line">Reading symbols from add.o...done.</span><br><span class="line">(gdb) l</span><br><span class="line">1       #include&quot;stdio.h&quot;</span><br><span class="line">2       int add(int x,int y)</span><br><span class="line">3       &#123;</span><br><span class="line">4               return x+y;</span><br><span class="line">5       &#125;</span><br><span class="line">6</span><br><span class="line">7       int main()</span><br><span class="line">8       &#123;</span><br><span class="line">9               int p = add(6,5);</span><br><span class="line">10              printf(&quot;%d\n&quot;,p);</span><br><span class="line">(gdb)</span><br></pre></td></tr></table></figure></p>
+<h4 id="list-n"><a href="#list-n" class="headerlink" title="list n"></a><strong>list n</strong></h4><p>显示已第n行为中心的10行代码</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">(gdb) list 6</span><br><span class="line">1       #include&quot;stdio.h&quot;</span><br><span class="line">2       int add(int x,int y)</span><br><span class="line">3       &#123;</span><br><span class="line">4               return x+y;</span><br><span class="line">5       &#125;</span><br><span class="line">6</span><br><span class="line">7       int main()</span><br><span class="line">8       &#123;</span><br><span class="line">9               int p = add(6,5);</span><br><span class="line">10              printf(&quot;%d\n&quot;,p);</span><br><span class="line">(gdb) list 7</span><br><span class="line">2       int add(int x,int y)</span><br><span class="line">3       &#123;</span><br><span class="line">4               return x+y;</span><br><span class="line">5       &#125;</span><br><span class="line">6</span><br><span class="line">7       int main()</span><br><span class="line">8       &#123;</span><br><span class="line">9               int p = add(6,5);</span><br><span class="line">10              printf(&quot;%d\n&quot;,p);</span><br><span class="line">11              return 0;</span><br><span class="line">(gdb) list 8</span><br><span class="line">3       &#123;</span><br><span class="line">4               return x+y;</span><br><span class="line">5       &#125;</span><br><span class="line">6</span><br><span class="line">7       int main()</span><br><span class="line">8       &#123;</span><br><span class="line">9               int p = add(6,5);</span><br><span class="line">10              printf(&quot;%d\n&quot;,p);</span><br><span class="line">11              return 0;</span><br><span class="line">12      &#125;</span><br><span class="line"></span><br><span class="line">(gdb)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h4 id="list-functionname"><a href="#list-functionname" class="headerlink" title="list functionname"></a><strong>list functionname</strong></h4><p>显示以functionname的函数为中心的10行代码</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">(gdb) list main</span><br><span class="line">3       &#123;</span><br><span class="line">4               return x+y;</span><br><span class="line">5       &#125;</span><br><span class="line">6</span><br><span class="line">7       int main()</span><br><span class="line">8       &#123;</span><br><span class="line">9               int p = add(6,5);</span><br><span class="line">10              printf(&quot;%d\n&quot;,p);</span><br><span class="line">11              return 0;</span><br><span class="line">12      &#125;</span><br><span class="line">(gdb) list add</span><br><span class="line">1       #include&quot;stdio.h&quot;</span><br><span class="line">2       int add(int x,int y)</span><br><span class="line">3       &#123;</span><br><span class="line">4               return x+y;</span><br><span class="line">5       &#125;</span><br><span class="line">6</span><br><span class="line">7       int main()</span><br><span class="line">8       &#123;</span><br><span class="line">9               int p = add(6,5);</span><br><span class="line">10              printf(&quot;%d\n&quot;,p);</span><br><span class="line">(gdb)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h4 id="list-1"><a href="#list-1" class="headerlink" title="list -"></a><strong>list -</strong></h4><p>显示刚才打印过的源代码之前的代码</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">(gdb) list main</span><br><span class="line">3       &#123;</span><br><span class="line">4               return x+y;</span><br><span class="line">5       &#125;</span><br><span class="line">6</span><br><span class="line">7       int main()</span><br><span class="line">8       &#123;</span><br><span class="line">9               int p = add(6,5);</span><br><span class="line">10              printf(&quot;%d\n&quot;,p);</span><br><span class="line">11              return 0;</span><br><span class="line">12      &#125;</span><br><span class="line">(gdb) list -</span><br><span class="line">1       #include&quot;stdio.h&quot;</span><br><span class="line">2       int add(int x,int y)</span><br><span class="line">(gdb)</span><br></pre></td></tr></table></figure>
+<h4 id="list-2"><a href="#list-2" class="headerlink" title="list"></a><strong>list</strong></h4><p>在刚才打印过的源代码之后打印10条代码</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">(gdb) list -</span><br><span class="line">1       #include&quot;stdio.h&quot;</span><br><span class="line">2       int add(int x,int y)</span><br><span class="line">(gdb) list</span><br><span class="line">3       &#123;</span><br><span class="line">4               return x+y;</span><br><span class="line">5       &#125;</span><br><span class="line">6</span><br><span class="line">7       int main()</span><br><span class="line">8       &#123;</span><br><span class="line">9               int p = add(6,5);</span><br><span class="line">10              printf(&quot;%d\n&quot;,p);</span><br><span class="line">11              return 0;</span><br><span class="line">12      &#125;</span><br><span class="line">(gdb) list</span><br><span class="line">Line number 13 out of range; add.cpp has 12 lines.</span><br><span class="line">(gdb)</span><br></pre></td></tr></table></figure>
+<h3 id="断点break-b"><a href="#断点break-b" class="headerlink" title="断点break/b"></a>断点break/b</h3><h4 id="break-location"><a href="#break-location" class="headerlink" title="break location"></a>break location</h4><p>location 位置可以为某一行,某函数名或者其它结构的地址</p>
+<p>gdb 会在执行该位置代码之前停下来</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">(gdb) list</span><br><span class="line">3       &#123;</span><br><span class="line">4               return x+y;</span><br><span class="line">5       &#125;</span><br><span class="line">6</span><br><span class="line">7       int main()</span><br><span class="line">8       &#123;</span><br><span class="line">9               int p = add(6,5);</span><br><span class="line">10              printf(&quot;%d\n&quot;,p);</span><br><span class="line">11              return 0;</span><br><span class="line">12      &#125;</span><br><span class="line">(gdb) b 10</span><br><span class="line">Breakpoint 1 at 0x4005c4: file add.cpp, line 10.</span><br><span class="line">(gdb) r</span><br><span class="line">Starting program: /root/projects/cpp/add.o</span><br><span class="line">Missing separate debuginfos, use: yum debuginfo-install glibc-2.28-101.el8.x86_64</span><br><span class="line"></span><br><span class="line">Breakpoint 1, main () at add.cpp:10</span><br><span class="line">10              printf(&quot;%d\n&quot;,p);</span><br><span class="line">(gdb) c</span><br><span class="line">Continuing.</span><br><span class="line">11</span><br><span class="line">[Inferior 1 (process 1957) exited normally]</span><br><span class="line">(gdb)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>使用 <strong>delete breakpoints</strong> 断点号 删除断点<br>这里的断点号表示的是第几个断点,刚才执行 <strong>break 10</strong> 返回 <strong>Breakpoint 1 at 0x4005c4: file add.cpp, line 10.</strong><br>中的1表示该断点的标号，因此使用 <strong>delete breakpoints 1</strong> 表示删除第10行所定义的断点<br><strong>clear n</strong> 表示清除第n行的断点,因此 <strong>clear 10</strong> 等同于 <strong>delete breakpoints 1</strong><br><strong>disable/enable n</strong> 表示使得编号为n的断点暂时失效或有效</p>
+<h4 id="info-breakpoints-查看断点相关的信息"><a href="#info-breakpoints-查看断点相关的信息" class="headerlink" title="info breakpoints 查看断点相关的信息"></a>info breakpoints 查看断点相关的信息</h4><div class="table-container">
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Num</td>
+<td>断点编号</td>
+</tr>
+<tr>
+<td>Disp</td>
+<td>断点执行一次之后是否有效 kep：有效 dis：无效</td>
+</tr>
+<tr>
+<td>Enb</td>
+<td>当前断点是否有效 y：有效 n：无效</td>
+</tr>
+<tr>
+<td>Address</td>
+<td>内存地址</td>
+</tr>
+<tr>
+<td>What</td>
+<td>位置</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>如下:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">(gdb) info breakpoints</span><br><span class="line">Num     Type           Disp Enb Address            What</span><br><span class="line">1       breakpoint     keep y   0x00000000004005c4 in main() at add.cpp:10</span><br><span class="line">        breakpoint already hit 1 time</span><br><span class="line">(gdb)</span><br></pre></td></tr></table></figure>
+<h3 id="display-disp-查看参数值"><a href="#display-disp-查看参数值" class="headerlink" title="display /disp 查看参数值"></a>display /disp 查看参数值</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">(gdb) b 10</span><br><span class="line">Breakpoint 1 at 0x4005c4: file add.cpp, line 10.</span><br><span class="line">(gdb) r</span><br><span class="line">Starting program: /root/projects/cpp/add.o</span><br><span class="line">Missing separate debuginfos, use: yum debuginfo-install glibc-2.28-101.el8.x86_64</span><br><span class="line"></span><br><span class="line">Breakpoint 1, main () at add.cpp:10</span><br><span class="line">10              printf(&quot;%d\n&quot;,p);</span><br><span class="line">(gdb) display p</span><br><span class="line">1: p = 11</span><br><span class="line">(gdb)</span><br></pre></td></tr></table></figure>
+<p>也可以使用 <strong>disable,enable,delete,info</strong> 命令修改及查看其状态,用法与对断点的一样</p>
+<p>也可以使用 undisplay </p>
+<h3 id="step-next-命令"><a href="#step-next-命令" class="headerlink" title="step/next 命令"></a>step/next 命令</h3><h4 id="step-命令"><a href="#step-命令" class="headerlink" title="step 命令"></a>step 命令</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">(gdb) b main</span><br><span class="line">Breakpoint 2 at 0x4005b2: file add.cpp, line 9.</span><br><span class="line">(gdb) r</span><br><span class="line">The program being debugged has been started already.</span><br><span class="line">Start it from the beginning? (y or n) y</span><br><span class="line">Starting program: /root/projects/cpp/add.o</span><br><span class="line"></span><br><span class="line">Breakpoint 2, main () at add.cpp:9</span><br><span class="line">9               int p = add(6,5);</span><br><span class="line">1: p = 0</span><br><span class="line">(gdb) s</span><br><span class="line">add (x=6, y=5) at add.cpp:4</span><br><span class="line">4               return x+y;</span><br><span class="line">(gdb) s</span><br><span class="line">5       &#125;</span><br><span class="line">(gdb) s</span><br><span class="line"></span><br><span class="line">Breakpoint 1, main () at add.cpp:10</span><br><span class="line">10              printf(&quot;%d\n&quot;,p);</span><br><span class="line">1: p = 11</span><br><span class="line">(gdb) s</span><br><span class="line">11</span><br><span class="line">11              return 0;</span><br><span class="line">1: p = 11</span><br><span class="line">(gdb) s</span><br><span class="line">12      &#125;</span><br><span class="line">1: p = 11</span><br><span class="line">(gdb) s</span><br><span class="line">0x00007ffff7a356a3 in __libc_start_main () from /lib64/libc.so.6</span><br><span class="line">(gdb)</span><br></pre></td></tr></table></figure>
+<h4 id="next-命令"><a href="#next-命令" class="headerlink" title="next 命令"></a>next 命令</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">(gdb) r</span><br><span class="line">Starting program: /root/projects/cpp/add.o</span><br><span class="line"></span><br><span class="line">Breakpoint 2, main () at add.cpp:9</span><br><span class="line">9               int p = add(6,5);</span><br><span class="line">1: p = 0</span><br><span class="line">(gdb) n</span><br><span class="line"></span><br><span class="line">Breakpoint 1, main () at add.cpp:10</span><br><span class="line">10              printf(&quot;%d\n&quot;,p);</span><br><span class="line">1: p = 11</span><br><span class="line">(gdb) n</span><br><span class="line">11</span><br><span class="line">11              return 0;</span><br><span class="line">1: p = 11</span><br><span class="line">(gdb) n</span><br><span class="line">12      &#125;</span><br><span class="line">1: p = 11</span><br><span class="line">(gdb) n</span><br><span class="line">0x00007ffff7a356a3 in __libc_start_main () from /lib64/libc.so.6</span><br></pre></td></tr></table></figure>
+<h3 id="watch"><a href="#watch" class="headerlink" title="watch"></a>watch</h3><p>可以设置观察点，使得当某表达式发生变化时程序暂停执行。</p>
+<p>执行该命令前保证程序已经运行<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line">(gdb) l</span><br><span class="line">1       #include&quot;stdio.h&quot;</span><br><span class="line">2       int add(int x,int y)</span><br><span class="line">3       &#123;</span><br><span class="line">4               return x+y;</span><br><span class="line">5       &#125;</span><br><span class="line">6</span><br><span class="line">7       int main()</span><br><span class="line">8       &#123;</span><br><span class="line">9               int p = add(6,5);</span><br><span class="line">10              printf(&quot;%d\n&quot;,p);</span><br><span class="line">(gdb) l</span><br><span class="line">11              return 0;</span><br><span class="line">12      &#125;</span><br><span class="line">(gdb) b main</span><br><span class="line">Breakpoint 1 at 0x4005b2: file add.cpp, line 9.</span><br><span class="line">(gdb) r</span><br><span class="line">Starting program: /root/projects/cpp/add.o</span><br><span class="line">Missing separate debuginfos, use: yum debuginfo-install glibc-2.28-101.el8.x86_64</span><br><span class="line"></span><br><span class="line">Breakpoint 1, main () at add.cpp:9</span><br><span class="line">9               int p = add(6,5);</span><br><span class="line">(gdb) watch p</span><br><span class="line">Hardware watchpoint 2: p</span><br><span class="line">(gdb) c</span><br><span class="line">Continuing.</span><br><span class="line"></span><br><span class="line">Hardware watchpoint 2: p</span><br><span class="line"></span><br><span class="line">Old value = 0</span><br><span class="line">New value = 11</span><br><span class="line">main () at add.cpp:10</span><br><span class="line">10              printf(&quot;%d\n&quot;,p);</span><br><span class="line">(gdb) c</span><br><span class="line">Continuing.</span><br><span class="line">11</span><br><span class="line"></span><br><span class="line">Watchpoint 2 deleted because the program has left the block in</span><br><span class="line">which its expression is valid.</span><br><span class="line">0x00007ffff7a356a3 in __libc_start_main () from /lib64/libc.so.6</span><br><span class="line">(gdb)</span><br><span class="line"></span><br></pre></td></tr></table></figure></p>
+<h3 id="print命令-whatis命令"><a href="#print命令-whatis命令" class="headerlink" title="print命令 whatis命令"></a>print命令 whatis命令</h3><p>print 表达式：简记为 p ，其中“表达式”可以是任何当前正在被测试程序的有效表达式，比如当前正在调试C语言的程序，那么“表达式”可以是任何C语言的有效表达式，包括数字，变量甚至是函数调用。<br>print a：将显示整数 a 的值<br>print ++a：将把 a 中的值加1,并显示出来<br>print name：将显示字符串 name 的值<br>print gdb_test(22)：将以整数22作为参数调用 gdb_test() 函数<br>print gdb_test(a)：将以变量 a 作为参数调用 gdb_test() 函数</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">(gdb) l</span><br><span class="line">1       #include&quot;stdio.h&quot;</span><br><span class="line">2       int add(int x,int y)</span><br><span class="line">3       &#123;</span><br><span class="line">4               return x+y;</span><br><span class="line">5       &#125;</span><br><span class="line">6</span><br><span class="line">7       int main()</span><br><span class="line">8       &#123;</span><br><span class="line">9               int p = add(6,5);</span><br><span class="line">10              printf(&quot;%d\n&quot;,p);</span><br><span class="line">(gdb)</span><br><span class="line">11              return 0;</span><br><span class="line">12      &#125;</span><br><span class="line">(gdb) break 10</span><br><span class="line">Breakpoint 1 at 0x4005c4: file add.cpp, line 10.</span><br><span class="line">(gdb) r</span><br><span class="line">Starting program: /root/projects/cpp/add.o</span><br><span class="line">Missing separate debuginfos, use: yum debuginfo-install glibc-2.28-101.el8.x86_64</span><br><span class="line"></span><br><span class="line">Breakpoint 1, main () at add.cpp:10</span><br><span class="line">10              printf(&quot;%d\n&quot;,p);</span><br><span class="line">(gdb) p p</span><br><span class="line">$1 = 11</span><br><span class="line">(gdb) whatis p</span><br><span class="line">type = int</span><br><span class="line">(gdb)</span><br></pre></td></tr></table></figure>
+<h3 id="set-var-name-value"><a href="#set-var-name-value" class="headerlink" title="set var name=value"></a>set var name=value</h3><p>在程序运行中动态改变变量的值</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">(gdb) p p</span><br><span class="line">$4 = 11</span><br><span class="line">(gdb) set var p=100</span><br><span class="line">(gdb) p p</span><br><span class="line">$5 = 100</span><br><span class="line">(gdb) set var p=10</span><br><span class="line">(gdb) c</span><br><span class="line">Continuing.</span><br><span class="line">10</span><br></pre></td></tr></table></figure>
+<h3 id="backtrace"><a href="#backtrace" class="headerlink" title="backtrace"></a>backtrace</h3><p>可使用frame 查看堆栈中某一帧的信息</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">Reading symbols from add.o...done.</span><br><span class="line">(gdb) b main</span><br><span class="line">Breakpoint 1 at 0x4005b2: file add.cpp, line 9.</span><br><span class="line">(gdb) r</span><br><span class="line">Starting program: /root/projects/cpp/add.o</span><br><span class="line">Missing separate debuginfos, use: yum debuginfo-install glibc-2.28-101.el8.x86_64</span><br><span class="line"></span><br><span class="line">Breakpoint 1, main () at add.cpp:9</span><br><span class="line">9               int p = add(6,5);</span><br><span class="line">(gdb) bt</span><br><span class="line">#0  main () at add.cpp:9</span><br><span class="line">(gdb) s</span><br><span class="line">add (x=6, y=5) at add.cpp:4</span><br><span class="line">4               return x+y;</span><br><span class="line">(gdb) bt</span><br><span class="line">#0  add (x=6, y=5) at add.cpp:4</span><br><span class="line">#1  0x00000000004005c1 in main () at add.cpp:9</span><br><span class="line">(gdb) s</span><br><span class="line">5       &#125;</span><br><span class="line">(gdb) s</span><br><span class="line">main () at add.cpp:10</span><br><span class="line">10              printf(&quot;%d\n&quot;,p);</span><br><span class="line">(gdb) s</span><br><span class="line">11</span><br><span class="line">11              return 0;</span><br><span class="line">(gdb) s</span><br><span class="line">12      &#125;</span><br><span class="line">(gdb) s</span><br><span class="line">0x00007ffff7a356a3 in __libc_start_main () from /lib64/libc.so.6</span><br><span class="line">(gdb) bt</span><br><span class="line">#0  0x00007ffff7a356a3 in __libc_start_main () from /lib64/libc.so.6</span><br><span class="line">#1  0x00000000004004de in _start ()</span><br><span class="line">(gdb) s</span><br><span class="line">Single stepping until exit from function __libc_start_main,</span><br><span class="line">which has no line number information.</span><br><span class="line">[Inferior 1 (process 2029) exited normally]</span><br><span class="line">(gdb) bt</span><br><span class="line">No stack.</span><br><span class="line">(gdb)</span><br></pre></td></tr></table></figure>
+<h2 id="GDB-高级用法"><a href="#GDB-高级用法" class="headerlink" title="GDB 高级用法"></a>GDB 高级用法</h2><div class="table-container">
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>缩写</th>
+<th>命令说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>disassemble</td>
+<td>disass</td>
+<td>反汇编</td>
+</tr>
+<tr>
+<td>examine</td>
+<td>x</td>
+<td>查看内存</td>
+</tr>
+<tr>
+<td>stepi</td>
+<td>si</td>
+<td>汇编级别的断点定位,会进入汇编和C函数内部;当要进入没有调试信息的库函数调试的时候，用si是唯一的方法</td>
+</tr>
+<tr>
+<td>finish</td>
+<td></td>
+<td>si运行到一个函数结束(跳出帧)</td>
+</tr>
+<tr>
+<td>nexti</td>
+<td>ni</td>
+<td>汇编级别的断点定位,不会进入汇编和C函数内部</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h3 id="examine-x-查看内存"><a href="#examine-x-查看内存" class="headerlink" title="examine/x 查看内存"></a>examine/x 查看内存</h3><p>格式:<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">x /nfu &lt;addr&gt;</span><br></pre></td></tr></table></figure></p>
+<p>其中:</p>
+<p><strong>n</strong> 表示要显示的内存单元的个数</p>
+<p><strong>f</strong> 表示显示方式, 可取如下值</p>
+<pre><code>- x 按十六进制格式显示变量。
+- d 按十进制格式显示变量。
+- t 按二进制格式显示变量。
+- o 按八进制格式显示变量。
+- a 按十六进制格式显示变量。
+- u 按十进制格式显示无符号整型。
+- i 指令地址格式
+- c 按字符格式显示变量。
+- f 按浮点数格式显示变量。
+</code></pre><p><strong>u</strong> 表示一个地址单元的长度</p>
+<pre><code>- b表示单字节，
+- h表示双字节，
+- w表示四字节，
+- g表示八字节
+</code></pre><p>例如：</p>
+<p>x/20xw 显示20个单元，16进制，4字节每单元</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">Reading symbols from add.o...done.</span><br><span class="line">(gdb) b main</span><br><span class="line">Breakpoint 1 at 0x4005b2: file add.cpp, line 9.</span><br><span class="line">(gdb) r</span><br><span class="line">Starting program: /root/projects/cpp/add.o</span><br><span class="line">Missing separate debuginfos, use: yum debuginfo-install glibc-2.28-101.el8.x86_64</span><br><span class="line"></span><br><span class="line">Breakpoint 1, main () at add.cpp:9</span><br><span class="line">9               int p = add(6,5);</span><br><span class="line">(gdb) n</span><br><span class="line">10              printf(&quot;%d\n&quot;,p);</span><br><span class="line">(gdb) x/4xb p</span><br><span class="line">0xb:    Cannot access memory at address 0xb</span><br><span class="line">(gdb) x/4xb &amp;p</span><br><span class="line">0x7fffffffe41c: 0x0b    0x00    0x00    0x00</span><br><span class="line">(gdb) x/1xw &amp;p</span><br><span class="line">0x7fffffffe41c: 0x0000000b</span><br><span class="line">(gdb) x/1dw &amp;p</span><br><span class="line">0x7fffffffe41c: 11</span><br><span class="line">(gdb) x/9i $pc</span><br><span class="line">=&gt; 0x4005c4 &lt;main()+26&gt;:        mov    -0x4(%rbp),%eax</span><br><span class="line">   0x4005c7 &lt;main()+29&gt;:        mov    %eax,%esi</span><br><span class="line">   0x4005c9 &lt;main()+31&gt;:        mov    $0x400678,%edi</span><br><span class="line">   0x4005ce &lt;main()+36&gt;:        mov    $0x0,%eax</span><br><span class="line">   0x4005d3 &lt;main()+41&gt;:        callq  0x4004a0 &lt;printf@plt&gt;</span><br><span class="line">   0x4005d8 &lt;main()+46&gt;:        mov    $0x0,%eax</span><br><span class="line">   0x4005dd &lt;main()+51&gt;:        leaveq</span><br><span class="line">   0x4005de &lt;main()+52&gt;:        retq</span><br><span class="line">   0x4005df:    nop</span><br><span class="line">(gdb)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h3 id="disassemble-disass-命令"><a href="#disassemble-disass-命令" class="headerlink" title="disassemble/disass 命令"></a>disassemble/disass 命令</h3><h4 id="disass-func-name"><a href="#disass-func-name" class="headerlink" title="disass func_name"></a>disass func_name</h4><p>反汇编一个函数</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">Reading symbols from add.o...done.</span><br><span class="line">(gdb) l</span><br><span class="line">1       #include&quot;stdio.h&quot;</span><br><span class="line">2       int add(int x,int y)</span><br><span class="line">3       &#123;</span><br><span class="line">4               return x+y;</span><br><span class="line">5       &#125;</span><br><span class="line">6</span><br><span class="line">7       int main()</span><br><span class="line">8       &#123;</span><br><span class="line">9               int p = add(6,5);</span><br><span class="line">10              printf(&quot;%d\n&quot;,p);</span><br><span class="line">(gdb) l</span><br><span class="line">11              return 0;</span><br><span class="line">12      &#125;</span><br><span class="line">(gdb) disass add</span><br><span class="line">Dump of assembler code for function add(int, int):</span><br><span class="line">   0x0000000000400596 &lt;+0&gt;:     push   %rbp</span><br><span class="line">   0x0000000000400597 &lt;+1&gt;:     mov    %rsp,%rbp</span><br><span class="line">   0x000000000040059a &lt;+4&gt;:     mov    %edi,-0x4(%rbp)</span><br><span class="line">   0x000000000040059d &lt;+7&gt;:     mov    %esi,-0x8(%rbp)</span><br><span class="line">   0x00000000004005a0 &lt;+10&gt;:    mov    -0x4(%rbp),%edx</span><br><span class="line">   0x00000000004005a3 &lt;+13&gt;:    mov    -0x8(%rbp),%eax</span><br><span class="line">   0x00000000004005a6 &lt;+16&gt;:    add    %edx,%eax</span><br><span class="line">   0x00000000004005a8 &lt;+18&gt;:    pop    %rbp</span><br><span class="line">   0x00000000004005a9 &lt;+19&gt;:    retq</span><br><span class="line">End of assembler dump.</span><br><span class="line">(gdb)</span><br></pre></td></tr></table></figure>
+<h4 id="disass-不带参数"><a href="#disass-不带参数" class="headerlink" title="disass 不带参数"></a>disass 不带参数</h4><p>disassemble 不带参数，默认的反汇编范围是 所选择帧的pc附近的函数<br>单个参数, 就是pc, 当然也可以是函数名，因为函数名 也是一个 地址; 这样范围就是该pc附近的函数<br>两个参数，就是内存地址范围</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">(gdb) disass</span><br><span class="line">Dump of assembler code for function main():</span><br><span class="line">   0x00000000004005aa &lt;+0&gt;:     push   %rbp</span><br><span class="line">   0x00000000004005ab &lt;+1&gt;:     mov    %rsp,%rbp</span><br><span class="line">   0x00000000004005ae &lt;+4&gt;:     sub    $0x10,%rsp</span><br><span class="line">   0x00000000004005b2 &lt;+8&gt;:     mov    $0x5,%esi</span><br><span class="line">   0x00000000004005b7 &lt;+13&gt;:    mov    $0x6,%edi</span><br><span class="line">   0x00000000004005bc &lt;+18&gt;:    callq  0x400596 &lt;add(int, int)&gt;</span><br><span class="line">   0x00000000004005c1 &lt;+23&gt;:    mov    %eax,-0x4(%rbp)</span><br><span class="line">=&gt; 0x00000000004005c4 &lt;+26&gt;:    mov    -0x4(%rbp),%eax</span><br><span class="line">   0x00000000004005c7 &lt;+29&gt;:    mov    %eax,%esi</span><br><span class="line">   0x00000000004005c9 &lt;+31&gt;:    mov    $0x400678,%edi</span><br><span class="line">   0x00000000004005ce &lt;+36&gt;:    mov    $0x0,%eax</span><br><span class="line">   0x00000000004005d3 &lt;+41&gt;:    callq  0x4004a0 &lt;printf@plt&gt;</span><br><span class="line">   0x00000000004005d8 &lt;+46&gt;:    mov    $0x0,%eax</span><br><span class="line">   0x00000000004005dd &lt;+51&gt;:    leaveq</span><br><span class="line">   0x00000000004005de &lt;+52&gt;:    retq</span><br><span class="line">End of assembler dump.</span><br><span class="line">(gdb)</span><br></pre></td></tr></table></figure>
+<h4 id="disassemble-0×0-0×10"><a href="#disassemble-0×0-0×10" class="headerlink" title="disassemble 0×0, 0×10"></a>disassemble 0×0, 0×10</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">(gdb) disass $pc,$pc+10</span><br><span class="line">Dump of assembler code from 0x40059a to 0x4005a4:</span><br><span class="line">=&gt; 0x000000000040059a &lt;add(int, int)+4&gt;:        mov    %edi,-0x4(%rbp)</span><br><span class="line">   0x000000000040059d &lt;add(int, int)+7&gt;:        mov    %esi,-0x8(%rbp)</span><br><span class="line">   0x00000000004005a0 &lt;add(int, int)+10&gt;:       mov    -0x4(%rbp),%edx</span><br><span class="line">   0x00000000004005a3 &lt;add(int, int)+13&gt;:       mov    -0x8(%rbp),%eax</span><br><span class="line">End of assembler dump.</span><br><span class="line">(gdb)</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">(gdb) disass $pc,+10</span><br><span class="line">Dump of assembler code from 0x40059a to 0x4005a4:</span><br><span class="line">=&gt; 0x000000000040059a &lt;add(int, int)+4&gt;:        mov    %edi,-0x4(%rbp)</span><br><span class="line">   0x000000000040059d &lt;add(int, int)+7&gt;:        mov    %esi,-0x8(%rbp)</span><br><span class="line">   0x00000000004005a0 &lt;add(int, int)+10&gt;:       mov    -0x4(%rbp),%edx</span><br><span class="line">   0x00000000004005a3 &lt;add(int, int)+13&gt;:       mov    -0x8(%rbp),%eax</span><br><span class="line">End of assembler dump.</span><br><span class="line">(gdb)</span><br></pre></td></tr></table></figure>
+<p>反汇编一段内存地址, 第1个参数是起始地址，第2个是终止地址</p>
+<h4 id="查看内存中的汇编代码"><a href="#查看内存中的汇编代码" class="headerlink" title="查看内存中的汇编代码"></a>查看内存中的汇编代码</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">(gdb) info line main</span><br><span class="line">Line 8 of &quot;add.cpp&quot; starts at address 0x4005aa &lt;main()&gt; and ends at 0x4005b2 &lt;main()+8&gt;.</span><br><span class="line">(gdb) info line add</span><br><span class="line">Line 3 of &quot;add.cpp&quot; starts at address 0x400596 &lt;add(int, int)&gt; and ends at 0x4005a0 &lt;add(int, int)+10&gt;.</span><br><span class="line">(gdb) x/30i 0x400596</span><br><span class="line">   0x400596 &lt;add(int, int)&gt;:    push   %rbp</span><br><span class="line">   0x400597 &lt;add(int, int)+1&gt;:  mov    %rsp,%rbp</span><br><span class="line">   0x40059a &lt;add(int, int)+4&gt;:  mov    %edi,-0x4(%rbp)</span><br><span class="line">   0x40059d &lt;add(int, int)+7&gt;:  mov    %esi,-0x8(%rbp)</span><br><span class="line">   0x4005a0 &lt;add(int, int)+10&gt;: mov    -0x4(%rbp),%edx</span><br><span class="line">   0x4005a3 &lt;add(int, int)+13&gt;: mov    -0x8(%rbp),%eax</span><br><span class="line">   0x4005a6 &lt;add(int, int)+16&gt;: add    %edx,%eax</span><br><span class="line">   0x4005a8 &lt;add(int, int)+18&gt;: pop    %rbp</span><br><span class="line">   0x4005a9 &lt;add(int, int)+19&gt;: retq</span><br><span class="line">   0x4005aa &lt;main()&gt;:   push   %rbp</span><br><span class="line">   0x4005ab &lt;main()+1&gt;: mov    %rsp,%rbp</span><br><span class="line">   0x4005ae &lt;main()+4&gt;: sub    $0x10,%rsp</span><br><span class="line">   0x4005b2 &lt;main()+8&gt;: mov    $0x5,%esi</span><br><span class="line">   0x4005b7 &lt;main()+13&gt;:        mov    $0x6,%edi</span><br><span class="line">   0x4005bc &lt;main()+18&gt;:        callq  0x400596 &lt;add(int, int)&gt;</span><br><span class="line">   0x4005c1 &lt;main()+23&gt;:        mov    %eax,-0x4(%rbp)</span><br><span class="line">=&gt; 0x4005c4 &lt;main()+26&gt;:        mov    -0x4(%rbp),%eax</span><br><span class="line">   0x4005c7 &lt;main()+29&gt;:        mov    %eax,%esi</span><br><span class="line">   0x4005c9 &lt;main()+31&gt;:        mov    $0x400678,%edi</span><br><span class="line">   0x4005ce &lt;main()+36&gt;:        mov    $0x0,%eax</span><br><span class="line">   0x4005d3 &lt;main()+41&gt;:        callq  0x4004a0 &lt;printf@plt&gt;</span><br><span class="line">   0x4005d8 &lt;main()+46&gt;:        mov    $0x0,%eax</span><br><span class="line">   0x4005dd &lt;main()+51&gt;:        leaveq</span><br><span class="line">   0x4005de &lt;main()+52&gt;:        retq</span><br><span class="line">   0x4005df:    nop</span><br><span class="line">   0x4005e0 &lt;__libc_csu_init&gt;:  endbr64</span><br><span class="line">   0x4005e4 &lt;__libc_csu_init+4&gt;:        push   %r15</span><br><span class="line">   0x4005e6 &lt;__libc_csu_init+6&gt;:        mov    %rdx,%r15</span><br><span class="line">   0x4005e9 &lt;__libc_csu_init+9&gt;:        push   %r14</span><br><span class="line">   0x4005eb &lt;__libc_csu_init+11&gt;:       mov    %rsi,%r14</span><br><span class="line">(gdb)</span><br></pre></td></tr></table></figure>
+<h4 id="使用-disassemble-m-func-name"><a href="#使用-disassemble-m-func-name" class="headerlink" title="使用 disassemble /m func_name"></a>使用 disassemble /m func_name</h4><p>/m 源码和汇编一起排列</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line">(gdb) disassemble /m main</span><br><span class="line">Dump of assembler code for function main():</span><br><span class="line">8       &#123;</span><br><span class="line">   0x00000000004005aa &lt;+0&gt;:     push   %rbp</span><br><span class="line">   0x00000000004005ab &lt;+1&gt;:     mov    %rsp,%rbp</span><br><span class="line">   0x00000000004005ae &lt;+4&gt;:     sub    $0x10,%rsp</span><br><span class="line"></span><br><span class="line">9               int p = add(6,5);</span><br><span class="line">   0x00000000004005b2 &lt;+8&gt;:     mov    $0x5,%esi</span><br><span class="line">   0x00000000004005b7 &lt;+13&gt;:    mov    $0x6,%edi</span><br><span class="line">   0x00000000004005bc &lt;+18&gt;:    callq  0x400596 &lt;add(int, int)&gt;</span><br><span class="line">   0x00000000004005c1 &lt;+23&gt;:    mov    %eax,-0x4(%rbp)</span><br><span class="line"></span><br><span class="line">10              printf(&quot;%d\n&quot;,p);</span><br><span class="line">   0x00000000004005c4 &lt;+26&gt;:    mov    -0x4(%rbp),%eax</span><br><span class="line">   0x00000000004005c7 &lt;+29&gt;:    mov    %eax,%esi</span><br><span class="line">   0x00000000004005c9 &lt;+31&gt;:    mov    $0x400678,%edi</span><br><span class="line">   0x00000000004005ce &lt;+36&gt;:    mov    $0x0,%eax</span><br><span class="line">   0x00000000004005d3 &lt;+41&gt;:    callq  0x4004a0 &lt;printf@plt&gt;</span><br><span class="line"></span><br><span class="line">11              return 0;</span><br><span class="line">   0x00000000004005d8 &lt;+46&gt;:    mov    $0x0,%eax</span><br><span class="line"></span><br><span class="line">12      &#125;</span><br><span class="line">   0x00000000004005dd &lt;+51&gt;:    leaveq</span><br><span class="line">   0x00000000004005de &lt;+52&gt;:    retq</span><br><span class="line"></span><br><span class="line">End of assembler dump.</span><br><span class="line">(gdb) disassemble /m add</span><br><span class="line">Dump of assembler code for function add(int, int):</span><br><span class="line">3       &#123;</span><br><span class="line">   0x0000000000400596 &lt;+0&gt;:     push   %rbp</span><br><span class="line">   0x0000000000400597 &lt;+1&gt;:     mov    %rsp,%rbp</span><br><span class="line">=&gt; 0x000000000040059a &lt;+4&gt;:     mov    %edi,-0x4(%rbp)</span><br><span class="line">   0x000000000040059d &lt;+7&gt;:     mov    %esi,-0x8(%rbp)</span><br><span class="line"></span><br><span class="line">4               return x+y;</span><br><span class="line">   0x00000000004005a0 &lt;+10&gt;:    mov    -0x4(%rbp),%edx</span><br><span class="line">   0x00000000004005a3 &lt;+13&gt;:    mov    -0x8(%rbp),%eax</span><br><span class="line">   0x00000000004005a6 &lt;+16&gt;:    add    %edx,%eax</span><br><span class="line"></span><br><span class="line">5       &#125;</span><br><span class="line">   0x00000000004005a8 &lt;+18&gt;:    pop    %rbp</span><br><span class="line">   0x00000000004005a9 &lt;+19&gt;:    retq</span><br><span class="line"></span><br><span class="line">End of assembler dump.</span><br><span class="line">(gdb)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h4 id="使用-disassemble-r-func-name"><a href="#使用-disassemble-r-func-name" class="headerlink" title="使用 disassemble /r func_name"></a>使用 disassemble /r func_name</h4><p>/r 还可以看到16进制代码</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">(gdb) disassemble /r main</span><br><span class="line">Dump of assembler code for function main():</span><br><span class="line">   0x00000000004005aa &lt;+0&gt;:     55      push   %rbp</span><br><span class="line">   0x00000000004005ab &lt;+1&gt;:     48 89 e5        mov    %rsp,%rbp</span><br><span class="line">   0x00000000004005ae &lt;+4&gt;:     48 83 ec 10     sub    $0x10,%rsp</span><br><span class="line">   0x00000000004005b2 &lt;+8&gt;:     be 05 00 00 00  mov    $0x5,%esi</span><br><span class="line">   0x00000000004005b7 &lt;+13&gt;:    bf 06 00 00 00  mov    $0x6,%edi</span><br><span class="line">   0x00000000004005bc &lt;+18&gt;:    e8 d5 ff ff ff  callq  0x400596 &lt;add(int, int)&gt;</span><br><span class="line">   0x00000000004005c1 &lt;+23&gt;:    89 45 fc        mov    %eax,-0x4(%rbp)</span><br><span class="line">   0x00000000004005c4 &lt;+26&gt;:    8b 45 fc        mov    -0x4(%rbp),%eax</span><br><span class="line">   0x00000000004005c7 &lt;+29&gt;:    89 c6   mov    %eax,%esi</span><br><span class="line">   0x00000000004005c9 &lt;+31&gt;:    bf 78 06 40 00  mov    $0x400678,%edi</span><br><span class="line">   0x00000000004005ce &lt;+36&gt;:    b8 00 00 00 00  mov    $0x0,%eax</span><br><span class="line">   0x00000000004005d3 &lt;+41&gt;:    e8 c8 fe ff ff  callq  0x4004a0 &lt;printf@plt&gt;</span><br><span class="line">   0x00000000004005d8 &lt;+46&gt;:    b8 00 00 00 00  mov    $0x0,%eax</span><br><span class="line">   0x00000000004005dd &lt;+51&gt;:    c9      leaveq</span><br><span class="line">   0x00000000004005de &lt;+52&gt;:    c3      retq</span><br><span class="line">End of assembler dump.</span><br><span class="line">(gdb) disassemble /r add</span><br><span class="line">Dump of assembler code for function add(int, int):</span><br><span class="line">   0x0000000000400596 &lt;+0&gt;:     55      push   %rbp</span><br><span class="line">   0x0000000000400597 &lt;+1&gt;:     48 89 e5        mov    %rsp,%rbp</span><br><span class="line">=&gt; 0x000000000040059a &lt;+4&gt;:     89 7d fc        mov    %edi,-0x4(%rbp)</span><br><span class="line">   0x000000000040059d &lt;+7&gt;:     89 75 f8        mov    %esi,-0x8(%rbp)</span><br><span class="line">   0x00000000004005a0 &lt;+10&gt;:    8b 55 fc        mov    -0x4(%rbp),%edx</span><br><span class="line">   0x00000000004005a3 &lt;+13&gt;:    8b 45 f8        mov    -0x8(%rbp),%eax</span><br><span class="line">   0x00000000004005a6 &lt;+16&gt;:    01 d0   add    %edx,%eax</span><br><span class="line">   0x00000000004005a8 &lt;+18&gt;:    5d      pop    %rbp</span><br><span class="line">   0x00000000004005a9 &lt;+19&gt;:    c3      retq</span><br><span class="line">End of assembler dump.</span><br><span class="line">(gdb)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h4 id="可以在汇编指令上加断点"><a href="#可以在汇编指令上加断点" class="headerlink" title="可以在汇编指令上加断点"></a>可以在汇编指令上加断点</h4><p>比如<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br></pre></td><td class="code"><pre><span class="line">Reading symbols from add.o...done.</span><br><span class="line">(gdb) disass /m main</span><br><span class="line">Dump of assembler code for function main():</span><br><span class="line">8       &#123;</span><br><span class="line">   0x00000000004005aa &lt;+0&gt;:     push   %rbp</span><br><span class="line">   0x00000000004005ab &lt;+1&gt;:     mov    %rsp,%rbp</span><br><span class="line">   0x00000000004005ae &lt;+4&gt;:     sub    $0x10,%rsp</span><br><span class="line"></span><br><span class="line">9               int p = add(6,5);</span><br><span class="line">   0x00000000004005b2 &lt;+8&gt;:     mov    $0x5,%esi</span><br><span class="line">   0x00000000004005b7 &lt;+13&gt;:    mov    $0x6,%edi</span><br><span class="line">   0x00000000004005bc &lt;+18&gt;:    callq  0x400596 &lt;add(int, int)&gt;</span><br><span class="line">   0x00000000004005c1 &lt;+23&gt;:    mov    %eax,-0x4(%rbp)</span><br><span class="line"></span><br><span class="line">10              printf(&quot;%d\n&quot;,p);</span><br><span class="line">   0x00000000004005c4 &lt;+26&gt;:    mov    -0x4(%rbp),%eax</span><br><span class="line">   0x00000000004005c7 &lt;+29&gt;:    mov    %eax,%esi</span><br><span class="line">   0x00000000004005c9 &lt;+31&gt;:    mov    $0x400678,%edi</span><br><span class="line">   0x00000000004005ce &lt;+36&gt;:    mov    $0x0,%eax</span><br><span class="line">   0x00000000004005d3 &lt;+41&gt;:    callq  0x4004a0 &lt;printf@plt&gt;</span><br><span class="line"></span><br><span class="line">11              return 0;</span><br><span class="line">   0x00000000004005d8 &lt;+46&gt;:    mov    $0x0,%eax</span><br><span class="line"></span><br><span class="line">12      &#125;</span><br><span class="line">   0x00000000004005dd &lt;+51&gt;:    leaveq</span><br><span class="line">   0x00000000004005de &lt;+52&gt;:    retq</span><br><span class="line"></span><br><span class="line">End of assembler dump.</span><br><span class="line">(gdb) b *0x00000000004005ab</span><br><span class="line">Breakpoint 1 at 0x4005ab: file add.cpp, line 8.</span><br><span class="line">(gdb) r</span><br><span class="line">Starting program: /root/projects/cpp/add.o</span><br><span class="line">Missing separate debuginfos, use: yum debuginfo-install glibc-2.28-101.el8.x86_64</span><br><span class="line"></span><br><span class="line">Breakpoint 1, 0x00000000004005ab in main () at add.cpp:8</span><br><span class="line">8       &#123;</span><br><span class="line">(gdb) p $rbp</span><br><span class="line">$1 = (void *) 0x4005e0 &lt;__libc_csu_init&gt;</span><br><span class="line">(gdb) p $rsp</span><br><span class="line">$2 = (void *) 0x7fffffffe420</span><br><span class="line">(gdb) si</span><br><span class="line">0x00000000004005ae      8       &#123;</span><br><span class="line">(gdb) disass main</span><br><span class="line">Dump of assembler code for function main():</span><br><span class="line">   0x00000000004005aa &lt;+0&gt;:     push   %rbp</span><br><span class="line">   0x00000000004005ab &lt;+1&gt;:     mov    %rsp,%rbp</span><br><span class="line">=&gt; 0x00000000004005ae &lt;+4&gt;:     sub    $0x10,%rsp</span><br><span class="line">   0x00000000004005b2 &lt;+8&gt;:     mov    $0x5,%esi</span><br><span class="line">   0x00000000004005b7 &lt;+13&gt;:    mov    $0x6,%edi</span><br><span class="line">   0x00000000004005bc &lt;+18&gt;:    callq  0x400596 &lt;add(int, int)&gt;</span><br><span class="line">   0x00000000004005c1 &lt;+23&gt;:    mov    %eax,-0x4(%rbp)</span><br><span class="line">   0x00000000004005c4 &lt;+26&gt;:    mov    -0x4(%rbp),%eax</span><br><span class="line">   0x00000000004005c7 &lt;+29&gt;:    mov    %eax,%esi</span><br><span class="line">   0x00000000004005c9 &lt;+31&gt;:    mov    $0x400678,%edi</span><br><span class="line">   0x00000000004005ce &lt;+36&gt;:    mov    $0x0,%eax</span><br><span class="line">   0x00000000004005d3 &lt;+41&gt;:    callq  0x4004a0 &lt;printf@plt&gt;</span><br><span class="line">   0x00000000004005d8 &lt;+46&gt;:    mov    $0x0,%eax</span><br><span class="line">   0x00000000004005dd &lt;+51&gt;:    leaveq</span><br><span class="line">   0x00000000004005de &lt;+52&gt;:    retq</span><br><span class="line">End of assembler dump.</span><br><span class="line">(gdb) p $rbp</span><br><span class="line">$4 = (void *) 0x7fffffffe420</span><br><span class="line">(gdb) si</span><br><span class="line">9               int p = add(6,5);</span><br><span class="line">(gdb) p $rsp</span><br><span class="line">$5 = (void *) 0x7fffffffe410</span><br><span class="line">(gdb)</span><br></pre></td></tr></table></figure></p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a target="_blank" rel="noopener" href="https://wiki.ubuntu.org.cn/%E7%94%A8GDB%E8%B0%83%E8%AF%95%E7%A8%8B%E5%BA%8F">用GDB调试程序</a></p>
+
+    </div>
+
+    
+    
+    
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/gdb/" rel="tag"># gdb</a>
+              <a href="/tags/c/" rel="tag"># c++</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/10/17/cpp/cpp-makefile-3/" rel="prev" title="学习MakeFile(书写规则)">
+      <i class="fa fa-chevron-left"></i> 学习MakeFile(书写规则)
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/10/17/cpp/cpp-configure/" rel="next" title="GDB 调试">
+      GDB 调试 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%95%E5%AD%90"><span class="nav-number">1.</span> <span class="nav-text">引子</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%99%E4%B8%AA%E4%BE%8B%E5%AD%90%E7%A8%8B%E5%BA%8F"><span class="nav-number">2.</span> <span class="nav-text">给个例子程序</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BC%96%E8%AF%91-gcc"><span class="nav-number">3.</span> <span class="nav-text">编译 gcc</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%9B%E5%85%A5gdb%E8%B0%83%E8%AF%95"><span class="nav-number">4.</span> <span class="nav-text">进入gdb调试</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E6%96%B9%E6%B3%95%E4%B8%80"><span class="nav-number">4.1.</span> <span class="nav-text">1. 方法一</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E6%96%B9%E6%B3%95%E4%BA%8C"><span class="nav-number">4.2.</span> <span class="nav-text">2. 方法二</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#GDB-%E5%91%BD%E4%BB%A4%E5%88%97%E8%A1%A8"><span class="nav-number">5.</span> <span class="nav-text">GDB 命令列表</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#list"><span class="nav-number">5.1.</span> <span class="nav-text">list</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#list-n"><span class="nav-number">5.1.1.</span> <span class="nav-text">list n</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#list-functionname"><span class="nav-number">5.1.2.</span> <span class="nav-text">list functionname</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#list-1"><span class="nav-number">5.1.3.</span> <span class="nav-text">list -</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#list-2"><span class="nav-number">5.1.4.</span> <span class="nav-text">list</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%AD%E7%82%B9break-b"><span class="nav-number">5.2.</span> <span class="nav-text">断点break&#x2F;b</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#break-location"><span class="nav-number">5.2.1.</span> <span class="nav-text">break location</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#info-breakpoints-%E6%9F%A5%E7%9C%8B%E6%96%AD%E7%82%B9%E7%9B%B8%E5%85%B3%E7%9A%84%E4%BF%A1%E6%81%AF"><span class="nav-number">5.2.2.</span> <span class="nav-text">info breakpoints 查看断点相关的信息</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#display-disp-%E6%9F%A5%E7%9C%8B%E5%8F%82%E6%95%B0%E5%80%BC"><span class="nav-number">5.3.</span> <span class="nav-text">display &#x2F;disp 查看参数值</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#step-next-%E5%91%BD%E4%BB%A4"><span class="nav-number">5.4.</span> <span class="nav-text">step&#x2F;next 命令</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#step-%E5%91%BD%E4%BB%A4"><span class="nav-number">5.4.1.</span> <span class="nav-text">step 命令</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#next-%E5%91%BD%E4%BB%A4"><span class="nav-number">5.4.2.</span> <span class="nav-text">next 命令</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#watch"><span class="nav-number">5.5.</span> <span class="nav-text">watch</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#print%E5%91%BD%E4%BB%A4-whatis%E5%91%BD%E4%BB%A4"><span class="nav-number">5.6.</span> <span class="nav-text">print命令 whatis命令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#set-var-name-value"><span class="nav-number">5.7.</span> <span class="nav-text">set var name&#x3D;value</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#backtrace"><span class="nav-number">5.8.</span> <span class="nav-text">backtrace</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#GDB-%E9%AB%98%E7%BA%A7%E7%94%A8%E6%B3%95"><span class="nav-number">6.</span> <span class="nav-text">GDB 高级用法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#examine-x-%E6%9F%A5%E7%9C%8B%E5%86%85%E5%AD%98"><span class="nav-number">6.1.</span> <span class="nav-text">examine&#x2F;x 查看内存</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#disassemble-disass-%E5%91%BD%E4%BB%A4"><span class="nav-number">6.2.</span> <span class="nav-text">disassemble&#x2F;disass 命令</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#disass-func-name"><span class="nav-number">6.2.1.</span> <span class="nav-text">disass func_name</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#disass-%E4%B8%8D%E5%B8%A6%E5%8F%82%E6%95%B0"><span class="nav-number">6.2.2.</span> <span class="nav-text">disass 不带参数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#disassemble-0%C3%970-0%C3%9710"><span class="nav-number">6.2.3.</span> <span class="nav-text">disassemble 0×0, 0×10</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B%E5%86%85%E5%AD%98%E4%B8%AD%E7%9A%84%E6%B1%87%E7%BC%96%E4%BB%A3%E7%A0%81"><span class="nav-number">6.2.4.</span> <span class="nav-text">查看内存中的汇编代码</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8-disassemble-m-func-name"><span class="nav-number">6.2.5.</span> <span class="nav-text">使用 disassemble &#x2F;m func_name</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8-disassemble-r-func-name"><span class="nav-number">6.2.6.</span> <span class="nav-text">使用 disassemble &#x2F;r func_name</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8F%AF%E4%BB%A5%E5%9C%A8%E6%B1%87%E7%BC%96%E6%8C%87%E4%BB%A4%E4%B8%8A%E5%8A%A0%E6%96%AD%E7%82%B9"><span class="nav-number">6.2.7.</span> <span class="nav-text">可以在汇编指令上加断点</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83"><span class="nav-number">7.</span> <span class="nav-text">参考</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Chester.C</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">143</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">32</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">67</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Chester.C</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+if (document.querySelectorAll('pre.mermaid').length) {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mermaid@8/dist/mermaid.min.js', () => {
+    mermaid.initialize({
+      theme    : 'forest',
+      logLevel : 3,
+      flowchart: { curve     : 'linear' },
+      gantt    : { axisFormat: '%m/%d/%Y' },
+      sequence : { actorMargin: 50 }
+    });
+  }, window.mermaid);
+}
+</script>
+
+
+  
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'OQBlgU8H1seTDvVrgC3Dhni0-gzGzoHsz',
+      appKey     : 'wF7D3hVD9WjlV9V52bhlymHO',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : true,
+      lang       : 'zh-cn' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>

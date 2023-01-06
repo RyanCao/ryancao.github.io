@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.2">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <link rel="amphtml" href="./amp/">
+  <meta name="baidu-site-verification" content="code-mUG0UNAPhR">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"blog.rcant.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="起因将MarkDown扩展 适应更多编辑的需要 配置环境 Node Git  数学符号插件 mathjax1. 安装插件12npm un hexo-renderer-marked  &#x2F;&#x2F; 删除默认markdown渲染模板npm i hexo-renderer-pandoc  &#x2F;&#x2F; 使用 pandoc 模板 我使用pandoc 模板渲染有问题，估计是pandoc和我的next,hexo 版本不兼容">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hexo MarkDown 扩展">
+<meta property="og:url" content="http://blog.rcant.com/2017/03/06/hexo/hexo-markdown-extends/index.html">
+<meta property="og:site_name" content="Chester.Cao Blog">
+<meta property="og:description" content="起因将MarkDown扩展 适应更多编辑的需要 配置环境 Node Git  数学符号插件 mathjax1. 安装插件12npm un hexo-renderer-marked  &#x2F;&#x2F; 删除默认markdown渲染模板npm i hexo-renderer-pandoc  &#x2F;&#x2F; 使用 pandoc 模板 我使用pandoc 模板渲染有问题，估计是pandoc和我的next,hexo 版本不兼容">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2017-03-06T09:40:07.000Z">
+<meta property="article:modified_time" content="2023-01-06T09:38:02.633Z">
+<meta property="article:author" content="Chester.C">
+<meta property="article:tag" content="hexo">
+<meta property="article:tag" content="markdown">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://blog.rcant.com/2017/03/06/hexo/hexo-markdown-extends/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Hexo MarkDown 扩展 | Chester.Cao Blog</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?974592ac4c5733a52af2b871678a5334";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Chester.Cao Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Chester.Cao Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Devlopper in C#</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-topics">
+
+    <a href="/topics/" rel="section"><i class="fa fa-fw fa-pencil"></i>主题</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://blog.rcant.com/2017/03/06/hexo/hexo-markdown-extends/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Chester.C">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chester.Cao Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Hexo MarkDown 扩展
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2017-03-06 17:40:07" itemprop="dateCreated datePublished" datetime="2017-03-06T17:40:07+08:00">2017-03-06</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-01-06 17:38:02" itemprop="dateModified" datetime="2023-01-06T17:38:02+08:00">2023-01-06</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/hexo/" itemprop="url" rel="index"><span itemprop="name">hexo</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2017/03/06/hexo/hexo-markdown-extends/" class="post-meta-item leancloud_visitors" data-flag-title="Hexo MarkDown 扩展" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2017/03/06/hexo/hexo-markdown-extends/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2017/03/06/hexo/hexo-markdown-extends/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="起因"><a href="#起因" class="headerlink" title="起因"></a>起因</h2><p>将MarkDown扩展 适应更多编辑的需要</p>
+<h2 id="配置环境"><a href="#配置环境" class="headerlink" title="配置环境"></a>配置环境</h2><ul>
+<li>Node</li>
+<li>Git</li>
+</ul>
+<h3 id="数学符号"><a href="#数学符号" class="headerlink" title="数学符号"></a>数学符号</h3><h4 id="插件-mathjax"><a href="#插件-mathjax" class="headerlink" title="插件 mathjax"></a>插件 mathjax</h4><h4 id="1-安装插件"><a href="#1-安装插件" class="headerlink" title="1. 安装插件"></a>1. 安装插件</h4><figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">npm un hexo-renderer-marked  // 删除默认markdown渲染模板</span><br><span class="line">npm i hexo-renderer-pandoc  // 使用 pandoc 模板</span><br></pre></td></tr></table></figure>
+<p>我使用pandoc 模板渲染有问题，估计是pandoc和我的next,hexo 版本不兼容</p>
+<p>使用kramed 没问题</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">npm un hexo-renderer-marked  // 删除默认markdown渲染模板</span><br><span class="line">npm i hexo-renderer-kramed  // 使用 kramed 模板</span><br></pre></td></tr></table></figure>
+<span id="more"></span>
+<h4 id="2-修改-主题配置-site-themes-next-config-yml"><a href="#2-修改-主题配置-site-themes-next-config-yml" class="headerlink" title="2. 修改 主题配置 site/themes/next/_config.yml"></a>2. 修改 主题配置 <strong>site/themes/next/_config.yml</strong></h4><figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="section"># Math Formulas Render Support</span></span><br><span class="line">math:</span><br><span class="line">  # Default (true) will load mathjax / katex script on demand.</span><br><span class="line">  # That is it only render those page which has <span class="code">`mathjax: true`</span> in Front-matter.</span><br><span class="line">  # If you set it to false, it will load mathjax / katex srcipt EVERY PAGE.</span><br><span class="line">  per<span class="emphasis">_page: true</span></span><br><span class="line"><span class="emphasis"></span></span><br><span class="line"><span class="emphasis">  # hexo-renderer-pandoc (or hexo-renderer-kramed) required for full MathJax support.</span></span><br><span class="line"><span class="emphasis">  mathjax:</span></span><br><span class="line"><span class="emphasis">    enable: true</span></span><br><span class="line"><span class="emphasis">    # See: https://mhchem.github.io/MathJax-mhchem/</span></span><br><span class="line"><span class="emphasis">    mhchem: false</span></span><br><span class="line"><span class="emphasis"></span></span><br><span class="line"><span class="emphasis">  # hexo-renderer-markdown-it-plus (or hexo-renderer-markdown-it with markdown-it-katex plugin) required for full Katex support.</span></span><br><span class="line"><span class="emphasis">  katex:</span></span><br><span class="line"><span class="emphasis">    enable: false</span></span><br><span class="line"><span class="emphasis">    # See: https://github.com/KaTeX/KaTeX/tree/master/contrib/copy-tex</span></span><br><span class="line"><span class="emphasis">    copy_</span>tex: false</span><br></pre></td></tr></table></figure>
+<h4 id="3-Post中声明使用-mathjax"><a href="#3-Post中声明使用-mathjax" class="headerlink" title="3. Post中声明使用 mathjax"></a>3. Post中声明使用 mathjax</h4><p>如下：</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">---</span><br><span class="line">title: On the Electrodynamics of Moving Bodies</span><br><span class="line">categories: Physics</span><br><span class="line">date: 1905-06-30 12:00:00</span><br><span class="line"><span class="section">mathjax: true</span></span><br><span class="line"><span class="section">---</span></span><br></pre></td></tr></table></figure>
+<h4 id="4-书写规范-示例"><a href="#4-书写规范-示例" class="headerlink" title="4. 书写规范 示例"></a>4. 书写规范 示例</h4><figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">$$</span><br><span class="line">i\hbar\frac&#123;\partial&#125;&#123;\partial t&#125;\psi=-\frac&#123;\hbar^2&#125;&#123;2m&#125;\nabla^2\psi+V\psi</span><br><span class="line">$$</span><br><span class="line"></span><br><span class="line">\begin&#123;eqnarray\<span class="emphasis">*&#125;</span></span><br><span class="line"><span class="emphasis">\nabla\cdot\vec&#123;E&#125;&amp;=&amp;\frac&#123;\rho&#125;&#123;\epsilon_0&#125;\\\\</span></span><br><span class="line"><span class="emphasis">\nabla\cdot\vec&#123;B&#125;&amp;=&amp;0\\\\</span></span><br><span class="line"><span class="emphasis">\nabla\times\vec&#123;E&#125;&amp;=&amp;-\frac&#123;\partial B&#125;&#123;\partial t&#125;\\\\</span></span><br><span class="line"><span class="emphasis">\nabla\times\vec&#123;B&#125;&amp;=&amp;\mu_0\left(\vec&#123;J&#125;+\epsilon_0\frac&#123;\partial E&#125;&#123;\partial t&#125;\right)\\\\</span></span><br><span class="line"><span class="emphasis">\end&#123;eqnarray\*</span>&#125;</span><br></pre></td></tr></table></figure>
+<script type="math/tex; mode=display">
+i\hbar\frac{\partial}{\partial t}\psi=-\frac{\hbar^2}{2m}\nabla^2\psi+V\psi</script><p>\begin{eqnarray*}<br>\nabla\cdot\vec{E}&amp;=&amp;\frac{\rho}{\epsilon_0}\\<br>\nabla\cdot\vec{B}&amp;=&amp;0\\<br>\nabla\times\vec{E}&amp;=&amp;-\frac{\partial B}{\partial t}\\<br>\nabla\times\vec{B}&amp;=&amp;\mu_0\left(\vec{J}+\epsilon_0\frac{\partial E}{\partial t}\right)\\<br>\end{eqnarray*}</p>
+<h4 id="插件KaTeX（未尝试）"><a href="#插件KaTeX（未尝试）" class="headerlink" title="插件KaTeX（未尝试）"></a>插件KaTeX（未尝试）</h4><p>据说比 MathJax 效率高，但支持度不如MathJax</p>
+<h4 id="1-安装插件-1"><a href="#1-安装插件-1" class="headerlink" title="1.  安装插件"></a>1.  安装插件</h4><figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">npm un hexo-renderer-marked --save  // 删除默认markdown渲染模板</span><br><span class="line">npm i hexo-renderer-markdown-it-plus --save // 使用markdown-it-plus 渲染</span><br></pre></td></tr></table></figure>
+<h4 id="2-修改主题配置文件-next-config-yml"><a href="#2-修改主题配置文件-next-config-yml" class="headerlink" title="2. 修改主题配置文件 next/_config.yml"></a>2. 修改主题配置文件 next/_config.yml</h4><figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="section"># Math Formulas Render Support</span></span><br><span class="line">math:</span><br><span class="line">  enable: true</span><br><span class="line">  # Default (true) will load mathjax / katex script on demand.</span><br><span class="line">  # That is it only render those page which has <span class="code">`mathjax: true`</span> in Front-matter.</span><br><span class="line">  # If you set it to false, it will load mathjax / katex srcipt EVERY PAGE.</span><br><span class="line">  per<span class="emphasis">_page: true #如果这个选项是false，那么每一个网页都会引入公式渲染，这是很浪费的，只需要在需要公式渲染功能的博文md文件的头部，添加一行`mathjax: true`(使用Katex引擎渲染也是在文件头部标记`mathjax: true`，表示支持公式)</span></span><br><span class="line"><span class="emphasis">  engine: Katex</span></span><br><span class="line"><span class="emphasis">  #engine: mathjax</span></span><br><span class="line"><span class="emphasis">  # hexo-renderer-pandoc (or hexo-renderer-kramed) required for full MathJax support.</span></span><br><span class="line"><span class="emphasis">  mathjax:</span></span><br><span class="line"><span class="emphasis">    enable: false</span></span><br><span class="line"><span class="emphasis">    # See: https://mhchem.github.io/MathJax-mhchem/</span></span><br><span class="line"><span class="emphasis">    mhchem: false</span></span><br><span class="line"><span class="emphasis"></span></span><br><span class="line"><span class="emphasis">  # hexo-renderer-markdown-it-plus (or hexo-renderer-markdown-it with markdown-it-katex plugin) required for full Katex support.</span></span><br><span class="line"><span class="emphasis">  katex:</span></span><br><span class="line"><span class="emphasis">    enable: true</span></span><br><span class="line"><span class="emphasis">    # See: https://github.com/KaTeX/KaTeX/tree/master/contrib/copy-tex</span></span><br><span class="line"><span class="emphasis">    copy_</span>tex: false</span><br></pre></td></tr></table></figure>
+<h3 id="流程图-flow-charts"><a href="#流程图-flow-charts" class="headerlink" title="流程图 flow charts"></a>流程图 flow charts</h3><h4 id="1-安装"><a href="#1-安装" class="headerlink" title="1. 安装"></a>1. 安装</h4><figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install --save hexo-filter-flowchart</span><br></pre></td></tr></table></figure>
+<h4 id="2-修改配置文件-sitre-config-yml"><a href="#2-修改配置文件-sitre-config-yml" class="headerlink" title="2. 修改配置文件 sitre/_config.yml"></a>2. 修改配置文件 sitre/_config.yml</h4><figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">flowchart:</span><br><span class="line">  # raphael:   # optional, the source url of raphael.js</span><br><span class="line">  # flowchart: # optional, the source url of flowchart.js</span><br><span class="line">  options: # options used for <span class="code">`drawSVG`</span></span><br></pre></td></tr></table></figure>
+<h4 id="3-使用声明"><a href="#3-使用声明" class="headerlink" title="3. 使用声明"></a>3. 使用声明</h4><p>在markdown中使用 需要将代码声明在 <strong>flow</strong> 代码块中</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">(<span class="code">```)flow</span></span><br><span class="line"><span class="code">code</span></span><br><span class="line"><span class="code">(```</span>)</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>请忽略括号，这里是为了防止转义</p>
+</blockquote>
+<h4 id="4-使用示例"><a href="#4-使用示例" class="headerlink" title="4. 使用示例"></a>4. 使用示例</h4><figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">st=&gt;start: Start|past:&gt;http://www.google.com[blank]</span><br><span class="line">e=&gt;end: End:&gt;http://www.google.com</span><br><span class="line">op1=&gt;operation: My Operation|past</span><br><span class="line">op2=&gt;operation: Stuff|current</span><br><span class="line">sub1=&gt;subroutine: My Subroutine|invalid</span><br><span class="line">cond=&gt;condition: Yes</span><br><span class="line">or No?|approved:&gt;http://www.google.com</span><br><span class="line">c2=&gt;condition: Good idea|rejected</span><br><span class="line">io=&gt;inputoutput: catch something...|request</span><br><span class="line"></span><br><span class="line">st-&gt;op1(right)-&gt;cond</span><br><span class="line">cond(yes, right)-&gt;c2</span><br><span class="line">cond(no)-&gt;sub1(left)-&gt;op1</span><br><span class="line">c2(yes)-&gt;io-&gt;e</span><br><span class="line">c2(no)-&gt;op2-&gt;e</span><br></pre></td></tr></table></figure>
+<p>效果</p>
+<div id="flowchart-0" class="flow-chart"></div>
+
+<h3 id="Sequence-Diagrams（未尝试）"><a href="#Sequence-Diagrams（未尝试）" class="headerlink" title="Sequence Diagrams（未尝试）"></a>Sequence Diagrams（未尝试）</h3><h4 id="1-安装-1"><a href="#1-安装-1" class="headerlink" title="1.  安装"></a>1.  安装</h4><figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install --save hexo-filter-sequence</span><br></pre></td></tr></table></figure>
+<h4 id="2-修改配置-site-config-yml"><a href="#2-修改配置-site-config-yml" class="headerlink" title="2. 修改配置 site/_config.yml"></a>2. 修改配置 site/_config.yml</h4><figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">sequence:</span><br><span class="line">  # webfont:     # optional, the source url of webfontloader.js</span><br><span class="line">  # snap:        # optional, the source url of snap.svg.js</span><br><span class="line">  # underscore:  # optional, the source url of underscore.js</span><br><span class="line">  # sequence:    # optional, the source url of sequence-diagram.js</span><br><span class="line">  # css: # optional, the url for css, such as hand drawn theme </span><br><span class="line">  options: </span><br><span class="line"><span class="code">    theme: </span></span><br><span class="line"><span class="code">    css_class: </span></span><br></pre></td></tr></table></figure>
+<h4 id="3-Sequence声明"><a href="#3-Sequence声明" class="headerlink" title="3. Sequence声明"></a>3. Sequence声明</h4><p>在markdown中使用 需要将代码声明在 <strong>sequence</strong> 代码块中</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">(<span class="code">```)sequence</span></span><br><span class="line"><span class="code">code</span></span><br><span class="line"><span class="code">(```</span>)</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>请忽略括号，这里是为了防止转义</p>
+</blockquote>
+<h4 id="4-代码示例"><a href="#4-代码示例" class="headerlink" title="4. 代码示例"></a>4. 代码示例</h4><figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Alice-&gt;Bob: Hello Bob, how are you?</span><br><span class="line">Note right of Bob: Bob thinks</span><br><span class="line">Bob--&gt;Alice: I am good thanks!</span><br></pre></td></tr></table></figure>
+<p>效果</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Alice-&gt;Bob: Hello Bob, how are you?</span><br><span class="line">Note right of Bob: Bob thinks</span><br><span class="line">Bob--&gt;Alice: I am good thanks!</span><br></pre></td></tr></table></figure>
+<h3 id="流程图时序图-Mermaid"><a href="#流程图时序图-Mermaid" class="headerlink" title="流程图时序图 Mermaid"></a>流程图时序图 Mermaid</h3><h4 id="1-安装-2"><a href="#1-安装-2" class="headerlink" title="1.   安装"></a>1.   安装</h4><figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install hexo-filter-mermaid-diagrams</span><br></pre></td></tr></table></figure>
+<h4 id="2-修改配置-site-themes-next-config-yml"><a href="#2-修改配置-site-themes-next-config-yml" class="headerlink" title="2. 修改配置 site/themes/next/_config.yml"></a>2. 修改配置 site/themes/next/_config.yml</h4><figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="section"># Mermaid tag</span></span><br><span class="line">mermaid:</span><br><span class="line">  enable: true</span><br><span class="line">  # Available themes: default | dark | forest | neutral</span><br><span class="line">  theme: forest</span><br></pre></td></tr></table></figure>
+<h4 id="3-Mermaid声明"><a href="#3-Mermaid声明" class="headerlink" title="3. Mermaid声明"></a>3. Mermaid声明</h4><p>在markdown中使用 需要将代码声明在 <strong>mermaid</strong> 代码块中</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">(<span class="code">```)mermaid</span></span><br><span class="line"><span class="code">code</span></span><br><span class="line"><span class="code">(```</span>)</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>请忽略括号，这里是为了防止转义</p>
+</blockquote>
+<h4 id="4-示例"><a href="#4-示例" class="headerlink" title="4. 示例"></a>4. 示例</h4><h5 id="流程图"><a href="#流程图" class="headerlink" title="流程图"></a>流程图</h5><figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">graph TD;</span><br><span class="line"><span class="code">    A--&gt;B;</span></span><br><span class="line"><span class="code">    A--&gt;C;</span></span><br><span class="line"><span class="code">    B--&gt;D;</span></span><br><span class="line"><span class="code">    C--&gt;D;</span></span><br></pre></td></tr></table></figure>
+<p>效果图</p>
+<pre class="mermaid">graph TD;
+    A-->B;
+    A-->C;
+    B-->D;
+    C-->D;</pre>
+
+<h5 id="时序图"><a href="#时序图" class="headerlink" title="时序图"></a>时序图</h5><figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">sequenceDiagram</span><br><span class="line"><span class="code">    participant Alice</span></span><br><span class="line"><span class="code">    participant Bob</span></span><br><span class="line"><span class="code">    Alice-&gt;&gt;John: Hello John, how are you?</span></span><br><span class="line"><span class="code">    loop Healthcheck</span></span><br><span class="line"><span class="code">        John-&gt;&gt;John: Fight against hypochondria</span></span><br><span class="line"><span class="code">    end</span></span><br><span class="line"><span class="code">    Note right of John: Rational thoughts &lt;br/&gt;prevail...</span></span><br><span class="line"><span class="code">    John--&gt;&gt;Alice: Great!</span></span><br><span class="line"><span class="code">    John-&gt;&gt;Bob: How about you?</span></span><br><span class="line"><span class="code">    Bob--&gt;&gt;John: Jolly good!</span></span><br></pre></td></tr></table></figure>
+<p>效果图</p>
+<pre class="mermaid">sequenceDiagram
+    participant Alice
+    participant Bob
+    Alice->>John: Hello John, how are you?
+    loop Healthcheck
+        John->>John: Fight against hypochondria
+    end
+    Note right of John: Rational thoughts <br/>prevail...
+    John-->>Alice: Great!
+    John->>Bob: How about you?
+    Bob-->>John: Jolly good!</pre>
+
+<h5 id="甘特图"><a href="#甘特图" class="headerlink" title="甘特图"></a>甘特图</h5><figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">gantt</span><br><span class="line">dateFormat  YYYY-MM-DD</span><br><span class="line">title Adding GANTT diagram to mermaid</span><br><span class="line"></span><br><span class="line">section A section</span><br><span class="line">Completed task            :done,    des1, 2014-01-06,2014-01-08</span><br><span class="line">Active task               :active,  des2, 2014-01-09, 3d</span><br><span class="line">Future task               :         des3, after des2, 5d</span><br><span class="line">Future task2               :         des4, after des3, 5d</span><br></pre></td></tr></table></figure>
+<p>效果图</p>
+<pre class="mermaid">gantt
+dateFormat  YYYY-MM-DD
+title Adding GANTT diagram to mermaid
+
+section A section
+Completed task            :done,    des1, 2014-01-06,2014-01-08
+Active task               :active,  des2, 2014-01-09, 3d
+Future task               :         des3, after des2, 5d
+Future task2               :         des4, after des3, 5d</pre>
+
+<h5 id="类图"><a href="#类图" class="headerlink" title="类图"></a>类图</h5><figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">classDiagram</span><br><span class="line">Class01 &lt;|-- AveryLongClass : Cool</span><br><span class="line">Class03 <span class="emphasis">*-- Class04</span></span><br><span class="line"><span class="emphasis">Class05 o-- Class06</span></span><br><span class="line"><span class="emphasis">Class07 .. Class08</span></span><br><span class="line"><span class="emphasis">Class09 --&gt; C2 : Where am i?</span></span><br><span class="line"><span class="emphasis">Class09 --*</span> C3</span><br><span class="line">Class09 --|&gt; Class07</span><br><span class="line">Class07 : equals()</span><br><span class="line">Class07 : Object[] elementData</span><br><span class="line">Class01 : size()</span><br><span class="line">Class01 : int chimp</span><br><span class="line">Class01 : int gorilla</span><br><span class="line">Class08 &lt;--&gt; C2: Cool label</span><br></pre></td></tr></table></figure>
+<p>效果</p>
+<pre class="mermaid">classDiagram
+Class01 <|-- AveryLongClass : Cool
+Class03 *-- Class04
+Class05 o-- Class06
+Class07 .. Class08
+Class09 --> C2 : Where am i?
+Class09 --* C3
+Class09 --|> Class07
+Class07 : equals()
+Class07 : Object[] elementData
+Class01 : size()
+Class01 : int chimp
+Class01 : int gorilla
+Class08 <--> C2: Cool label</pre>
+
+<h5 id="git-图形"><a href="#git-图形" class="headerlink" title="git 图形"></a>git 图形</h5><figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">gitGraph:</span><br><span class="line">options</span><br><span class="line">&#123;</span><br><span class="line"><span class="code">    &quot;nodeSpacing&quot;: 150,</span></span><br><span class="line"><span class="code">    &quot;nodeRadius&quot;: 10</span></span><br><span class="line"><span class="code">&#125;</span></span><br><span class="line"><span class="code">end</span></span><br><span class="line"><span class="code">commit</span></span><br><span class="line"><span class="code">branch newbranch</span></span><br><span class="line"><span class="code">checkout newbranch</span></span><br><span class="line"><span class="code">commit</span></span><br><span class="line"><span class="code">commit</span></span><br><span class="line"><span class="code">checkout master</span></span><br><span class="line"><span class="code">commit</span></span><br><span class="line"><span class="code">commit</span></span><br><span class="line"><span class="code">merge newbranch</span></span><br></pre></td></tr></table></figure>
+<p>效果</p>
+<pre class="mermaid">gitGraph:
+options
+{
+    "nodeSpacing": 150,
+    "nodeRadius": 10
+}
+end
+commit
+branch newbranch
+checkout newbranch
+commit
+commit
+checkout master
+commit
+commit
+merge newbranch</pre>
+
+<p><a target="_blank" rel="noopener" href="https://github.com/webappdevelp/hexo-filter-mermaid-diagrams">参考</a></p>
+<h3 id="PlantUML"><a href="#PlantUML" class="headerlink" title="PlantUML"></a>PlantUML</h3><h2 id="Hexo博客系列"><a href="#Hexo博客系列" class="headerlink" title="Hexo博客系列"></a>Hexo博客系列</h2><ul>
+<li><a href="/2017/03/01/hexo/hexo-firstblog/" title="Hexo博客搭建">Hexo博客搭建</a>  </li>
+<li><a href="/2017/03/01/hexo/hexo-secordblog/" title="Hexo更换博客样式">Hexo更换博客样式</a>  </li>
+<li><a href="/2017/03/03/hexo/hexo-updatenode/" title="Hexo升级Node版本">Hexo升级Node版本</a>  </li>
+<li><a href="/2017/03/04/hexo/hexo-amp-enable/" title="Hexo AMP 支持">Hexo AMP 支持</a>  </li>
+<li><a href="/2017/03/03/others/markdown-first/" title="MarkDown语法">MarkDown语法</a></li>
+<li><a href="/2017/03/06/hexo/hexo-markdown-extends/" title="Hexo-MarkDown扩展">Hexo-MarkDown扩展</a>  </li>
+<li><a href="/2017/03/07/hexo/hexo-flags/" title="Hexo 标签插件的使用">Hexo 标签插件的使用</a>  </li>
+<li><a href="/2017/03/10/hexo/hexo-mermaid/" title="Mermaid 使用指南">Mermaid 使用指南</a>  </li>
+<li><a href="/2017/03/11/hexo/hexo-plugins/" title="Hexo 插件添加">Hexo 插件添加</a> <script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.2.7/raphael.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/flowchart/1.6.5/flowchart.min.js"></script><textarea id="flowchart-0-code" style="display: none">st=>start: Start|past:>http://www.google.com[blank]
+e=>end: End:>http://www.google.com
+op1=>operation: My Operation|past
+op2=>operation: Stuff|current
+sub1=>subroutine: My Subroutine|invalid
+cond=>condition: Yes
+or No?|approved:>http://www.google.com
+c2=>condition: Good idea|rejected
+io=>inputoutput: catch something...|request
+
+st->op1(right)->cond
+cond(yes, right)->c2
+cond(no)->sub1(left)->op1
+c2(yes)->io->e
+c2(no)->op2->e</textarea><textarea id="flowchart-0-options" style="display: none">{"scale":1,"line-width":2,"line-length":50,"text-margin":10,"font-size":12}</textarea><script>  var code = document.getElementById("flowchart-0-code").value;  var options = JSON.parse(decodeURIComponent(document.getElementById("flowchart-0-options").value));  var diagram = flowchart.parse(code);  diagram.drawSVG("flowchart-0", options);</script></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/hexo/" rel="tag"># hexo</a>
+              <a href="/tags/markdown/" rel="tag"># markdown</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2017/03/04/hexo/hexo-amp-enable/" rel="prev" title="Hexo Amp 支持">
+      <i class="fa fa-chevron-left"></i> Hexo Amp 支持
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2017/03/07/hexo/hexo-flags/" rel="next" title="Hexo 标签插件的使用">
+      Hexo 标签插件的使用 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B5%B7%E5%9B%A0"><span class="nav-number">1.</span> <span class="nav-text">起因</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E7%8E%AF%E5%A2%83"><span class="nav-number">2.</span> <span class="nav-text">配置环境</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E5%AD%A6%E7%AC%A6%E5%8F%B7"><span class="nav-number">2.1.</span> <span class="nav-text">数学符号</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8F%92%E4%BB%B6-mathjax"><span class="nav-number">2.1.1.</span> <span class="nav-text">插件 mathjax</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-%E5%AE%89%E8%A3%85%E6%8F%92%E4%BB%B6"><span class="nav-number">2.1.2.</span> <span class="nav-text">1. 安装插件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-%E4%BF%AE%E6%94%B9-%E4%B8%BB%E9%A2%98%E9%85%8D%E7%BD%AE-site-themes-next-config-yml"><span class="nav-number">2.1.3.</span> <span class="nav-text">2. 修改 主题配置 site&#x2F;themes&#x2F;next&#x2F;_config.yml</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-Post%E4%B8%AD%E5%A3%B0%E6%98%8E%E4%BD%BF%E7%94%A8-mathjax"><span class="nav-number">2.1.4.</span> <span class="nav-text">3. Post中声明使用 mathjax</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-%E4%B9%A6%E5%86%99%E8%A7%84%E8%8C%83-%E7%A4%BA%E4%BE%8B"><span class="nav-number">2.1.5.</span> <span class="nav-text">4. 书写规范 示例</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8F%92%E4%BB%B6KaTeX%EF%BC%88%E6%9C%AA%E5%B0%9D%E8%AF%95%EF%BC%89"><span class="nav-number">2.1.6.</span> <span class="nav-text">插件KaTeX（未尝试）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-%E5%AE%89%E8%A3%85%E6%8F%92%E4%BB%B6-1"><span class="nav-number">2.1.7.</span> <span class="nav-text">1.  安装插件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-%E4%BF%AE%E6%94%B9%E4%B8%BB%E9%A2%98%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6-next-config-yml"><span class="nav-number">2.1.8.</span> <span class="nav-text">2. 修改主题配置文件 next&#x2F;_config.yml</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B5%81%E7%A8%8B%E5%9B%BE-flow-charts"><span class="nav-number">2.2.</span> <span class="nav-text">流程图 flow charts</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-%E5%AE%89%E8%A3%85"><span class="nav-number">2.2.1.</span> <span class="nav-text">1. 安装</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-%E4%BF%AE%E6%94%B9%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6-sitre-config-yml"><span class="nav-number">2.2.2.</span> <span class="nav-text">2. 修改配置文件 sitre&#x2F;_config.yml</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-%E4%BD%BF%E7%94%A8%E5%A3%B0%E6%98%8E"><span class="nav-number">2.2.3.</span> <span class="nav-text">3. 使用声明</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-%E4%BD%BF%E7%94%A8%E7%A4%BA%E4%BE%8B"><span class="nav-number">2.2.4.</span> <span class="nav-text">4. 使用示例</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Sequence-Diagrams%EF%BC%88%E6%9C%AA%E5%B0%9D%E8%AF%95%EF%BC%89"><span class="nav-number">2.3.</span> <span class="nav-text">Sequence Diagrams（未尝试）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-%E5%AE%89%E8%A3%85-1"><span class="nav-number">2.3.1.</span> <span class="nav-text">1.  安装</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-%E4%BF%AE%E6%94%B9%E9%85%8D%E7%BD%AE-site-config-yml"><span class="nav-number">2.3.2.</span> <span class="nav-text">2. 修改配置 site&#x2F;_config.yml</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-Sequence%E5%A3%B0%E6%98%8E"><span class="nav-number">2.3.3.</span> <span class="nav-text">3. Sequence声明</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-%E4%BB%A3%E7%A0%81%E7%A4%BA%E4%BE%8B"><span class="nav-number">2.3.4.</span> <span class="nav-text">4. 代码示例</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B5%81%E7%A8%8B%E5%9B%BE%E6%97%B6%E5%BA%8F%E5%9B%BE-Mermaid"><span class="nav-number">2.4.</span> <span class="nav-text">流程图时序图 Mermaid</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-%E5%AE%89%E8%A3%85-2"><span class="nav-number">2.4.1.</span> <span class="nav-text">1.   安装</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-%E4%BF%AE%E6%94%B9%E9%85%8D%E7%BD%AE-site-themes-next-config-yml"><span class="nav-number">2.4.2.</span> <span class="nav-text">2. 修改配置 site&#x2F;themes&#x2F;next&#x2F;_config.yml</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-Mermaid%E5%A3%B0%E6%98%8E"><span class="nav-number">2.4.3.</span> <span class="nav-text">3. Mermaid声明</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-%E7%A4%BA%E4%BE%8B"><span class="nav-number">2.4.4.</span> <span class="nav-text">4. 示例</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%B5%81%E7%A8%8B%E5%9B%BE"><span class="nav-number">2.4.4.1.</span> <span class="nav-text">流程图</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%97%B6%E5%BA%8F%E5%9B%BE"><span class="nav-number">2.4.4.2.</span> <span class="nav-text">时序图</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%94%98%E7%89%B9%E5%9B%BE"><span class="nav-number">2.4.4.3.</span> <span class="nav-text">甘特图</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%B1%BB%E5%9B%BE"><span class="nav-number">2.4.4.4.</span> <span class="nav-text">类图</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#git-%E5%9B%BE%E5%BD%A2"><span class="nav-number">2.4.4.5.</span> <span class="nav-text">git 图形</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#PlantUML"><span class="nav-number">2.5.</span> <span class="nav-text">PlantUML</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Hexo%E5%8D%9A%E5%AE%A2%E7%B3%BB%E5%88%97"><span class="nav-number">3.</span> <span class="nav-text">Hexo博客系列</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Chester.C</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">143</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">32</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">67</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Chester.C</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+if (document.querySelectorAll('pre.mermaid').length) {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mermaid@8/dist/mermaid.min.js', () => {
+    mermaid.initialize({
+      theme    : 'forest',
+      logLevel : 3,
+      flowchart: { curve     : 'linear' },
+      gantt    : { axisFormat: '%m/%d/%Y' },
+      sequence : { actorMargin: 50 }
+    });
+  }, window.mermaid);
+}
+</script>
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'OQBlgU8H1seTDvVrgC3Dhni0-gzGzoHsz',
+      appKey     : 'wF7D3hVD9WjlV9V52bhlymHO',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : true,
+      lang       : 'zh-cn' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>

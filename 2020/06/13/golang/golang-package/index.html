@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.2">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <link rel="amphtml" href="./amp/">
+  <meta name="baidu-site-verification" content="code-mUG0UNAPhR">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"blog.rcant.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="Window 上建立Golang开发环境记录 govendor1. govendor简介golang工程的依赖包经常使用go get命令来获取，例如：go get github.com&#x2F;kardianos&#x2F;govendor ，会将依赖包下载到GOPATH的路径下。 常用的依赖包管理工具有godep，govendor等，在Golang1.5之后，Go提供了 GO15VENDOREXPERIMENT">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Golang包管理工具govendor的使用&amp;go mod">
+<meta property="og:url" content="http://blog.rcant.com/2020/06/13/golang/golang-package/index.html">
+<meta property="og:site_name" content="Chester.Cao Blog">
+<meta property="og:description" content="Window 上建立Golang开发环境记录 govendor1. govendor简介golang工程的依赖包经常使用go get命令来获取，例如：go get github.com&#x2F;kardianos&#x2F;govendor ，会将依赖包下载到GOPATH的路径下。 常用的依赖包管理工具有godep，govendor等，在Golang1.5之后，Go提供了 GO15VENDOREXPERIMENT">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-06-13T06:40:07.000Z">
+<meta property="article:modified_time" content="2023-01-06T09:37:32.434Z">
+<meta property="article:author" content="Chester.C">
+<meta property="article:tag" content="golang">
+<meta property="article:tag" content="vscode">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://blog.rcant.com/2020/06/13/golang/golang-package/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Golang包管理工具govendor的使用&go mod | Chester.Cao Blog</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?974592ac4c5733a52af2b871678a5334";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Chester.Cao Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Chester.Cao Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Devlopper in C#</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-topics">
+
+    <a href="/topics/" rel="section"><i class="fa fa-fw fa-pencil"></i>主题</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://blog.rcant.com/2020/06/13/golang/golang-package/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Chester.C">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chester.Cao Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Golang包管理工具govendor的使用&go mod
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-06-13 14:40:07" itemprop="dateCreated datePublished" datetime="2020-06-13T14:40:07+08:00">2020-06-13</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-01-06 17:37:32" itemprop="dateModified" datetime="2023-01-06T17:37:32+08:00">2023-01-06</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/golang/" itemprop="url" rel="index"><span itemprop="name">golang</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2020/06/13/golang/golang-package/" class="post-meta-item leancloud_visitors" data-flag-title="Golang包管理工具govendor的使用&go mod" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2020/06/13/golang/golang-package/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/06/13/golang/golang-package/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>Window 上建立Golang开发环境记录</p>
+<h2 id="govendor"><a href="#govendor" class="headerlink" title="govendor"></a>govendor</h2><h3 id="1-govendor简介"><a href="#1-govendor简介" class="headerlink" title="1. govendor简介"></a>1. govendor简介</h3><p>golang工程的依赖包经常使用go get命令来获取，例如：go get github.com/kardianos/govendor ，会将依赖包下载到GOPATH的路径下。</p>
+<p>常用的依赖包管理工具有godep，govendor等，在Golang1.5之后，Go提供了 GO15VENDOREXPERIMENT 环境变量(Go 1.6版本默认开启该环境变量)，用于将go build时的应用路径搜索调整成为 当前项目目录/vendor 目录方式。通过这种形式，我们可以实现类似于 godep 方式的项目依赖管理。</p>
+<h3 id="2-安装与使用"><a href="#2-安装与使用" class="headerlink" title="2. 安装与使用"></a>2. 安装与使用</h3><h4 id="2-1-安装"><a href="#2-1-安装" class="headerlink" title="2.1. 安装"></a>2.1. 安装</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">go get -u -v github.com/kardianos/govendor</span><br></pre></td></tr></table></figure>
+<span id="more"></span>
+<h4 id="2-2-使用"><a href="#2-2-使用" class="headerlink" title="2.2 使用"></a>2.2 使用</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">#进入到项目目录</span><br><span class="line">cd /home/gopath/src/mytool</span><br><span class="line"></span><br><span class="line">#初始化vendor目录</span><br><span class="line">govendor init</span><br><span class="line"></span><br><span class="line">#查看vendor目录</span><br><span class="line">[root@CC54425A mytool]# ls</span><br><span class="line">commands  main.go  vendor  mytool_test.sh</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#将GOPATH中本工程使用到的依赖包自动移动到vendor目录中</span><br><span class="line">#说明：如果本地GOPATH没有依赖包，先go get相应的依赖包</span><br><span class="line">govendor add +external</span><br><span class="line">或使用缩写： govendor add +e </span><br><span class="line"></span><br><span class="line">#Go 1.6以上版本默认开启 GO15VENDOREXPERIMENT 环境变量，可忽略该步骤。</span><br><span class="line">#通过设置环境变量 GO15VENDOREXPERIMENT=1 使用vendor文件夹构建文件。</span><br><span class="line">#可以选择 export GO15VENDOREXPERIMENT=1 或 GO15VENDOREXPERIMENT=1 go build 执行编译</span><br><span class="line">export GO15VENDOREXPERIMENT=1</span><br></pre></td></tr></table></figure>
+<h4 id="2-3-说明"><a href="#2-3-说明" class="headerlink" title="2.3. 说明"></a>2.3. 说明</h4><p>govendor只是用来管理项目的依赖包，如果GOPATH中本身没有项目的依赖包，则需要通过go get先下载到GOPATH中，再通过govendor add +external拷贝到vendor目录中。Go 1.6以上版本默认开启GO15VENDOREXPERIMENT环境变量。</p>
+<h4 id="2-4-常用命令"><a href="#2-4-常用命令" class="headerlink" title="2.4. 常用命令"></a>2.4. 常用命令</h4><p>常见的命令如下，格式为 govendor COMMAND。</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>功能</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>init</td>
+<td>初始化 vendor 目录</td>
+</tr>
+<tr>
+<td>list</td>
+<td>列出所有的依赖包</td>
+</tr>
+<tr>
+<td>add</td>
+<td>添加包到 vendor 目录，如 govendor add +external 添加所有外部包</td>
+</tr>
+<tr>
+<td>add PKG_PATH</td>
+<td>添加指定的依赖包到 vendor 目录</td>
+</tr>
+<tr>
+<td>update</td>
+<td>从 $GOPATH 更新依赖包到 vendor 目录</td>
+</tr>
+<tr>
+<td>remove</td>
+<td>从 vendor 管理中删除依赖</td>
+</tr>
+<tr>
+<td>status</td>
+<td>列出所有缺失、过期和修改过的包</td>
+</tr>
+<tr>
+<td>fetch</td>
+<td>添加或更新包到本地 vendor 目录</td>
+</tr>
+<tr>
+<td>sync</td>
+<td>本地存在 vendor.json 时候拉去依赖包，匹配所记录的版本</td>
+</tr>
+<tr>
+<td>ge</td>
+<td>类似 go get 目录，拉取依赖包到 vendor 目录</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h2 id="go-mod"><a href="#go-mod" class="headerlink" title="go mod"></a>go mod</h2><h3 id="go-mod-介绍"><a href="#go-mod-介绍" class="headerlink" title="go mod 介绍"></a>go mod 介绍</h3><p>Go.mod是Golang1.11版本新引入的官方包管理工具用于解决之前没有地方记录依赖包具体版本的问题，方便依赖包的管理。</p>
+<p>Go.mod其实就是一个Modules，关于Modules的官方定义为：</p>
+<p>Modules是相关Go包的集合，是源代码交换和版本控制的单元。go命令直接支持使用Modules，包括记录和解析对其他模块的依赖性。Modules替换旧的基于GOPATH的方法，来指定使用哪些源文件。</p>
+<p>Modules和传统的GOPATH不同，不需要包含例如src，bin这样的子目录，一个源代码目录甚至是空目录都可以作为Modules，只要其中包含有go.mod文件。</p>
+<h4 id="3-1首先将go的版本升级为1-11以上"><a href="#3-1首先将go的版本升级为1-11以上" class="headerlink" title="3.1首先将go的版本升级为1.11以上"></a>3.1首先将go的版本升级为1.11以上</h4><p>下载地址，目前我只会重新安装…</p>
+<h4 id="3-2-设置GO111MODULE"><a href="#3-2-设置GO111MODULE" class="headerlink" title="3.2 设置GO111MODULE"></a>3.2 设置GO111MODULE</h4><p>GO111MODULE有三个值：off, on和auto（默认值）。</p>
+<ul>
+<li>GO111MODULE=off，go命令行将不会支持module功能，寻找依赖包的方式将会沿用旧版本那种通过vendor目录或者GOPATH模式来查找。</li>
+<li>GO111MODULE=on，go命令行会使用modules，而一点也不会去GOPATH目录下查找。</li>
+<li>GO111MODULE=auto，默认值，go命令行将会根据当前目录来决定是否启用module功能。这种情况下可以分为两种情形：</li>
+</ul>
+<p>当前目录在GOPATH/src之外且该目录包含go.mod文件<br>当前文件在包含go.mod文件的目录下面。</p>
+<blockquote>
+<p>坑：我在win10的时候只有通过在CMD窗口下set GO111MODULE=on命令才能生效，网上的通过环境变量，和Powershell窗口都是不生效的！</p>
+</blockquote>
+<h4 id="3-3-go-mod命令："><a href="#3-3-go-mod命令：" class="headerlink" title="3.3 go mod命令："></a>3.3 go mod命令：</h4><div class="table-container">
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>功能</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>download</td>
+<td>下载依赖的module到本地cache</td>
+</tr>
+<tr>
+<td>edit</td>
+<td>编辑go.mod文件</td>
+</tr>
+<tr>
+<td>graph</td>
+<td>打印模块依赖图</td>
+</tr>
+<tr>
+<td>init</td>
+<td>在当前文件夹下初始化一个新的module, 创建go.mod文件</td>
+</tr>
+<tr>
+<td>tidy</td>
+<td>增加丢失的module，去掉未用的module</td>
+</tr>
+<tr>
+<td>vendor</td>
+<td>将依赖复制到vendor下,注意依赖需要在import 中声明后才能进行导入</td>
+</tr>
+<tr>
+<td>verify</td>
+<td>校验依赖</td>
+</tr>
+<tr>
+<td>why</td>
+<td>解释为什么需要依赖</td>
+</tr>
+<tr>
+<td>go get ./…</td>
+<td>命令可以查找出当前项目的依赖</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>将对应的包替换为对应github上面的包</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">replace (</span><br><span class="line">    golang.org/x/crypto =&gt; github.com/golang/crypto v0.0.0-20181127143415-eb0de9b17e85</span><br><span class="line">    golang.org/x/net =&gt; github.com/golang/net v0.0.0-20181114220301-adae6a3d119a</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<p>使用本地包</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">require (</span><br><span class="line">    modtest v0.0.0</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">replace (</span><br><span class="line">    modtest v0.0.0 =&gt; ../modtest</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<p>打包命令</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">1.使用GOPATH模式进行打包</span><br><span class="line"></span><br><span class="line">export GO111MODULE=off</span><br><span class="line">export CGO_ENABLED=0</span><br><span class="line">go build  -a -v -o app main.go</span><br><span class="line"></span><br><span class="line">2.使用vendor目录下包来进行打包</span><br><span class="line"></span><br><span class="line">export GO111MODULE=on</span><br><span class="line">export CGO_ENABLED=0</span><br><span class="line">go build -mod=vendor -a -v -o app main.go</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h4 id="3-4-go-mod如何在项目中使用"><a href="#3-4-go-mod如何在项目中使用" class="headerlink" title="3.4 go.mod如何在项目中使用"></a>3.4 go.mod如何在项目中使用</h4><p>1.首先我们要在GOPATH/src 目录之外新建工程，或将老工程copy到GOPATH/src 目录之外。</p>
+<p>PS：go.mod文件一旦创建后，它的内容将会被go toolchain全面掌控。go toolchain会在各类命令执行时，比如go get、go build、go mod等修改和维护go.mod文件。</p>
+<p>go.mod 提供了module, require、replace和exclude四个命令</p>
+<ul>
+<li>module语句指定包的名字（路径）</li>
+<li>require语句指定的依赖项模块</li>
+<li>replace语句可以替换依赖项模块</li>
+<li>exclude语句可以忽略依赖项模块</li>
+</ul>
+<p>问题一：依赖的包下载到哪里了？还在GOPATH里吗？<br>不在。<br>使用Go的包管理方式，依赖的第三方包被下载到了$GOPATH/pkg/mod路径下。</p>
+<p>问题二： 依赖包的版本是怎么控制的？<br>在上一个问题里，可以看到最终下载在$GOPATH/pkg/mod 下的包中最后会有一个版本号 v1.0.5，也就是说,$GOPATH/pkg/mod里可以保存相同包的不同版本。</p>
+<p>版本是在go.mod中指定的。如果，在go.mod中没有指定，go命令会自动下载代码中的依赖的最新版本，本例就是自动下载最新的版本。如果，在go.mod用require语句指定包和版本 ，go命令会根据指定的路径和版本下载包，<br>指定版本时可以用latest，这样它会自动下载指定包的最新版本；</p>
+<p>问题三： 可以把项目放在$GOPATH/src下吗？<br>可以。但是go会根据GO111MODULE的值而采取不同的处理方式，默认情况下，GO111MODULE=auto 自动模式</p>
+<ul>
+<li>1.auto 自动模式下，项目在$GOPATH/src里会使用$GOPATH/src的依赖包，在$GOPATH/src外，就使用go.mod 里 require的包</li>
+<li>2.on 开启模式，1.12后，无论在$GOPATH/src里还是在外面，都会使用go.mod 里 require的包</li>
+<li>3.off 关闭模式，就是老规矩。</li>
+</ul>
+<p>问题四： 依赖包中的地址失效了怎么办？比如 golang.org/x/… 下的包都无法下载怎么办？<br>在go快速发展的过程中，有一些依赖包地址变更了。以前的做法：</p>
+<ul>
+<li>1.修改源码，用新路径替换import的地址</li>
+<li>2.git clone 或 go get 新包后，copy到$GOPATH/src里旧的路径下</li>
+</ul>
+<p>无论什么方法，都不便于维护，特别是多人协同开发时。<br>使用go.mod就简单了，在go.mod文件里用 replace 替换包，例如</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">replace golang.org/x/text =&gt; github.com/golang/text latest</span><br></pre></td></tr></table></figure>
+<p>这样，go会用 github.com/golang/text 替代golang.org/x/text，原理就是下载github.com/golang/text 的最新版本到 $GOPATH/pkg/mod/golang.org/x/text下。</p>
+<p>问题五： init生成的go.mod的模块名称有什么用？</p>
+<p>本例里，用 go mod init hello 生成的go.mod文件里的第一行会申明module hello<br>因为我们的项目已经不在$GOPATH/src里了，那么引用自己怎么办？就用模块名+路径。</p>
+<p>问题六：以前老项目如何用新的包管理<br>如果用auto模式，把项目移动到$GOPATH/src外<br>进入目录，运行 go mod init + 模块名称<br>go build 或者 go run 一次</p>
+<p>govendor文章转载出处<br>go mod文章转载出处<br>go mod常见问题出处</p>
+
+    </div>
+
+    
+    
+    
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/golang/" rel="tag"># golang</a>
+              <a href="/tags/vscode/" rel="tag"># vscode</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/06/13/golang/golang-vscode/" rel="prev" title="VSCode+GoLang 环境搭建">
+      <i class="fa fa-chevron-left"></i> VSCode+GoLang 环境搭建
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/06/13/golang/golang-note/" rel="next" title="Go 注意">
+      Go 注意 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#govendor"><span class="nav-number">1.</span> <span class="nav-text">govendor</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-govendor%E7%AE%80%E4%BB%8B"><span class="nav-number">1.1.</span> <span class="nav-text">1. govendor简介</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E5%AE%89%E8%A3%85%E4%B8%8E%E4%BD%BF%E7%94%A8"><span class="nav-number">1.2.</span> <span class="nav-text">2. 安装与使用</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-1-%E5%AE%89%E8%A3%85"><span class="nav-number">1.2.1.</span> <span class="nav-text">2.1. 安装</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-2-%E4%BD%BF%E7%94%A8"><span class="nav-number">1.2.2.</span> <span class="nav-text">2.2 使用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-3-%E8%AF%B4%E6%98%8E"><span class="nav-number">1.2.3.</span> <span class="nav-text">2.3. 说明</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-4-%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4"><span class="nav-number">1.2.4.</span> <span class="nav-text">2.4. 常用命令</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#go-mod"><span class="nav-number">2.</span> <span class="nav-text">go mod</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#go-mod-%E4%BB%8B%E7%BB%8D"><span class="nav-number">2.1.</span> <span class="nav-text">go mod 介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#3-1%E9%A6%96%E5%85%88%E5%B0%86go%E7%9A%84%E7%89%88%E6%9C%AC%E5%8D%87%E7%BA%A7%E4%B8%BA1-11%E4%BB%A5%E4%B8%8A"><span class="nav-number">2.1.1.</span> <span class="nav-text">3.1首先将go的版本升级为1.11以上</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-2-%E8%AE%BE%E7%BD%AEGO111MODULE"><span class="nav-number">2.1.2.</span> <span class="nav-text">3.2 设置GO111MODULE</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-3-go-mod%E5%91%BD%E4%BB%A4%EF%BC%9A"><span class="nav-number">2.1.3.</span> <span class="nav-text">3.3 go mod命令：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-4-go-mod%E5%A6%82%E4%BD%95%E5%9C%A8%E9%A1%B9%E7%9B%AE%E4%B8%AD%E4%BD%BF%E7%94%A8"><span class="nav-number">2.1.4.</span> <span class="nav-text">3.4 go.mod如何在项目中使用</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Chester.C</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">143</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">32</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">67</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Chester.C</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+if (document.querySelectorAll('pre.mermaid').length) {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mermaid@8/dist/mermaid.min.js', () => {
+    mermaid.initialize({
+      theme    : 'forest',
+      logLevel : 3,
+      flowchart: { curve     : 'linear' },
+      gantt    : { axisFormat: '%m/%d/%Y' },
+      sequence : { actorMargin: 50 }
+    });
+  }, window.mermaid);
+}
+</script>
+
+
+  
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'OQBlgU8H1seTDvVrgC3Dhni0-gzGzoHsz',
+      appKey     : 'wF7D3hVD9WjlV9V52bhlymHO',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : true,
+      lang       : 'zh-cn' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.2">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <link rel="amphtml" href="./amp/">
+  <meta name="baidu-site-verification" content="code-mUG0UNAPhR">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"blog.rcant.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="引子Surface Shader  最简单的SurfaceShader1234567891011121314151617181920212223242526272829303132333435363738Shader &quot;Custom&#x2F;T_3_0&quot; &amp;#123;    Properties &amp;#123;        _MainTex (&quot;Base (RGB)&amp;quot">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Shader 学习文档 [三]">
+<meta property="og:url" content="http://blog.rcant.com/2017/05/30/unity/shader-third-surface/index.html">
+<meta property="og:site_name" content="Chester.Cao Blog">
+<meta property="og:description" content="引子Surface Shader  最简单的SurfaceShader1234567891011121314151617181920212223242526272829303132333435363738Shader &quot;Custom&#x2F;T_3_0&quot; &amp;#123;    Properties &amp;#123;        _MainTex (&quot;Base (RGB)&amp;quot">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2017-05-30T03:39:17.000Z">
+<meta property="article:modified_time" content="2023-01-06T09:42:34.810Z">
+<meta property="article:author" content="Chester.C">
+<meta property="article:tag" content="unity3d">
+<meta property="article:tag" content="shader">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://blog.rcant.com/2017/05/30/unity/shader-third-surface/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Shader 学习文档 [三] | Chester.Cao Blog</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?974592ac4c5733a52af2b871678a5334";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Chester.Cao Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Chester.Cao Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Devlopper in C#</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-topics">
+
+    <a href="/topics/" rel="section"><i class="fa fa-fw fa-pencil"></i>主题</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://blog.rcant.com/2017/05/30/unity/shader-third-surface/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Chester.C">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chester.Cao Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Shader 学习文档 [三]
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2017-05-30 11:39:17" itemprop="dateCreated datePublished" datetime="2017-05-30T11:39:17+08:00">2017-05-30</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-01-06 17:42:34" itemprop="dateModified" datetime="2023-01-06T17:42:34+08:00">2023-01-06</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/unity3d/" itemprop="url" rel="index"><span itemprop="name">unity3d</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2017/05/30/unity/shader-third-surface/" class="post-meta-item leancloud_visitors" data-flag-title="Shader 学习文档 [三]" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2017/05/30/unity/shader-third-surface/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2017/05/30/unity/shader-third-surface/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h2><p>Surface Shader </p>
+<h2 id="最简单的SurfaceShader"><a href="#最简单的SurfaceShader" class="headerlink" title="最简单的SurfaceShader"></a>最简单的SurfaceShader</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">Shader &quot;Custom/T_3_0&quot; &#123;</span><br><span class="line"></span><br><span class="line">    Properties &#123;</span><br><span class="line">        _MainTex (&quot;Base (RGB)&quot;, 2D) = &quot;white&quot; &#123;&#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    SubShader &#123;</span><br><span class="line">        CGPROGRAM</span><br><span class="line">        #pragma surface surf Lambert</span><br><span class="line"></span><br><span class="line">        sampler2D _MainTex;</span><br><span class="line"></span><br><span class="line">        struct Input &#123;</span><br><span class="line">            float2 uv_MainTex;</span><br><span class="line">        &#125; ;</span><br><span class="line"></span><br><span class="line">        void surf (Input IN, inout SurfaceOutput o) &#123;</span><br><span class="line">            half4 c = tex2D (_MainTex, IN.uv_MainTex);</span><br><span class="line">            o.Albedo = c.rgb;</span><br><span class="line">            o.Alpha = c.a;</span><br><span class="line">        &#125;</span><br><span class="line">        ENDCG</span><br><span class="line">    &#125;  </span><br><span class="line">&#125;</span><br><span class="line">&lt;!--more--&gt;</span><br><span class="line">表面处理函数从顶点处理函数（这里自动顶点处理）接收参数Input IN,输出SurfaceOutput o至光照模型（这里是Lambert）。</span><br><span class="line">这里我们就做了三件事：</span><br><span class="line"></span><br><span class="line">1. 通过uv取得了贴图对应uv的颜色c</span><br><span class="line">2. 把c.rgb赋给o.Albedo</span><br><span class="line">3. 把c.a赋给o.Alpha</span><br><span class="line"></span><br><span class="line">这就完成了。之后让任一物体使用该Shader,则不管加什么光都能正确显示。真的很简单！</span><br><span class="line"></span><br><span class="line">## 表面处理函数surf的输入及输出</span><br><span class="line"></span><br><span class="line">### 输入</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>struct Input {<br>    float2 uv_MainTex;<br>    float3 viewDir;<br>    float4 anyName:COLOR;<br>    float4 screenPos;<br>    float3 worldPos;<br>    float3 worldRefl;<br>} ;<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">uv_MainTex: uv</span><br><span class="line">viewDir: 入视角</span><br><span class="line">screenPos:裁剪空间位置</span><br><span class="line">worldPos:世界空间位置</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">### 输出</span><br><span class="line"></span><br></pre></td></tr></table></figure><br>struct SurfaceOutput {<br>    half3 Albedo;<br>    half3 Normal;<br>    half3 Emission;<br>    half Specular;<br>    half Gloss;<br>    half Alpha;<br>};<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">Albedo:漫反射颜色</span><br><span class="line">Normal: 法线</span><br><span class="line">Emission：自发光颜色</span><br><span class="line">Specular:镜面反射系数</span><br><span class="line">Gloss：</span><br><span class="line">Alpha:透明值</span><br><span class="line"></span><br><span class="line">[参考](http://docs.unity3d.com/Documentation/Components/SL-SurfaceShaders.html)</span><br><span class="line"></span><br><span class="line">## Surface Shader参数</span><br><span class="line"></span><br><span class="line">Surface Shader可以通过加参数实现额外的控制，例如加顶点处理函数，alpha混合等。</span><br><span class="line">注意：</span><br><span class="line">如果使用的光照模型是Unity自带的Lambert或者BlinnPhong：</span><br><span class="line">alpha混合，alpha混合等功能必须使用Surface Shader参数。</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">### alpha混合</span><br><span class="line">直接加参数Alpha即可</span><br><span class="line"></span><br></pre></td></tr></table></figure></p>
+<h1 id="pragma-surface-surf-BlinnPhong-alpha"><a href="#pragma-surface-surf-BlinnPhong-alpha" class="headerlink" title="pragma surface surf BlinnPhong alpha"></a>pragma surface surf BlinnPhong alpha</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">### alphatest</span><br><span class="line"></span><br><span class="line">加入一个变量，这里起名为_Cutoff， 然后在#pragma surface结尾处加上alphatest:_Cutoff。</span><br><span class="line">效果是alpha值大于_Cutoff时，才会输出颜色</span><br><span class="line"> </span><br></pre></td></tr></table></figure>
+<p>Shader “Custom/T_3_0” {<br>    Properties {<br>        _MainTex (“Base (RGB)”, 2D) = “white” {}<br>        _Cutoff (“Alpha cutoff”, Range(0,1)) = 0.5<br>    }<br>    SubShader {<br>        CGPROGRAM</p>
+<pre><code>    #pragma surface surf Lambert alphatest:_Cutoff
+    sampler2D _MainTex;
+
+    struct Input &#123;
+        float2 uv_MainTex;
+    &#125; ;
+
+    void surf (Input IN, inout SurfaceOutput o) &#123;
+        half4 c = tex2D (_MainTex, IN.uv_MainTex);
+        o.Albedo = c.rgb;
+        o.Alpha = c.a;
+    &#125;
+    ENDCG
+&#125;  
+</code></pre><p>}<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">### 顶点函数</span><br><span class="line">例：臃肿的模型</span><br><span class="line">实现方法，将顶点向法线方向延伸一段距离</span><br><span class="line"></span><br></pre></td></tr></table></figure><br>  Shader “Example/Normal Extrusion” {<br>    Properties {<br>      _MainTex (“Texture”, 2D) = “white” {}<br>      _Amount (“Extrusion Amount”, Range(-1,1)) = 0.5<br>    }<br>    SubShader {<br>      Tags { “RenderType” = “Opaque” }<br>      CGPROGRAM</p>
+<pre><code>  #pragma surface surf Lambert vertex:vert
+  struct Input &#123;
+      float2 uv_MainTex;
+  &#125;;
+  float _Amount;
+  void vert (inout appdata_full v) &#123;
+      v.vertex.xyz += v.normal * _Amount;
+  &#125;
+  sampler2D _MainTex;
+  void surf (Input IN, inout SurfaceOutput o) &#123;
+      o.Albedo = tex2D (_MainTex, IN.uv_MainTex).rgb;
+  &#125;
+  ENDCG
+&#125; 
+Fallback &quot;Diffuse&quot;
+</code></pre><p>  }<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">### finalcolor</span><br><span class="line">finalcolor:ColorFunction</span><br><span class="line">对颜色输出作最后的更改</span><br><span class="line"> </span><br></pre></td></tr></table></figure><br>Shader “Example/Tint Final Color” {<br>    Properties {<br>      _MainTex (“Texture”, 2D) = “white” {}<br>      _ColorTint (“Tint”, Color) = (1.0, 0.6, 0.6, 1.0)<br>    }<br>    SubShader {<br>      CGPROGRAM</p>
+<pre><code>  #pragma surface surf Lambert finalcolor:mycolor
+  struct Input &#123;
+      float2 uv_MainTex;
+  &#125;;
+  fixed4 _ColorTint;
+  void mycolor (Input IN, SurfaceOutput o, inout fixed4 color)
+  &#123;
+</code></pre><p>//在这里对最后输出的颜色color进行修改<br>          color *= _ColorTint;<br>      }<br>      sampler2D _MainTex;<br>      void surf (Input IN, inout SurfaceOutput o) {<br>           o.Albedo = tex2D (_MainTex, IN.uv_MainTex).rgb;<br>      }<br>      ENDCG<br>    }<br> }<br>```</p>
+<p><a target="_blank" rel="noopener" href="http://docs.unity3d.com/Documentation/Components/SL-SurfaceShaders.html">更多的参数请参考文档</a></p>
+
+    </div>
+
+    
+    
+    
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/unity3d/" rel="tag"># unity3d</a>
+              <a href="/tags/shader/" rel="tag"># shader</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2017/05/29/unity/shader-second/" rel="prev" title="Shader 学习文档 [二]">
+      <i class="fa fa-chevron-left"></i> Shader 学习文档 [二]
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2017/10/24/centos/centos-repos-change/" rel="next" title="centos 更换镜像源">
+      centos 更换镜像源 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%95%E5%AD%90"><span class="nav-number">1.</span> <span class="nav-text">引子</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%80%E7%AE%80%E5%8D%95%E7%9A%84SurfaceShader"><span class="nav-number">2.</span> <span class="nav-text">最简单的SurfaceShader</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#pragma-surface-surf-BlinnPhong-alpha"><span class="nav-number"></span> <span class="nav-text">pragma surface surf BlinnPhong alpha</span></a></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Chester.C</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">143</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">32</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">67</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Chester.C</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+if (document.querySelectorAll('pre.mermaid').length) {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mermaid@8/dist/mermaid.min.js', () => {
+    mermaid.initialize({
+      theme    : 'forest',
+      logLevel : 3,
+      flowchart: { curve     : 'linear' },
+      gantt    : { axisFormat: '%m/%d/%Y' },
+      sequence : { actorMargin: 50 }
+    });
+  }, window.mermaid);
+}
+</script>
+
+
+  
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'OQBlgU8H1seTDvVrgC3Dhni0-gzGzoHsz',
+      appKey     : 'wF7D3hVD9WjlV9V52bhlymHO',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : true,
+      lang       : 'zh-cn' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>

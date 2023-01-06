@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.2">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <link rel="amphtml" href="./amp/">
+  <meta name="baidu-site-verification" content="code-mUG0UNAPhR">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"blog.rcant.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="数据结构-跳表 SkipList 跳表的原理什么是跳表链表，相信大家都不陌生，维护一个有序的链表是一件非常简单的事情，我们都知道，在一个有序的链表里面，查询跟插入的算法复杂度都是O(n)。  对上述有序列表建立一层索引这样 就可以加速查询效率和 插入效率比如查找 11，不加索引的需要查找 6次加了一层索引以后，只需要查找 4次查找速度为 O(n&#x2F;2) +1  如果再加一层索引 就变成是 O(n&#x2F;4">
+<meta property="og:type" content="article">
+<meta property="og:title" content="数据结构-跳表">
+<meta property="og:url" content="http://blog.rcant.com/2020/09/01/datastruct/datastruct-skiplist/index.html">
+<meta property="og:site_name" content="Chester.Cao Blog">
+<meta property="og:description" content="数据结构-跳表 SkipList 跳表的原理什么是跳表链表，相信大家都不陌生，维护一个有序的链表是一件非常简单的事情，我们都知道，在一个有序的链表里面，查询跟插入的算法复杂度都是O(n)。  对上述有序列表建立一层索引这样 就可以加速查询效率和 插入效率比如查找 11，不加索引的需要查找 6次加了一层索引以后，只需要查找 4次查找速度为 O(n&#x2F;2) +1  如果再加一层索引 就变成是 O(n&#x2F;4">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://blog.rcant.com/2020/09/01/datastruct/datastruct-skiplist/linkedlist-1.png">
+<meta property="og:image" content="http://blog.rcant.com/2020/09/01/datastruct/datastruct-skiplist/linkedlist-2.png">
+<meta property="og:image" content="http://blog.rcant.com/2020/09/01/datastruct/datastruct-skiplist/linkedlist-3.png">
+<meta property="og:image" content="http://blog.rcant.com/2020/09/01/datastruct/datastruct-skiplist/skip-find.png">
+<meta property="og:image" content="http://blog.rcant.com/2020/09/01/datastruct/datastruct-skiplist/skip-insert1.png">
+<meta property="og:image" content="http://blog.rcant.com/2020/09/01/datastruct/datastruct-skiplist/skip-insert2.png">
+<meta property="og:image" content="http://blog.rcant.com/2020/09/01/datastruct/datastruct-skiplist/skip-insert3.png">
+<meta property="og:image" content="http://blog.rcant.com/2020/09/01/datastruct/datastruct-skiplist/skip-yanhua.png">
+<meta property="og:image" content="http://blog.rcant.com/2020/09/01/datastruct/datastruct-skiplist/skip-test.png">
+<meta property="og:image" content="http://blog.rcant.com/2020/09/01/datastruct/datastruct-skiplist/skip-test2.png">
+<meta property="article:published_time" content="2020-09-01T06:40:07.000Z">
+<meta property="article:modified_time" content="2023-01-06T09:31:44.223Z">
+<meta property="article:author" content="Chester.C">
+<meta property="article:tag" content="datastruct">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://blog.rcant.com/2020/09/01/datastruct/datastruct-skiplist/linkedlist-1.png">
+
+<link rel="canonical" href="http://blog.rcant.com/2020/09/01/datastruct/datastruct-skiplist/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>数据结构-跳表 | Chester.Cao Blog</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?974592ac4c5733a52af2b871678a5334";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Chester.Cao Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Chester.Cao Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Devlopper in C#</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-topics">
+
+    <a href="/topics/" rel="section"><i class="fa fa-fw fa-pencil"></i>主题</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://blog.rcant.com/2020/09/01/datastruct/datastruct-skiplist/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Chester.C">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chester.Cao Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          数据结构-跳表
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-09-01 14:40:07" itemprop="dateCreated datePublished" datetime="2020-09-01T14:40:07+08:00">2020-09-01</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-01-06 17:31:44" itemprop="dateModified" datetime="2023-01-06T17:31:44+08:00">2023-01-06</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/datastruct/" itemprop="url" rel="index"><span itemprop="name">datastruct</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2020/09/01/datastruct/datastruct-skiplist/" class="post-meta-item leancloud_visitors" data-flag-title="数据结构-跳表" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2020/09/01/datastruct/datastruct-skiplist/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/09/01/datastruct/datastruct-skiplist/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>数据结构-跳表</p>
+<p>SkipList</p>
+<h2 id="跳表的原理"><a href="#跳表的原理" class="headerlink" title="跳表的原理"></a>跳表的原理</h2><h3 id="什么是跳表"><a href="#什么是跳表" class="headerlink" title="什么是跳表"></a>什么是跳表</h3><p>链表，相信大家都不陌生，维护一个有序的链表是一件非常简单的事情，我们都知道，在一个有序的链表里面，查询跟插入的算法复杂度都是O(n)。</p>
+<img src="/2020/09/01/datastruct/datastruct-skiplist/linkedlist-1.png" class="" title="进入编辑模式">
+<p>对上述有序列表建立一层索引<br>这样 就可以加速查询效率和 插入效率<br>比如查找 11，不加索引的需要查找 6次<br>加了一层索引以后，只需要查找 4次<br>查找速度为 O(n/2) +1</p>
+<img src="/2020/09/01/datastruct/datastruct-skiplist/linkedlist-2.png" class="" title="进入编辑模式">
+<p>如果再加一层索引 就变成是 O(n/4) + 2</p>
+<img src="/2020/09/01/datastruct/datastruct-skiplist/linkedlist-3.png" class="" title="进入编辑模式">
+<p>跳表就是这样的一种数据结构，结点是跳过一部分的，<br>从而加快了查询的速度。跳表跟红黑树又有什么差别呢？</p>
+<p>既然两者的算法复杂度差不多，为什么Redis要使用跳表而不使用红黑树呢？<br>跳表相对于红黑树，主要有这几个优点：</p>
+<ol>
+<li>代码相对简单</li>
+<li>如果我们要查询一个区间里面的值，用平衡树可能会麻烦。<br>这里的麻烦指的是实现和理解上，平衡二叉树查询一段区间也是可以做到的。</li>
+<li>删除一段区间，这个如果是平衡二叉树，就会相当困难，<br>毕竟设计到树的平衡问题，而跳表则没有这种烦恼。</li>
+</ol>
+<span id="more"></span>
+<h3 id="跳表查询元素"><a href="#跳表查询元素" class="headerlink" title="跳表查询元素"></a>跳表查询元素</h3><p>假如我们要查询11，那么我们从最上层出发，<br>发现下一个是5，再下一个是13，已经大于11，所以进入下一层，<br>下一层的一个是9，查找下一个，下一个又是13，再次进入下一层。<br>最终找到11。</p>
+<p>最终 一定查找会进入最底层</p>
+<img src="/2020/09/01/datastruct/datastruct-skiplist/skip-find.png" class="" title="进入编辑模式">
+<h3 id="跳表插入元素"><a href="#跳表插入元素" class="headerlink" title="跳表插入元素"></a>跳表插入元素</h3><p>插入</p>
+<p>插入的时候，首先要进行查询，然后从最底层开始，插入被插入的元素。<br>然后看看从下而上，是否需要逐层插入。</p>
+<p>这里不需要完全平衡</p>
+<p>最底层往上获取一个随机值[0,1]，判断小于0.5不插入结束，<br>否则将元素插入到当前层，并向上找一层，获取随机值[0,1]判断是否小于0.5<br>来确定当前层是否需要插入，除非到到最上层了，否则继续向上找上一层</p>
+<p>插入 8</p>
+<p>查询插入位置<br><img src="/2020/09/01/datastruct/datastruct-skiplist/skip-insert1.png" class="" title="进入编辑模式"><br>底层插入，判断其上一层是否需要插入<br><img src="/2020/09/01/datastruct/datastruct-skiplist/skip-insert2.png" class="" title="进入编辑模式"><br>继续判断直到条件不成立，或者到达最大层<br><img src="/2020/09/01/datastruct/datastruct-skiplist/skip-insert3.png" class="" title="进入编辑模式"></p>
+<h3 id="跳表删除元素"><a href="#跳表删除元素" class="headerlink" title="跳表删除元素"></a>跳表删除元素</h3><p>首先需要查询最底层，然后对其他层做相同操作<br>删除需要删除每一层的对应节点</p>
+<h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><p>设计图<br><img src="/2020/09/01/datastruct/datastruct-skiplist/skip-yanhua.png" class="" title="设计图"></p>
+<h2 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">static void Main(string[] args)</span><br><span class="line">&#123;</span><br><span class="line">    TestSkipList();</span><br><span class="line">&#125;</span><br><span class="line">static void TestSkipList()</span><br><span class="line">&#123;</span><br><span class="line">    //测试 调表结构</span><br><span class="line">    SkipList&lt;string, int&gt; skipList = new DataStructLib.SkipList&lt;string, int&gt;();</span><br><span class="line">    skipList.Add(&quot;1&quot;, 32);</span><br><span class="line">    Console.WriteLine(skipList);</span><br><span class="line">    skipList.Add(&quot;2&quot;, 12);</span><br><span class="line">    Console.WriteLine(skipList);</span><br><span class="line">    skipList.Add(&quot;4&quot;, 36);</span><br><span class="line">    Console.WriteLine(skipList);</span><br><span class="line">    skipList.Add(&quot;22&quot;, 3222);</span><br><span class="line">    Console.WriteLine(skipList);</span><br><span class="line">    skipList.Add(&quot;12&quot;, 1122);</span><br><span class="line">    Console.WriteLine(skipList);</span><br><span class="line">    skipList.Add(&quot;6&quot;, 31);</span><br><span class="line">    Console.WriteLine(skipList);</span><br><span class="line">    skipList.Remove(&quot;12&quot;);</span><br><span class="line">    Console.WriteLine(skipList);</span><br><span class="line">    skipList.Remove(&quot;6&quot;);</span><br><span class="line">    Console.WriteLine(skipList);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><a href="SkipList.cs" title="源码下载">点击下载</a></p>
+<p>测试图1<br><img src="/2020/09/01/datastruct/datastruct-skiplist/skip-test.png" class="" title="测试"></p>
+<p>测试图2<br><img src="/2020/09/01/datastruct/datastruct-skiplist/skip-test2.png" class="" title="测试"></p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>总结：</p>
+<ol>
+<li>跳表一定是一个有序表，否则就没有意义</li>
+<li>跳表的实现是对有序链表加入了多级缓存</li>
+<li>跳表是随机平衡的</li>
+<li>数据量达不到一定级别的话，还是不要使用跳表了，因为有缓存的开销，得不偿失</li>
+<li>跳表的内存开销是 原链表的两倍，跳表查询插入和删除时间复杂度大概是 O(logn)，</li>
+</ol>
+
+    </div>
+
+    
+    
+    
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/datastruct/" rel="tag"># datastruct</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/08/26/csharp/csharp-docfx/" rel="prev" title="CSharp ApiDoc 自动生成API文档">
+      <i class="fa fa-chevron-left"></i> CSharp ApiDoc 自动生成API文档
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/09/04/csharp/csharp-coroutine/" rel="next" title="CSharp 协程处理">
+      CSharp 协程处理 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B7%B3%E8%A1%A8%E7%9A%84%E5%8E%9F%E7%90%86"><span class="nav-number">1.</span> <span class="nav-text">跳表的原理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E8%B7%B3%E8%A1%A8"><span class="nav-number">1.1.</span> <span class="nav-text">什么是跳表</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B7%B3%E8%A1%A8%E6%9F%A5%E8%AF%A2%E5%85%83%E7%B4%A0"><span class="nav-number">1.2.</span> <span class="nav-text">跳表查询元素</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B7%B3%E8%A1%A8%E6%8F%92%E5%85%A5%E5%85%83%E7%B4%A0"><span class="nav-number">1.3.</span> <span class="nav-text">跳表插入元素</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B7%B3%E8%A1%A8%E5%88%A0%E9%99%A4%E5%85%83%E7%B4%A0"><span class="nav-number">1.4.</span> <span class="nav-text">跳表删除元素</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0"><span class="nav-number">2.</span> <span class="nav-text">实现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B5%8B%E8%AF%95"><span class="nav-number">3.</span> <span class="nav-text">测试</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Chester.C</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">143</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">32</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">67</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Chester.C</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+if (document.querySelectorAll('pre.mermaid').length) {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mermaid@8/dist/mermaid.min.js', () => {
+    mermaid.initialize({
+      theme    : 'forest',
+      logLevel : 3,
+      flowchart: { curve     : 'linear' },
+      gantt    : { axisFormat: '%m/%d/%Y' },
+      sequence : { actorMargin: 50 }
+    });
+  }, window.mermaid);
+}
+</script>
+
+
+  
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'OQBlgU8H1seTDvVrgC3Dhni0-gzGzoHsz',
+      appKey     : 'wF7D3hVD9WjlV9V52bhlymHO',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : true,
+      lang       : 'zh-cn' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>

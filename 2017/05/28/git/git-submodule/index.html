@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.2">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <link rel="amphtml" href="./amp/">
+  <meta name="baidu-site-verification" content="code-mUG0UNAPhR">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"blog.rcant.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="引子Git Submodule使用教程 Submodule 是什么？项目的版本库在某些情况下需要引用其他版本库的文件，例如公司积累了一套常用的函数库，被多个项目调用. 显然这个函数库的代码不能直接放到某个项目的代码中，而是要独立为一个代码库。这个时候就需要使用Submodule。 1.对于公共资源各种程序员的处理方式每个公司的系统都会有一套统一的系统风格，或者针对某一个大客户的多个系统风格保持统一">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Git Submodule使用教程">
+<meta property="og:url" content="http://blog.rcant.com/2017/05/28/git/git-submodule/index.html">
+<meta property="og:site_name" content="Chester.Cao Blog">
+<meta property="og:description" content="引子Git Submodule使用教程 Submodule 是什么？项目的版本库在某些情况下需要引用其他版本库的文件，例如公司积累了一套常用的函数库，被多个项目调用. 显然这个函数库的代码不能直接放到某个项目的代码中，而是要独立为一个代码库。这个时候就需要使用Submodule。 1.对于公共资源各种程序员的处理方式每个公司的系统都会有一套统一的系统风格，或者针对某一个大客户的多个系统风格保持统一">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2017-05-28T03:39:17.000Z">
+<meta property="article:modified_time" content="2023-01-06T09:36:55.322Z">
+<meta property="article:author" content="Chester.C">
+<meta property="article:tag" content="git">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://blog.rcant.com/2017/05/28/git/git-submodule/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Git Submodule使用教程 | Chester.Cao Blog</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?974592ac4c5733a52af2b871678a5334";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Chester.Cao Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Chester.Cao Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Devlopper in C#</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-topics">
+
+    <a href="/topics/" rel="section"><i class="fa fa-fw fa-pencil"></i>主题</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://blog.rcant.com/2017/05/28/git/git-submodule/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Chester.C">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chester.Cao Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Git Submodule使用教程
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2017-05-28 11:39:17" itemprop="dateCreated datePublished" datetime="2017-05-28T11:39:17+08:00">2017-05-28</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-01-06 17:36:55" itemprop="dateModified" datetime="2023-01-06T17:36:55+08:00">2023-01-06</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/git/" itemprop="url" rel="index"><span itemprop="name">git</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2017/05/28/git/git-submodule/" class="post-meta-item leancloud_visitors" data-flag-title="Git Submodule使用教程" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2017/05/28/git/git-submodule/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2017/05/28/git/git-submodule/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h2><p>Git Submodule使用教程</p>
+<h2 id="Submodule-是什么？"><a href="#Submodule-是什么？" class="headerlink" title="Submodule 是什么？"></a>Submodule 是什么？</h2><p>项目的版本库在某些情况下需要引用其他版本库的文件，例如公司积累了一套常用的函数库，被多个项目调用. 显然这个函数库的代码不能直接放到某个项目的代码中，而是要独立为一个代码库。这个时候就需要使用Submodule。</p>
+<p>1.对于公共资源各种程序员的处理方式<br>每个公司的系统都会有一套统一的系统风格，或者针对某一个大客户的多个系统风格保持统一，而且如果风格改动后要同步到多个系统中；这样的需求几乎每个开发人员都遇到，下面看看各个层次的程序员怎么处理：</p>
+<p>假如对于系统的风格需要几个目录：css、images、js。</p>
+<ul>
+<li>普通程序员，把最新版本的代码逐个复制到每个项目中，如果有N个项目，那就是要复制N x 3次；如果漏掉了某个文件夹没有复制…</li>
+<li>文艺程序员，使用Git Submodule功能，执行：<span class="label danger">git submodule update</span>，然后冲一杯咖啡悠哉的享受着。</li>
+</ul>
+<p>类似于SVN的svn:externals.</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>功能</th>
+<th>svn:externals</th>
+<th>git submodule</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>如何记录外部版本库的地址</td>
+<td>目录 svn:externals 属性</td>
+<td>项目根目录下的 .gitmodules 文件</td>
+</tr>
+<tr>
+<td>默认是否自动检出外部版本库</td>
+<td>是\n在使用svn checkout 检出时若使用 —ignore-externals可以忽略对外部版本库的引用，不检出</td>
+<td>否\n默认不克隆外部版本库。若要克隆则需要使用git submodule init及git submodule update命令</td>
+</tr>
+<tr>
+<td>是否能部分引用外部版本库内容</td>
+<td>是\n因为svn支持部分检出</td>
+<td>否\n必须克隆整个外部版本库</td>
+</tr>
+<tr>
+<td>是否可以指向分支而随之改变</td>
+<td>是</td>
+<td>否\n固定于外部版本库的某个提交</td>
+</tr>
+</tbody>
+</table>
+</div>
+<span id="more"></span>
+<h2 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h2><div class="note info">
+            <p>说明：本例采用<span class="label danger">两个项目</span>以及<span class="label danger">两个公共类库</span>演示对submodule的操作。</p>
+          </div> 
+<h3 id="准备环境"><a href="#准备环境" class="headerlink" title="准备环境"></a>准备环境</h3><h4 id="创建公共类库的本地仓库"><a href="#创建公共类库的本地仓库" class="headerlink" title="创建公共类库的本地仓库"></a>创建公共类库的本地仓库</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost projects]# git --git-dir=/root/repos/libA.git init --bare</span><br><span class="line">Initialized empty Git repository in /root/repos/libA.git/</span><br><span class="line">[root@localhost projects]# git --git-dir=/root/repos/libB.git init --bare</span><br><span class="line">Initialized empty Git repository in /root/repos/libB.git/</span><br><span class="line">[root@localhost projects]# ls -al /root/repos</span><br><span class="line">total 4</span><br><span class="line">drwxr-xr-x.  4 root root   38 Nov 20 04:35 .</span><br><span class="line">dr-xr-x---. 13 root root 4096 Nov 20 04:34 ..</span><br><span class="line">drwxr-xr-x.  7 root root  119 Nov 20 04:35 libA.git</span><br><span class="line">drwxr-xr-x.  7 root root  119 Nov 20 04:35 libB.git</span><br></pre></td></tr></table></figure>
+<h4 id="初始化公共库"><a href="#初始化公共库" class="headerlink" title="初始化公共库"></a>初始化公共库</h4><p>获取<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost projects]# git clone /root/repos/libA.git</span><br><span class="line">Cloning into &#x27;libA&#x27;...</span><br><span class="line">warning: You appear to have cloned an empty repository.</span><br><span class="line">done.</span><br><span class="line">[root@localhost projects]# git clone /root/repos/libB.git</span><br><span class="line">Cloning into &#x27;libB&#x27;...</span><br><span class="line">warning: You appear to have cloned an empty repository.</span><br><span class="line">done.</span><br><span class="line">[root@localhost projects]#</span><br><span class="line"></span><br></pre></td></tr></table></figure></p>
+<p>初始化libA</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost projects]# cd libA/</span><br><span class="line">[root@localhost libA]# echo &quot;libA&quot; &gt; readme</span><br><span class="line">[root@localhost libA]# git add readme</span><br><span class="line">[root@localhost libA]# git commit -m &quot;init&quot; readme</span><br><span class="line">[master (root-commit) ee8edb6] init</span><br><span class="line"> 1 file changed, 1 insertion(+)</span><br><span class="line"> create mode 100644 readme</span><br><span class="line">[root@localhost libA]# git push origin master</span><br><span class="line">Enumerating objects: 3, done.</span><br><span class="line">Counting objects: 100% (3/3), done.</span><br><span class="line">Writing objects: 100% (3/3), 207 bytes | 69.00 KiB/s, done.</span><br><span class="line">Total 3 (delta 0), reused 0 (delta 0)</span><br><span class="line">To /root/repos/libA.git</span><br><span class="line"> * [new branch]      master -&gt; master</span><br></pre></td></tr></table></figure>
+<p>初始化libB</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost libA]# cd ../libB/</span><br><span class="line">[root@localhost libB]# echo &quot;libB&quot;&gt;readme</span><br><span class="line">[root@localhost libB]# git add readme</span><br><span class="line">[root@localhost libB]# git commit -m&quot;init&quot; readme</span><br><span class="line">[master (root-commit) f70d346] init</span><br><span class="line"> 1 file changed, 1 insertion(+)</span><br><span class="line"> create mode 100644 readme</span><br><span class="line">[root@localhost libB]# git push origin master</span><br><span class="line">Enumerating objects: 3, done.</span><br><span class="line">Counting objects: 100% (3/3), done.</span><br><span class="line">Writing objects: 100% (3/3), 200 bytes | 100.00 KiB/s, done.</span><br><span class="line">Total 3 (delta 0), reused 0 (delta 0)</span><br><span class="line">To /root/repos/libB.git</span><br><span class="line"> * [new branch]      master -&gt; master</span><br></pre></td></tr></table></figure>
+<h2 id="创建项目使用两个模块"><a href="#创建项目使用两个模块" class="headerlink" title="创建项目使用两个模块"></a>创建项目使用两个模块</h2><h3 id="创建两个项目仓库"><a href="#创建两个项目仓库" class="headerlink" title="创建两个项目仓库"></a>创建两个项目仓库</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost projects]# git --git-dir=/root/repos/project1.git init --bare</span><br><span class="line">Initialized empty Git repository in /root/repos/project1.git/</span><br><span class="line">[root@localhost projects]# git --git-dir=/root/repos/project2.git init --bare</span><br><span class="line">Initialized empty Git repository in /root/repos/project2.git/</span><br><span class="line">[root@localhost projects]#</span><br></pre></td></tr></table></figure>
+<h3 id="获取project1到本地"><a href="#获取project1到本地" class="headerlink" title="获取project1到本地"></a>获取project1到本地</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost libB]# cd ../</span><br><span class="line">[root@localhost projects]# git clone /root/repos/project1.git</span><br><span class="line">Cloning into &#x27;project1&#x27;...</span><br><span class="line">warning: You appear to have cloned an empty repository.</span><br><span class="line">done.</span><br><span class="line">[root@localhost projects]# cd project1/</span><br></pre></td></tr></table></figure>
+<h3 id="使用-添加子模块"><a href="#使用-添加子模块" class="headerlink" title="使用  添加子模块"></a>使用 <span class="label danger">git submodule add</span> 添加子模块</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost project1]# git submodule add /root/repos/libA.git libs/libA</span><br><span class="line">Cloning into &#x27;/root/projects/project1/libs/libA&#x27;...</span><br><span class="line">done.</span><br><span class="line">[root@localhost project1]# git submodule add /root/repos/libB.git libs/libB</span><br><span class="line">Cloning into &#x27;/root/projects/project1/libs/libB&#x27;...</span><br><span class="line">done.</span><br><span class="line">[root@localhost project1]# git status</span><br><span class="line">On branch master</span><br><span class="line"></span><br><span class="line">No commits yet</span><br><span class="line"></span><br><span class="line">Changes to be committed:</span><br><span class="line">  (use &quot;git rm --cached &lt;file&gt;...&quot; to unstage)</span><br><span class="line"></span><br><span class="line">        new file:   .gitmodules</span><br><span class="line">        new file:   libs/libA</span><br><span class="line">        new file:   libs/libB</span><br></pre></td></tr></table></figure>
+<p>好了，到目前为止我们已经使用<span class="label danger">git submodule add</span>命令为<span class="label danger">project1</span>成功添加了两个公共类库（libA、libB），查看了当前的状态发现添加了一个新文件(.gitmodules)和两个文件夹(libs/libA、libs/libB)；那么新增的.gitmodules文件是做什么用的呢？我们查看一下文件内容便知晓了：</p>
+<p>模块的记录文件 在.gitmodules存取</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost project1]# cat .gitmodules</span><br><span class="line">[submodule &quot;libs/libA&quot;]</span><br><span class="line">        path = libs/libA</span><br><span class="line">        url = /root/repos/libA.git</span><br><span class="line">[submodule &quot;libs/libB&quot;]</span><br><span class="line">        path = libs/libB</span><br><span class="line">        url = /root/repos/libB.git</span><br></pre></td></tr></table></figure>
+<p>顺便看一下 .git/config<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost project1]# cat .git/config</span><br><span class="line">[core]</span><br><span class="line">        repositoryformatversion = 0</span><br><span class="line">        filemode = true</span><br><span class="line">        bare = false</span><br><span class="line">        logallrefupdates = true</span><br><span class="line">[remote &quot;origin&quot;]</span><br><span class="line">        url = /root/repos/project1.git</span><br><span class="line">        fetch = +refs/heads/*:refs/remotes/origin/*</span><br><span class="line">[branch &quot;master&quot;]</span><br><span class="line">        remote = origin</span><br><span class="line">        merge = refs/heads/master</span><br><span class="line">[submodule &quot;libs/libA&quot;]</span><br><span class="line">        url = /root/repos/libA.git</span><br><span class="line">        active = true</span><br><span class="line">[submodule &quot;libs/libB&quot;]</span><br><span class="line">        url = /root/repos/libB.git</span><br><span class="line">        active = true</span><br></pre></td></tr></table></figure></p>
+<p>可以看到 libs目录下已经存在两个子模块的内容了</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost project1]# tree -L 2 libs/</span><br><span class="line">libs/</span><br><span class="line">├── libA</span><br><span class="line">│   └── readme</span><br><span class="line">└── libB</span><br><span class="line">    └── readme</span><br><span class="line"></span><br><span class="line">2 directories, 2 files</span><br><span class="line">[root@localhost project1]# tree -L 2 .git/modules/libs/</span><br><span class="line">.git/modules/libs/</span><br><span class="line">├── libA</span><br><span class="line">│   ├── branches</span><br><span class="line">│   ├── config</span><br><span class="line">│   ├── description</span><br><span class="line">│   ├── HEAD</span><br><span class="line">│   ├── hooks</span><br><span class="line">│   ├── index</span><br><span class="line">│   ├── info</span><br><span class="line">│   ├── logs</span><br><span class="line">│   ├── objects</span><br><span class="line">│   ├── packed-refs</span><br><span class="line">│   └── refs</span><br><span class="line">└── libB</span><br><span class="line">    ├── branches</span><br><span class="line">    ├── config</span><br><span class="line">    ├── description</span><br><span class="line">    ├── HEAD</span><br><span class="line">    ├── hooks</span><br><span class="line">    ├── index</span><br><span class="line">    ├── info</span><br><span class="line">    ├── logs</span><br><span class="line">    ├── objects</span><br><span class="line">    ├── packed-refs</span><br><span class="line">    └── refs</span><br><span class="line"></span><br><span class="line">14 directories, 10 files</span><br></pre></td></tr></table></figure>
+<p>还可以查看当前submodule状态<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost project1]# git submodule status</span><br><span class="line"> ee8edb6e68cf05a4cceeccb3e0344dc149c5a1ea libs/libA (heads/master)</span><br><span class="line"> f70d346153fe4020db82d3a8b990c1898b6c86fb libs/libB (heads/master)</span><br></pre></td></tr></table></figure></p>
+<p>将修改提交到仓库中</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost project1]# git commit -am&quot;add submodules to project&quot;</span><br><span class="line">[master (root-commit) fabea54] add submodules to project</span><br><span class="line"> 3 files changed, 8 insertions(+)</span><br><span class="line"> create mode 100644 .gitmodules</span><br><span class="line"> create mode 160000 libs/libA</span><br><span class="line"> create mode 160000 libs/libB</span><br><span class="line">[root@localhost project1]# git push</span><br><span class="line">Enumerating objects: 4, done.</span><br><span class="line">Counting objects: 100% (4/4), done.</span><br><span class="line">Compressing objects: 100% (4/4), done.</span><br><span class="line">Writing objects: 100% (4/4), 360 bytes | 180.00 KiB/s, done.</span><br><span class="line">Total 4 (delta 0), reused 0 (delta 0)</span><br><span class="line">To /root/repos/project1.git</span><br><span class="line"> * [new branch]      master -&gt; master</span><br></pre></td></tr></table></figure>
+<h2 id="其他人使用带有Submodule的仓库"><a href="#其他人使用带有Submodule的仓库" class="headerlink" title="其他人使用带有Submodule的仓库"></a>其他人使用带有Submodule的仓库</h2><p>开发人员B …</p>
+<h3 id="使用获取远程仓库"><a href="#使用获取远程仓库" class="headerlink" title="使用获取远程仓库"></a>使用<span class="label danger">git clone</span>获取远程仓库</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost projects]# git clone /root/repos/project1.git project1-b</span><br><span class="line">Cloning into &#x27;project1-b&#x27;...</span><br><span class="line">done.</span><br></pre></td></tr></table></figure>
+<h3 id="使用查看当前子模块状态"><a href="#使用查看当前子模块状态" class="headerlink" title="使用查看当前子模块状态"></a>使用<span class="label danger">git submodule status</span>查看当前子模块状态</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost project1-b]# git submodule status</span><br><span class="line">-ee8edb6e68cf05a4cceeccb3e0344dc149c5a1ea libs/libA</span><br><span class="line">-f70d346153fe4020db82d3a8b990c1898b6c86fb libs/libB</span><br></pre></td></tr></table></figure>
+<p>其中 <span class="label danger">-</span> 代表资源未初始化到模块中<br>后面的代码为 对应模块git库的<span class="label danger">commitID</span></p>
+<p>未初始化检出 即未调用过 <span class="label danger">git submodule init</span> </p>
+<p>此时<span class="label danger">.git/config</span> 中是不存在 submodule 的信息的</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost project1-b]# cat .git/config</span><br><span class="line">[core]</span><br><span class="line">        repositoryformatversion = 0</span><br><span class="line">        filemode = true</span><br><span class="line">        bare = false</span><br><span class="line">        logallrefupdates = true</span><br><span class="line">[remote &quot;origin&quot;]</span><br><span class="line">        url = /root/repos/project1.git</span><br><span class="line">        fetch = +refs/heads/*:refs/remotes/origin/*</span><br><span class="line">[branch &quot;master&quot;]</span><br><span class="line">        remote = origin</span><br><span class="line">        merge = refs/heads/master</span><br></pre></td></tr></table></figure>
+<h3 id="初始化"><a href="#初始化" class="headerlink" title="初始化 "></a>初始化 <span class="label danger">git submodule init</span></h3><div class="note ">
+            <p>执行 <span class="label danger">git submodule init</span>  实际上修改了  <span class="label danger">.git/config</span>  文件，对子模块进行了注册。</p>
+          </div>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost project1-b]# git submodule init</span><br><span class="line">Submodule &#x27;libs/libA&#x27; (/root/repos/libA.git) registered for path &#x27;libs/libA&#x27;</span><br><span class="line">Submodule &#x27;libs/libB&#x27; (/root/repos/libB.git) registered for path &#x27;libs/libB&#x27;</span><br></pre></td></tr></table></figure>
+<p>查看状态 </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost project1-b]# git submodule status</span><br><span class="line"> ee8edb6e68cf05a4cceeccb3e0344dc149c5a1ea libs/libA</span><br><span class="line"> f70d346153fe4020db82d3a8b990c1898b6c86fb libs/libB</span><br></pre></td></tr></table></figure>
+<p>此时前面以及没有<span class="label danger">-</span>符号了<br>查看文件<span class="label danger">.git/config</span><br>(以加号开始的行为新增加的行)</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">[core]</span><br><span class="line">        repositoryformatversion = 0</span><br><span class="line">        filemode = true</span><br><span class="line">        bare = false</span><br><span class="line">        logallrefupdates = true</span><br><span class="line">[remote &quot;origin&quot;]</span><br><span class="line">        url = /root/repos/project1.git</span><br><span class="line">        fetch = +refs/heads/*:refs/remotes/origin/*</span><br><span class="line">[branch &quot;master&quot;]</span><br><span class="line">        remote = origin</span><br><span class="line">        merge = refs/heads/master</span><br><span class="line">+[submodule &quot;libs/libA&quot;]</span><br><span class="line">+        active = true</span><br><span class="line">+        url = /root/repos/libA.git</span><br><span class="line">+[submodule &quot;libs/libB&quot;]</span><br><span class="line">+        active = true</span><br><span class="line">+        url = /root/repos/libB.git</span><br></pre></td></tr></table></figure>
+<p>查看 工作空间中的文件信息 </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost project1-b]# tree -L 2 libs/</span><br><span class="line">libs/</span><br><span class="line">├── libA</span><br><span class="line">└── libB</span><br><span class="line"></span><br><span class="line">2 directories, 0 files</span><br></pre></td></tr></table></figure>
+<p>发现并不存在文件，这是需要 检出 子模块的代码信息</p>
+<h3 id="使用-检出代码"><a href="#使用-检出代码" class="headerlink" title="使用  检出代码"></a>使用 <span class="label danger">git submodule update</span> 检出代码</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost project1-b]# git submodule update</span><br><span class="line">Cloning into &#x27;/root/projects/project1-b/libs/libA&#x27;...</span><br><span class="line">done.</span><br><span class="line">Cloning into &#x27;/root/projects/project1-b/libs/libB&#x27;...</span><br><span class="line">done.</span><br><span class="line">Submodule path &#x27;libs/libA&#x27;: checked out &#x27;ee8edb6e68cf05a4cceeccb3e0344dc149c5a1ea&#x27;</span><br><span class="line">Submodule path &#x27;libs/libB&#x27;: checked out &#x27;f70d346153fe4020db82d3a8b990c1898b6c86fb&#x27;</span><br><span class="line">[root@localhost project1-b]# tree -L 2 libs/</span><br><span class="line">libs/</span><br><span class="line">├── libA</span><br><span class="line">│   └── readme</span><br><span class="line">└── libB</span><br><span class="line">    └── readme</span><br><span class="line"></span><br><span class="line">2 directories, 2 files</span><br></pre></td></tr></table></figure>
+<h3 id="修改子模块"><a href="#修改子模块" class="headerlink" title="修改子模块"></a>修改子模块</h3><p>查看当前 仓库状态<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost project1-b]# git status</span><br><span class="line">On branch master</span><br><span class="line">Your branch is up to date with &#x27;origin/master&#x27;.</span><br><span class="line"></span><br><span class="line">nothing to commit, working tree clean</span><br></pre></td></tr></table></figure></p>
+<p>如果我们进入子模块A 查看状态呢<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost project1-b]# cd libs/libA/</span><br><span class="line">[root@localhost libA]# git status</span><br><span class="line">HEAD detached at ee8edb6</span><br><span class="line">nothing to commit, working tree clean</span><br><span class="line">[root@localhost libA]# git branch</span><br><span class="line">* (HEAD detached at ee8edb6)</span><br><span class="line">  master</span><br></pre></td></tr></table></figure><br>我们发现 当前 git的头指针不是指向master的，而是指向固定的commitID的<br>如果这个时候我们修改子模块A中的文件，提交就会丢失。</p>
+<p>我们看 .gitmodule 文件<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost libA]# cat ../../.gitmodules</span><br><span class="line">[submodule &quot;libs/libA&quot;]</span><br><span class="line">        path = libs/libA</span><br><span class="line">        url = /root/repos/libA.git</span><br><span class="line">[submodule &quot;libs/libB&quot;]</span><br><span class="line">        path = libs/libB</span><br><span class="line">        url = /root/repos/libB.git</span><br></pre></td></tr></table></figure></p>
+<p>每一个 submodule 记录了</p>
+<ul>
+<li>submodule 名称 submodule “libs/libA”</li>
+<li>submodule 在主项目中的位置 path = libs/libA</li>
+<li>submodule 使用的仓库地址 url = /root/repos/libB.git</li>
+<li>submodule 版本默认commitID [default:master]</li>
+</ul>
+<p>这个时候如果我们需要修改 子模块的内容<br>需要先将 当前Head 指向 需要修改的分支，修改完内容后提交到分支上<br>比如当前的分支master</p>
+<p>切换分支 修改内容，并提交<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost libA]# git checkout master</span><br><span class="line">Switched to branch &#x27;master&#x27;</span><br><span class="line">Your branch is up to date with &#x27;origin/master&#x27;.</span><br><span class="line">[root@localhost libA]# echo &quot;add by developer B&quot; &gt;&gt; readme</span><br><span class="line">[root@localhost libA]# git commit -am &quot;update libA by developer B&quot;</span><br><span class="line">[master 0d13d75] update libA by developer B</span><br><span class="line"> 1 file changed, 1 insertion(+)</span><br></pre></td></tr></table></figure></p>
+<p>将工作空间切换到主项目下，查看当前主项目状态<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost libA]# cd ../../</span><br><span class="line">[root@localhost project1-b]# git status</span><br><span class="line">On branch master</span><br><span class="line">Your branch is up to date with &#x27;origin/master&#x27;.</span><br><span class="line"></span><br><span class="line">Changes not staged for commit:</span><br><span class="line">  (use &quot;git add &lt;file&gt;...&quot; to update what will be committed)</span><br><span class="line">  (use &quot;git checkout -- &lt;file&gt;...&quot; to discard changes in working directory)</span><br><span class="line"></span><br><span class="line">        modified:   libs/libA (new commits)</span><br><span class="line"></span><br><span class="line">no changes added to commit (use &quot;git add&quot; and/or &quot;git commit -a&quot;)</span><br><span class="line">[root@localhost project1-b]# git diff</span><br><span class="line">diff --git a/libs/libA b/libs/libA</span><br><span class="line">index ee8edb6..0d13d75 160000</span><br><span class="line">--- a/libs/libA</span><br><span class="line">+++ b/libs/libA</span><br><span class="line">@@ -1 +1 @@</span><br><span class="line">-Subproject commit ee8edb6e68cf05a4cceeccb3e0344dc149c5a1ea</span><br><span class="line">+Subproject commit 0d13d7551eea10cb8c1407055fa674109753f360</span><br></pre></td></tr></table></figure><br>我们可以发现commitID 以及被修改了</p>
+<div class="note ">
+            <p>注意：如果现在执行了 git submodule update 操作那么libs/libA的commit id又会还原到ee8edb6e68cf05a4cceeccb3e0344dc149c5a1ea</p>
+          </div>
+<p>这样的话刚刚的修改是不是就丢了呢？不会，因为修改已经提交到了master分支，只要再git checkout master就可以了。</p>
+<p>我们现在先将 libs/libA 的修改提交到仓库</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost project1-b]# cd libs/libA/</span><br><span class="line">[root@localhost libA]# git push</span><br><span class="line">Enumerating objects: 5, done.</span><br><span class="line">Counting objects: 100% (5/5), done.</span><br><span class="line">Writing objects: 100% (3/3), 265 bytes | 88.00 KiB/s, done.</span><br><span class="line">Total 3 (delta 0), reused 0 (delta 0)</span><br><span class="line">To /root/repos/libA.git</span><br><span class="line">   ee8edb6..0d13d75  master -&gt; master</span><br></pre></td></tr></table></figure>
+<p>现在仅仅只完成了一步，下一步要提交主项目引用submodule的commit id：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"></span><br></pre></td></tr></table></figure>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/lsgxeva/p/8540758.html">Git Submodule使用完整教程</a><br><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/e27a978ddb88">git submodule 的使用</a><br><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/f8a55b972972/">git submodule 使用小结</a></p>
+
+    </div>
+
+    
+    
+    
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/git/" rel="tag"># git</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2017/05/28/unity/shader-first/" rel="prev" title="Shader 学习文档 [一]">
+      <i class="fa fa-chevron-left"></i> Shader 学习文档 [一]
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2017/05/29/unity/shader-second/" rel="next" title="Shader 学习文档 [二]">
+      Shader 学习文档 [二] <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%95%E5%AD%90"><span class="nav-number">1.</span> <span class="nav-text">引子</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Submodule-%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="nav-number">2.</span> <span class="nav-text">Submodule 是什么？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C"><span class="nav-number">3.</span> <span class="nav-text">准备工作</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%87%86%E5%A4%87%E7%8E%AF%E5%A2%83"><span class="nav-number">3.1.</span> <span class="nav-text">准备环境</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E5%85%AC%E5%85%B1%E7%B1%BB%E5%BA%93%E7%9A%84%E6%9C%AC%E5%9C%B0%E4%BB%93%E5%BA%93"><span class="nav-number">3.1.1.</span> <span class="nav-text">创建公共类库的本地仓库</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%9D%E5%A7%8B%E5%8C%96%E5%85%AC%E5%85%B1%E5%BA%93"><span class="nav-number">3.1.2.</span> <span class="nav-text">初始化公共库</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E9%A1%B9%E7%9B%AE%E4%BD%BF%E7%94%A8%E4%B8%A4%E4%B8%AA%E6%A8%A1%E5%9D%97"><span class="nav-number">4.</span> <span class="nav-text">创建项目使用两个模块</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E4%B8%A4%E4%B8%AA%E9%A1%B9%E7%9B%AE%E4%BB%93%E5%BA%93"><span class="nav-number">4.1.</span> <span class="nav-text">创建两个项目仓库</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%8E%B7%E5%8F%96project1%E5%88%B0%E6%9C%AC%E5%9C%B0"><span class="nav-number">4.2.</span> <span class="nav-text">获取project1到本地</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8-%E6%B7%BB%E5%8A%A0%E5%AD%90%E6%A8%A1%E5%9D%97"><span class="nav-number">4.3.</span> <span class="nav-text">使用 git submodule add 添加子模块</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B6%E4%BB%96%E4%BA%BA%E4%BD%BF%E7%94%A8%E5%B8%A6%E6%9C%89Submodule%E7%9A%84%E4%BB%93%E5%BA%93"><span class="nav-number">5.</span> <span class="nav-text">其他人使用带有Submodule的仓库</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E8%8E%B7%E5%8F%96%E8%BF%9C%E7%A8%8B%E4%BB%93%E5%BA%93"><span class="nav-number">5.1.</span> <span class="nav-text">使用git clone获取远程仓库</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E6%9F%A5%E7%9C%8B%E5%BD%93%E5%89%8D%E5%AD%90%E6%A8%A1%E5%9D%97%E7%8A%B6%E6%80%81"><span class="nav-number">5.2.</span> <span class="nav-text">使用git submodule status查看当前子模块状态</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="nav-number">5.3.</span> <span class="nav-text">初始化 git submodule init</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8-%E6%A3%80%E5%87%BA%E4%BB%A3%E7%A0%81"><span class="nav-number">5.4.</span> <span class="nav-text">使用 git submodule update 检出代码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BF%AE%E6%94%B9%E5%AD%90%E6%A8%A1%E5%9D%97"><span class="nav-number">5.5.</span> <span class="nav-text">修改子模块</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83"><span class="nav-number">6.</span> <span class="nav-text">参考</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Chester.C</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">143</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">32</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">67</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Chester.C</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+if (document.querySelectorAll('pre.mermaid').length) {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mermaid@8/dist/mermaid.min.js', () => {
+    mermaid.initialize({
+      theme    : 'forest',
+      logLevel : 3,
+      flowchart: { curve     : 'linear' },
+      gantt    : { axisFormat: '%m/%d/%Y' },
+      sequence : { actorMargin: 50 }
+    });
+  }, window.mermaid);
+}
+</script>
+
+
+  
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'OQBlgU8H1seTDvVrgC3Dhni0-gzGzoHsz',
+      appKey     : 'wF7D3hVD9WjlV9V52bhlymHO',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : true,
+      lang       : 'zh-cn' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>

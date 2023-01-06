@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.2">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <link rel="amphtml" href="./amp/">
+  <meta name="baidu-site-verification" content="code-mUG0UNAPhR">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"blog.rcant.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="发布者确认 发布者确认发布者确认是RabbitMQ的扩展，可以实现可靠的发布。在channel上启用发布者确认后，代理将异步确认客户端发布的消息，这意味着他们已在服务器端处理。 在频道上启用发布者确认发布者确认是AMQP 0.9.1协议的RabbitMQ扩展，因此默认情况下未启用它们。发布者确认是通过ConfirmSelect方法在通道级别启用的： 12var channel &#x3D; connecti">
+<meta property="og:type" content="article">
+<meta property="og:title" content="RabbitMQ 发布者确认">
+<meta property="og:url" content="http://blog.rcant.com/2020/10/24/mq/rabbitmq-model-publish-confirm/index.html">
+<meta property="og:site_name" content="Chester.Cao Blog">
+<meta property="og:description" content="发布者确认 发布者确认发布者确认是RabbitMQ的扩展，可以实现可靠的发布。在channel上启用发布者确认后，代理将异步确认客户端发布的消息，这意味着他们已在服务器端处理。 在频道上启用发布者确认发布者确认是AMQP 0.9.1协议的RabbitMQ扩展，因此默认情况下未启用它们。发布者确认是通过ConfirmSelect方法在通道级别启用的： 12var channel &#x3D; connecti">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-10-24T13:39:17.000Z">
+<meta property="article:modified_time" content="2023-01-06T09:39:25.889Z">
+<meta property="article:author" content="Chester.C">
+<meta property="article:tag" content="rabbitmq">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://blog.rcant.com/2020/10/24/mq/rabbitmq-model-publish-confirm/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>RabbitMQ 发布者确认 | Chester.Cao Blog</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?974592ac4c5733a52af2b871678a5334";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Chester.Cao Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Chester.Cao Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Devlopper in C#</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-topics">
+
+    <a href="/topics/" rel="section"><i class="fa fa-fw fa-pencil"></i>主题</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://blog.rcant.com/2020/10/24/mq/rabbitmq-model-publish-confirm/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Chester.C">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chester.Cao Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          RabbitMQ 发布者确认
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-10-24 21:39:17" itemprop="dateCreated datePublished" datetime="2020-10-24T21:39:17+08:00">2020-10-24</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-01-06 17:39:25" itemprop="dateModified" datetime="2023-01-06T17:39:25+08:00">2023-01-06</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/MQ/" itemprop="url" rel="index"><span itemprop="name">MQ</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2020/10/24/mq/rabbitmq-model-publish-confirm/" class="post-meta-item leancloud_visitors" data-flag-title="RabbitMQ 发布者确认" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2020/10/24/mq/rabbitmq-model-publish-confirm/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/10/24/mq/rabbitmq-model-publish-confirm/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>发布者确认</p>
+<h2 id="发布者确认"><a href="#发布者确认" class="headerlink" title="发布者确认"></a>发布者确认</h2><p>发布者确认是RabbitMQ的扩展，可以实现可靠的发布。在channel上启用发布者确认后，代理将异步确认客户端发布的消息，这意味着他们已在服务器端处理。</p>
+<h2 id="在频道上启用发布者确认"><a href="#在频道上启用发布者确认" class="headerlink" title="在频道上启用发布者确认"></a>在频道上启用发布者确认</h2><p>发布者确认是AMQP 0.9.1协议的RabbitMQ扩展，因此默认情况下未启用它们。发布者确认是通过ConfirmSelect方法在通道级别启用的：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">var channel = connection.CreateModel();</span><br><span class="line">channel.ConfirmSelect();</span><br></pre></td></tr></table></figure>
+<p>必须在希望使用发布者确认的每个频道上调用此方法。确认仅应启用一次，而不是对每个已发布的消息都启用</p>
+<h3 id="策略1：Publishing-Messages-Individually"><a href="#策略1：Publishing-Messages-Individually" class="headerlink" title="策略1：Publishing Messages Individually"></a>策略1：Publishing Messages Individually</h3><p>每条消息发步后,等待确认<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">private static void PublishMessagesIndividually()</span><br><span class="line">&#123;</span><br><span class="line">    using (var connection = CreateConnection())</span><br><span class="line">    using (var channel = connection.CreateModel())</span><br><span class="line">    &#123;</span><br><span class="line">        var queueName = channel.QueueDeclare().QueueName;</span><br><span class="line">        channel.ConfirmSelect();</span><br><span class="line"></span><br><span class="line">        var timer = new Stopwatch();</span><br><span class="line">        timer.Start();</span><br><span class="line">        for (int i = 0; i &lt; MESSAGE_COUNT; i++)</span><br><span class="line">        &#123;</span><br><span class="line">            var body = Encoding.UTF8.GetBytes(i.ToString());</span><br><span class="line">            channel.BasicPublish(exchange: &quot;&quot;, routingKey: queueName, basicProperties: null, body: body);</span><br><span class="line">            channel.WaitForConfirmsOrDie(new TimeSpan(0, 0, 5));</span><br><span class="line">        &#125;</span><br><span class="line">        timer.Stop();</span><br><span class="line">        Console.WriteLine($&quot;Published &#123;MESSAGE_COUNT:N0&#125; messages individually in &#123;timer.ElapsedMilliseconds:N0&#125; ms&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>在前面的示例中，我们像往常一样发布一条消息，并等待通过Channel＃WaitForConfirmsOrDie(TimeSpan)方法进行确认。确认消息后，该方法立即返回。如果未在超时时间内确认该消息或该消息没有被确认(这意味着代理出于某种原因无法处理该消息)，则该方法将引发异常。异常的处理通常包括记录错误消息和/或重试发送消息。</p>
+<p>此方法非常简单，但也有一个主要缺点：由于消息的确认会阻止所有后续消息的发布，因此它会大大降低发布速度。这种方法不会提供每秒超过数百条已发布消息的吞吐量。但是，对于某些应用程序来说这可能已经足够了。</p>
+<p>发布者确认异步吗？</p>
+<p>我们在一开始提到代理程序以异步方式确认发布的消息，但是在第一个示例中，代码同步等待直到消息被确认。<br>客户端实际上异步接收确认，并相应地取消阻止对WaitForConfirmsOrDie的调用 。将WaitForConfirmsOrDie视为依赖于后台异步通知的同步。</p>
+<span id="more"></span>
+<h3 id="策略2：批量发布消息"><a href="#策略2：批量发布消息" class="headerlink" title="策略2：批量发布消息"></a>策略2：批量发布消息</h3><p>为了改进前面的示例，我们可以发布一批消息，并等待整个批次被确认。以下示例使用了100个批次：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">private static void PublishMessagesInBatch()</span><br><span class="line">&#123;</span><br><span class="line">    using (var connection = CreateConnection())</span><br><span class="line">    using (var channel = connection.CreateModel())</span><br><span class="line">    &#123;</span><br><span class="line">        var queueName = channel.QueueDeclare().QueueName;</span><br><span class="line">        channel.ConfirmSelect();</span><br><span class="line"></span><br><span class="line">        var batchSize = 100;</span><br><span class="line">        var outstandingMessageCount = 0;</span><br><span class="line">        var timer = new Stopwatch();</span><br><span class="line">        timer.Start();</span><br><span class="line">        for (int i = 0; i &lt; MESSAGE_COUNT; i++)</span><br><span class="line">        &#123;</span><br><span class="line">            var body = Encoding.UTF8.GetBytes(i.ToString());</span><br><span class="line">            channel.BasicPublish(exchange: &quot;&quot;, routingKey: queueName, basicProperties: null, body: body);</span><br><span class="line">            outstandingMessageCount++;</span><br><span class="line"></span><br><span class="line">            if (outstandingMessageCount == batchSize)</span><br><span class="line">            &#123;</span><br><span class="line">                channel.WaitForConfirmsOrDie(new TimeSpan(0, 0, 5));</span><br><span class="line">                outstandingMessageCount = 0;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        if (outstandingMessageCount &gt; 0)</span><br><span class="line">            channel.WaitForConfirmsOrDie(new TimeSpan(0, 0, 5));</span><br><span class="line"></span><br><span class="line">        timer.Stop();</span><br><span class="line">        Console.WriteLine($&quot;Published &#123;MESSAGE_COUNT:N0&#125; messages in batch in &#123;timer.ElapsedMilliseconds:N0&#125; ms&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>与等待确认单个消息相比，等待一批消息被确认可以极大地提高吞吐量（对于远程RabbitMQ节点，这最多可以达到20-30倍）。<br>缺点之一是我们不知道发生故障时到底出了什么问题，因此我们可能必须将整个批处理保存在内存中，以记录有意义的内容或重新发布消息。而且该解决方案仍然是同步的，因此它阻止了消息的发布。</p>
+<h3 id="策略3：处理发布者异步确认"><a href="#策略3：处理发布者异步确认" class="headerlink" title="策略3：处理发布者异步确认"></a>策略3：处理发布者异步确认</h3><p>代理异步确认已发布的消息，只需在客户端上注册一个回调即可收到这些确认的通知：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">var channel = connection.CreateModel();</span><br><span class="line">channel.ConfirmSelect();</span><br><span class="line">channel.BasicAcks += (sender, ea) =&gt;</span><br><span class="line">&#123;</span><br><span class="line">  // RabbitMQ 确认的消息</span><br><span class="line">&#125;;</span><br><span class="line">channel.BasicNacks += (sender, ea) =&gt;</span><br><span class="line">&#123;</span><br><span class="line">  // RabbitMQ 未确认的消息(可以认为是丢失的消息)</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>有2个回调：一个用于确认的消息，另一个用于未确认的消息（代理可以认为丢失的消息）。这两个回调都有一个对应的 <strong>EventArgs</strong> 参数（ea），其中包含：</p>
+<ul>
+<li>DeliveryTag : 标识 <strong>已确认或丢失</strong> 消息的序列号。</li>
+<li>multiple : 这是一个布尔值。如果为false，则仅 <strong>确认/丢失</strong> 一条消息；如果为true，则将 <strong>确认/丢失</strong> 序列号较低或相等的所有消息。</li>
+</ul>
+<p>可以在消息发布之前通过 <strong>Channel＃NextPublishSeqNo</strong> 获取序列号</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">var sequenceNumber = channel.NextPublishSeqNo;</span><br><span class="line">channel.BasicPublish(exchange, queue, properties, body);</span><br></pre></td></tr></table></figure>
+<p>将消息与序列号关联的一种简单方法是使用字典。假设我们要发布字符串，因为它们很容易变成要发布的字节数组。这是一个代码示例，该示例使用字典将发布序列号与消息的字符串主体相关联：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">var outstandingConfirms = new ConcurrentDictionary&lt;ulong, string&gt;();</span><br><span class="line">// ... code for confirm callbacks will come later</span><br><span class="line">var body = &quot;...&quot;;</span><br><span class="line">outstandingConfirms.TryAdd(channel.NextPublishSeqNo, body);</span><br><span class="line">channel.BasicPublish(exchange, queue, properties, Encoding.UTF8.GetBytes(body));</span><br></pre></td></tr></table></figure>
+<p>现在，发布消息 使用字典来跟踪 消息是否被确认。<br>我们需要在消息确认回调时清理此字典，并做一些类似在消息丢失警告的操作：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">var outstandingConfirms = new ConcurrentDictionary&lt;ulong, string&gt;();</span><br><span class="line"></span><br><span class="line">void ​cleanOutstandingConfirms(ulong sequenceNumber, bool multiple)</span><br><span class="line">&#123;</span><br><span class="line">   ​if (multiple)</span><br><span class="line">   ​&#123;</span><br><span class="line">       ​var confirmed = outstandingConfirms.Where(k =&gt; k.Key &lt;= sequenceNumber);</span><br><span class="line">       ​foreach (var entry in confirmed)</span><br><span class="line">       ​&#123;</span><br><span class="line">           ​outstandingConfirms.TryRemove(entry.Key, out _);</span><br><span class="line">       ​&#125;</span><br><span class="line">   ​&#125;</span><br><span class="line">   ​else</span><br><span class="line">   ​&#123;</span><br><span class="line">       ​outstandingConfirms.TryRemove(sequenceNumber, out _);</span><br><span class="line">   ​&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">channel.BasicAcks += (sender, ea) =&gt; cleanOutstandingConfirms(ea.DeliveryTag, ea.Multiple);</span><br><span class="line">channel.BasicNacks += (sender, ea) =&gt;</span><br><span class="line">&#123;</span><br><span class="line">   ​outstandingConfirms.TryGetValue(ea.DeliveryTag, out string body);</span><br><span class="line">   ​Console.WriteLine($&quot;Message with body &#123;body&#125; has been nack-ed. Sequence number: &#123;ea.DeliveryTag&#125;, multiple: &#123;ea.Multiple&#125;&quot;);</span><br><span class="line">   ​cleanOutstandingConfirms(ea.DeliveryTag, ea.Multiple);</span><br><span class="line">&#125;;</span><br><span class="line">// ... publishing code</span><br></pre></td></tr></table></figure>
+<h3 id="所有代码"><a href="#所有代码" class="headerlink" title="所有代码"></a>所有代码</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br></pre></td><td class="code"><pre><span class="line">using RabbitMQ.Client;</span><br><span class="line">using System;</span><br><span class="line">using System.Collections.Concurrent;</span><br><span class="line">using System.Diagnostics;</span><br><span class="line">using System.Text;</span><br><span class="line">using System.Linq;</span><br><span class="line">using System.Threading;</span><br><span class="line"></span><br><span class="line">class PublisherConfirms</span><br><span class="line">&#123;</span><br><span class="line">    private const int MESSAGE_COUNT = 50_000;</span><br><span class="line"></span><br><span class="line">    public static void Main()</span><br><span class="line">    &#123;</span><br><span class="line">        PublishMessagesIndividually();</span><br><span class="line">        PublishMessagesInBatch();</span><br><span class="line">        HandlePublishConfirmsAsynchronously();</span><br><span class="line">        Console.ReadLine();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private static IConnection CreateConnection()</span><br><span class="line">    &#123;</span><br><span class="line">        var factory = new ConnectionFactory &#123; HostName = &quot;localhost&quot;, VirtualHost = &quot;frexport&quot; &#125;;</span><br><span class="line">        return factory.CreateConnection();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private static void PublishMessagesIndividually()</span><br><span class="line">    &#123;</span><br><span class="line">        using (var connection = CreateConnection())</span><br><span class="line">        using (var channel = connection.CreateModel())</span><br><span class="line">        &#123;</span><br><span class="line">            var queueName = channel.QueueDeclare().QueueName;</span><br><span class="line">            channel.ConfirmSelect();</span><br><span class="line"></span><br><span class="line">            var timer = new Stopwatch();</span><br><span class="line">            timer.Start();</span><br><span class="line">            for (int i = 0; i &lt; MESSAGE_COUNT; i++)</span><br><span class="line">            &#123;</span><br><span class="line">                var body = Encoding.UTF8.GetBytes(i.ToString());</span><br><span class="line">                channel.BasicPublish(exchange: &quot;&quot;, routingKey: queueName, basicProperties: null, body: body);</span><br><span class="line">                channel.WaitForConfirmsOrDie(new TimeSpan(0, 0, 5));</span><br><span class="line">            &#125;</span><br><span class="line">            timer.Stop();</span><br><span class="line">            Console.WriteLine($&quot;Published &#123;MESSAGE_COUNT:N0&#125; messages individually in &#123;timer.ElapsedMilliseconds:N0&#125; ms&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private static void PublishMessagesInBatch()</span><br><span class="line">    &#123;</span><br><span class="line">        using (var connection = CreateConnection())</span><br><span class="line">        using (var channel = connection.CreateModel())</span><br><span class="line">        &#123;</span><br><span class="line">            var queueName = channel.QueueDeclare().QueueName;</span><br><span class="line">            channel.ConfirmSelect();</span><br><span class="line"></span><br><span class="line">            var batchSize = 100;</span><br><span class="line">            var outstandingMessageCount = 0;</span><br><span class="line">            var timer = new Stopwatch();</span><br><span class="line">            timer.Start();</span><br><span class="line">            for (int i = 0; i &lt; MESSAGE_COUNT; i++)</span><br><span class="line">            &#123;</span><br><span class="line">                var body = Encoding.UTF8.GetBytes(i.ToString());</span><br><span class="line">                channel.BasicPublish(exchange: &quot;&quot;, routingKey: queueName, basicProperties: null, body: body);</span><br><span class="line">                outstandingMessageCount++;</span><br><span class="line"></span><br><span class="line">                if (outstandingMessageCount == batchSize)</span><br><span class="line">                &#123;</span><br><span class="line">                    channel.WaitForConfirmsOrDie(new TimeSpan(0, 0, 5));</span><br><span class="line">                    outstandingMessageCount = 0;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            if (outstandingMessageCount &gt; 0)</span><br><span class="line">                channel.WaitForConfirmsOrDie(new TimeSpan(0, 0, 5));</span><br><span class="line"></span><br><span class="line">            timer.Stop();</span><br><span class="line">            Console.WriteLine($&quot;Published &#123;MESSAGE_COUNT:N0&#125; messages in batch in &#123;timer.ElapsedMilliseconds:N0&#125; ms&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private static void HandlePublishConfirmsAsynchronously()</span><br><span class="line">    &#123;</span><br><span class="line">        using (var connection = CreateConnection())</span><br><span class="line">        using (var channel = connection.CreateModel())</span><br><span class="line">        &#123;</span><br><span class="line">            var queueName = channel.QueueDeclare().QueueName;</span><br><span class="line">            channel.ConfirmSelect();</span><br><span class="line"></span><br><span class="line">            var outstandingConfirms = new ConcurrentDictionary&lt;ulong, string&gt;();</span><br><span class="line"></span><br><span class="line">            void cleanOutstandingConfirms(ulong sequenceNumber, bool multiple)</span><br><span class="line">            &#123;</span><br><span class="line">                if (multiple)</span><br><span class="line">                &#123;</span><br><span class="line">                    var confirmed = outstandingConfirms.Where(k =&gt; k.Key &lt;= sequenceNumber);</span><br><span class="line">                    foreach (var entry in confirmed)</span><br><span class="line">                        outstandingConfirms.TryRemove(entry.Key, out _);</span><br><span class="line">                &#125;</span><br><span class="line">                else</span><br><span class="line">                    outstandingConfirms.TryRemove(sequenceNumber, out _);</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            channel.BasicAcks += (sender, ea) =&gt; cleanOutstandingConfirms(ea.DeliveryTag, ea.Multiple);</span><br><span class="line">            channel.BasicNacks += (sender, ea) =&gt;</span><br><span class="line">            &#123;</span><br><span class="line">                outstandingConfirms.TryGetValue(ea.DeliveryTag, out string body);</span><br><span class="line">                Console.WriteLine($&quot;Message with body &#123;body&#125; has been nack-ed. Sequence number: &#123;ea.DeliveryTag&#125;, multiple: &#123;ea.Multiple&#125;&quot;);</span><br><span class="line">                cleanOutstandingConfirms(ea.DeliveryTag, ea.Multiple);</span><br><span class="line">            &#125;;</span><br><span class="line"></span><br><span class="line">            var timer = new Stopwatch();</span><br><span class="line">            timer.Start();</span><br><span class="line">            for (int i = 0; i &lt; MESSAGE_COUNT; i++)</span><br><span class="line">            &#123;</span><br><span class="line">                var body = i.ToString();</span><br><span class="line">                outstandingConfirms.TryAdd(channel.NextPublishSeqNo, i.ToString());</span><br><span class="line">                channel.BasicPublish(exchange: &quot;&quot;, routingKey: queueName, basicProperties: null, body: Encoding.UTF8.GetBytes(body));</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            if (!WaitUntil(60, () =&gt; outstandingConfirms.IsEmpty))</span><br><span class="line">                throw new Exception(&quot;All messages could not be confirmed in 60 seconds&quot;);</span><br><span class="line"></span><br><span class="line">            timer.Stop();</span><br><span class="line">            Console.WriteLine($&quot;Published &#123;MESSAGE_COUNT:N0&#125; messages and handled confirm asynchronously &#123;timer.ElapsedMilliseconds:N0&#125; ms&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private static bool WaitUntil(int numberOfSeconds, Func&lt;bool&gt; condition)</span><br><span class="line">    &#123;</span><br><span class="line">        int waited = 0;</span><br><span class="line">        while (!condition() &amp;&amp; waited &lt; numberOfSeconds * 1000)</span><br><span class="line">        &#123;</span><br><span class="line">            Thread.Sleep(100);</span><br><span class="line">            waited += 100;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        return condition();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="RabbitMQ在本机运行的效果"><a href="#RabbitMQ在本机运行的效果" class="headerlink" title="RabbitMQ在本机运行的效果"></a>RabbitMQ在本机运行的效果</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Published 50,000 messages individually in 5,549 ms</span><br><span class="line">Published 50,000 messages in batch in 2,331 ms</span><br><span class="line">Published 50,000 messages and handled confirms asynchronously in 4,054 ms</span><br></pre></td></tr></table></figure>
+<h2 id="RabbitMQ在远程运行的效果"><a href="#RabbitMQ在远程运行的效果" class="headerlink" title="RabbitMQ在远程运行的效果"></a>RabbitMQ在远程运行的效果</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Published 50,000 messages individually in 231,541 ms</span><br><span class="line">Published 50,000 messages in batch in 7,232 ms</span><br><span class="line">Published 50,000 messages and handled confirms asynchronously in 6,332 ms</span><br></pre></td></tr></table></figure>
+<h2 id="RabbitMQ-Model介绍"><a href="#RabbitMQ-Model介绍" class="headerlink" title="RabbitMQ Model介绍"></a>RabbitMQ Model介绍</h2><ul>
+<li><a href="/2020/10/24/mq/rabbitmq-model-simple/" title="RabbitMQ Hello Model">RabbitMQ Hello Model</a>  </li>
+<li><a href="/2020/10/24/mq/rabbitmq-model-work/" title="RabbitMQ WorkQueue Model">RabbitMQ WorkQueue Model</a>  </li>
+<li><a href="/2020/10/24/mq/rabbitmq-model-subscribe/" title="RabbitMQ Subscribe Model">RabbitMQ Subscribe Model</a>  </li>
+<li><a href="/2020/10/24/mq/rabbitmq-model-routing/" title="RabbitMQ Routing Model">RabbitMQ Routing Model</a>  </li>
+<li><a href="/2020/10/24/mq/rabbitmq-model-topics/" title="RabbitMQ Topics Model">RabbitMQ Topics Model</a>  </li>
+<li><a href="/2020/10/24/mq/rabbitmq-model-rpc/" title="RabbitMQ RPC Model">RabbitMQ RPC Model</a>  </li>
+<li><a href="/2020/10/24/mq/rabbitmq-model-publish-confirm/" title="RabbitMQ 发布确认">RabbitMQ 发布确认</a>  </li>
+</ul>
+
+    </div>
+
+    
+    
+    
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/rabbitmq/" rel="tag"># rabbitmq</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/10/24/mq/rabbitmq-model-routing/" rel="prev" title="RabbitMQ 路由模式">
+      <i class="fa fa-chevron-left"></i> RabbitMQ 路由模式
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/11/12/cpp/cpp-makefile-simple/" rel="next" title="学习MakeFile">
+      学习MakeFile <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%91%E5%B8%83%E8%80%85%E7%A1%AE%E8%AE%A4"><span class="nav-number">1.</span> <span class="nav-text">发布者确认</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9C%A8%E9%A2%91%E9%81%93%E4%B8%8A%E5%90%AF%E7%94%A8%E5%8F%91%E5%B8%83%E8%80%85%E7%A1%AE%E8%AE%A4"><span class="nav-number">2.</span> <span class="nav-text">在频道上启用发布者确认</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AD%96%E7%95%A51%EF%BC%9APublishing-Messages-Individually"><span class="nav-number">2.1.</span> <span class="nav-text">策略1：Publishing Messages Individually</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AD%96%E7%95%A52%EF%BC%9A%E6%89%B9%E9%87%8F%E5%8F%91%E5%B8%83%E6%B6%88%E6%81%AF"><span class="nav-number">2.2.</span> <span class="nav-text">策略2：批量发布消息</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AD%96%E7%95%A53%EF%BC%9A%E5%A4%84%E7%90%86%E5%8F%91%E5%B8%83%E8%80%85%E5%BC%82%E6%AD%A5%E7%A1%AE%E8%AE%A4"><span class="nav-number">2.3.</span> <span class="nav-text">策略3：处理发布者异步确认</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%89%80%E6%9C%89%E4%BB%A3%E7%A0%81"><span class="nav-number">2.4.</span> <span class="nav-text">所有代码</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RabbitMQ%E5%9C%A8%E6%9C%AC%E6%9C%BA%E8%BF%90%E8%A1%8C%E7%9A%84%E6%95%88%E6%9E%9C"><span class="nav-number">3.</span> <span class="nav-text">RabbitMQ在本机运行的效果</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RabbitMQ%E5%9C%A8%E8%BF%9C%E7%A8%8B%E8%BF%90%E8%A1%8C%E7%9A%84%E6%95%88%E6%9E%9C"><span class="nav-number">4.</span> <span class="nav-text">RabbitMQ在远程运行的效果</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RabbitMQ-Model%E4%BB%8B%E7%BB%8D"><span class="nav-number">5.</span> <span class="nav-text">RabbitMQ Model介绍</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Chester.C</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">143</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">32</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">67</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Chester.C</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+if (document.querySelectorAll('pre.mermaid').length) {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mermaid@8/dist/mermaid.min.js', () => {
+    mermaid.initialize({
+      theme    : 'forest',
+      logLevel : 3,
+      flowchart: { curve     : 'linear' },
+      gantt    : { axisFormat: '%m/%d/%Y' },
+      sequence : { actorMargin: 50 }
+    });
+  }, window.mermaid);
+}
+</script>
+
+
+  
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'OQBlgU8H1seTDvVrgC3Dhni0-gzGzoHsz',
+      appKey     : 'wF7D3hVD9WjlV9V52bhlymHO',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : true,
+      lang       : 'zh-cn' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>

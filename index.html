@@ -1,0 +1,1529 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.2">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="baidu-site-verification" content="code-mUG0UNAPhR">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"blog.rcant.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta property="og:type" content="website">
+<meta property="og:title" content="Chester.Cao Blog">
+<meta property="og:url" content="http://blog.rcant.com/index.html">
+<meta property="og:site_name" content="Chester.Cao Blog">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:author" content="Chester.C">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://blog.rcant.com/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : true,
+    isPost : false,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Chester.Cao Blog</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?974592ac4c5733a52af2b871678a5334";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Chester.Cao Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Chester.Cao Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Devlopper in C#</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-topics">
+
+    <a href="/topics/" rel="section"><i class="fa fa-fw fa-pencil"></i>主题</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content index posts-expand">
+            
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://blog.rcant.com/2021/03/09/framework/programmer-grow-0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Chester.C">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chester.Cao Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/03/09/framework/programmer-grow-0/" class="post-title-link" itemprop="url">从程序员到架构师 学习</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-03-09 11:39:17" itemprop="dateCreated datePublished" datetime="2021-03-09T11:39:17+08:00">2021-03-09</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-01-06 17:36:27" itemprop="dateModified" datetime="2023-01-06T17:36:27+08:00">2023-01-06</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%9E%B6%E6%9E%84/" itemprop="url" rel="index"><span itemprop="name">架构</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2021/03/09/framework/programmer-grow-0/" class="post-meta-item leancloud_visitors" data-flag-title="从程序员到架构师 学习" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2021/03/09/framework/programmer-grow-0/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2021/03/09/framework/programmer-grow-0/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h2><p>架构风格</p>
+<p>人才，以及合理的人才结构，是软件公司乃至软件业发展的关键<br>成才，并在企业中承担重要职责，是个人职业发展的关键</p>
+<h2 id="从程序员到架构师转型"><a href="#从程序员到架构师转型" class="headerlink" title="从程序员到架构师转型"></a>从程序员到架构师转型</h2><p>一个软企发展的好坏，极大的取决于如下人才因素：</p>
+<ul>
+<li>员工素质</li>
+<li>人才结构</li>
+<li>员工职业技能的纵深积累</li>
+<li>员工职业技能的适时更新</li>
+</ul>
+<p>要让软件企业适应发展，需要：</p>
+<ul>
+<li>定期分析和掌握本公司员工能力状况、人才结构状况</li>
+<li>员工专项技能的渐进提升（如架构技能，设计重构技能）</li>
+<li>研发骨干整体技能的跨越转型（例如 高级工程师向架构师，系统工程师和技术经理的转型）</li>
+</ul>
+<p>提升个人技能，也是让企业获取人才的合适途径</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2021/03/09/framework/programmer-grow-0/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://blog.rcant.com/2020/11/13/cpp/cpp-autoconf-0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Chester.C">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chester.Cao Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/11/13/cpp/cpp-autoconf-0/" class="post-title-link" itemprop="url">学习Autoconf</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-11-13 11:39:17" itemprop="dateCreated datePublished" datetime="2020-11-13T11:39:17+08:00">2020-11-13</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-12-15 15:06:27" itemprop="dateModified" datetime="2021-12-15T15:06:27+08:00">2021-12-15</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/C/" itemprop="url" rel="index"><span itemprop="name">C</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2020/11/13/cpp/cpp-autoconf-0/" class="post-meta-item leancloud_visitors" data-flag-title="学习Autoconf" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2020/11/13/cpp/cpp-autoconf-0/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/11/13/cpp/cpp-autoconf-0/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>Makefile其实不难学，对于一些基本概念百度上应该很多，这里分享一个循序渐进的学习方式，保证让你快速掌握Makefile的编写。本文首发于公众号：良许Linux，里面有一个 Makefile 系列，欢迎关注交流！</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/11/13/cpp/cpp-autoconf-0/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://blog.rcant.com/2020/11/13/cpp/cpp-cmake-0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Chester.C">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chester.Cao Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/11/13/cpp/cpp-cmake-0/" class="post-title-link" itemprop="url">学习CMake</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-11-13 11:39:17" itemprop="dateCreated datePublished" datetime="2020-11-13T11:39:17+08:00">2020-11-13</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-01-06 17:29:02" itemprop="dateModified" datetime="2023-01-06T17:29:02+08:00">2023-01-06</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/C/" itemprop="url" rel="index"><span itemprop="name">C</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2020/11/13/cpp/cpp-cmake-0/" class="post-meta-item leancloud_visitors" data-flag-title="学习CMake" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2020/11/13/cpp/cpp-cmake-0/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/11/13/cpp/cpp-cmake-0/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>你或许听过好几种 Make 工具，例如 <a target="_blank" rel="noopener" href="https://www.hahack.com/wiki/tools-makefile.html">GNU Make</a> ，QT 的 <a target="_blank" rel="noopener" href="http://qt-project.org/doc/qt-4.8/qmake-manual.html">qmake</a> ，微软的 <a target="_blank" rel="noopener" href="http://msdn.microsoft.com/en-us/library/ms930369.aspx">MS nmake</a>，BSD Make（<a target="_blank" rel="noopener" href="http://www.freebsd.org/doc/en/books/pmake/">pmake</a>），Makepp，等等。这些 Make 工具遵循着不同的规范和标准，所执行的 Makefile 格式也千差万别。这样就带来了一个严峻的问题：如果软件想跨平台，必须要保证能够在不同平台编译。而如果使用上面的 Make 工具，就得为每一种标准写一次 Makefile ，这将是一件让人抓狂的工作。</p>
+<p>CMake就是针对上面问题所设计的工具：它首先允许开发者编写一种平台无关的 CMakeList.txt 文件来定制整个编译流程，然后再根据目标用户的平台进一步生成所需的本地化 Makefile 和工程文件，如 Unix 的 Makefile 或 Windows 的 Visual Studio 工程。从而做到“Write once, run everywhere”。显然，CMake 是一个比上述几种 make 更高级的编译配置工具。一些使用 CMake 作为项目架构系统的知名开源项目有 VTK、ITK、KDE、OpenCV、OSG 等 [1]。</p>
+<p>在 linux 平台下使用 CMake 生成 Makefile 并编译的流程如下：</p>
+<ol>
+<li>编写 CMake 配置文件 CMakeLists.txt 。</li>
+<li>执行命令 <span class="label warning">cmake PATH</span> 或者 <span class="label warning">ccmake PATH</span> 生成 Makefile ( <span class="label warning">ccmake</span> 和 <span class="label warning">cmake</span> 的区别在于前者提供了一个交互式的界面)。其中， <span class="label warning">PATH</span> 是 CMakeLists.txt 所在的目录。</li>
+<li>使用 <span class="label warning">make</span> 命令进行编译。</li>
+</ol>
+<p>本文将从实例入手，一步步讲解 CMake 的常见用法，文中所有的实例代码可以在这里找到。如果你读完仍觉得意犹未尽，可以继续学习我在文章末尾提供的其他资源。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/11/13/cpp/cpp-cmake-0/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://blog.rcant.com/2020/11/12/cpp/cpp-makefile-0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Chester.C">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chester.Cao Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/11/12/cpp/cpp-makefile-0/" class="post-title-link" itemprop="url">学习MakeFile(前言)</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-11-12 11:39:17" itemprop="dateCreated datePublished" datetime="2020-11-12T11:39:17+08:00">2020-11-12</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-01-06 17:29:19" itemprop="dateModified" datetime="2023-01-06T17:29:19+08:00">2023-01-06</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/C/" itemprop="url" rel="index"><span itemprop="name">C</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2020/11/12/cpp/cpp-makefile-0/" class="post-meta-item leancloud_visitors" data-flag-title="学习MakeFile(前言)" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2020/11/12/cpp/cpp-makefile-0/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/11/12/cpp/cpp-makefile-0/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h2><p>为了让逐个编译的过程变成一条命令</p>
+<h2 id="前提：了解Makefile是什么？"><a href="#前提：了解Makefile是什么？" class="headerlink" title="前提：了解Makefile是什么？"></a>前提：了解Makefile是什么？</h2><span class="label danger">Makefile</span>  关系到了整个工程的编译规则。一个工程中的源文件不计数，其按类型、功能、模块分别放在若干个目录中，<span class="label danger">Makefile</span> 定义了一系列的规则来指定，哪些文件需要先编译，哪些文件需要后编译，哪些文件需要重新编译，甚至于进行更复杂的功能操作，因为 <span class="label danger">Makefile</span>  就像一个 <span class="label danger">Makefile</span> 脚本一样，其中也可以执行操作系统的命令。
+
+<span class="label danger">Makefile</span>  带来的好处就是——“自动化编译”，一旦写好，只需要一个 <span class="label danger">make</span> 命令，整个工程完全自动编译，极大的提高了软件开发的效率。 
+
+<span class="label danger">make</span> 是一个命令工具，是一个解释 <span class="label danger">Makefile</span> 中指令的命令工具，一般来说，大多数的IDE都有这个命令，比如：Delphi的 <span class="label danger">make</span> ，Visual C++ 的 <span class="label danger">nmake</span>，Linux下GNU的 <span class="label danger">make</span> 。可见， <span class="label danger">Makefile</span> 都成为了一种在工程方面的编译方法。
+
+<blockquote><p>在这篇文档中，将以C/C++的源码作为我们基础，所以必然涉及一些关于C/C++的编译的知识，相关于这方面的内容，还请各位查看相关的编译器的文档。这里所默认的编译器是UNIX下的GCC和CC。</p>
+</blockquote>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/11/12/cpp/cpp-makefile-0/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://blog.rcant.com/2020/11/12/cpp/cpp-makefile-2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Chester.C">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chester.Cao Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/11/12/cpp/cpp-makefile-2/" class="post-title-link" itemprop="url">学习MakeFile(总述)</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-11-12 11:39:17" itemprop="dateCreated datePublished" datetime="2020-11-12T11:39:17+08:00">2020-11-12</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-01-06 17:29:39" itemprop="dateModified" datetime="2023-01-06T17:29:39+08:00">2023-01-06</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/C/" itemprop="url" rel="index"><span itemprop="name">C</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2020/11/12/cpp/cpp-makefile-2/" class="post-meta-item leancloud_visitors" data-flag-title="学习MakeFile(总述)" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2020/11/12/cpp/cpp-makefile-2/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/11/12/cpp/cpp-makefile-2/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h2><p>为了让逐个编译的过程变成一条命令</p>
+<h2 id="2-Makefile-总述"><a href="#2-Makefile-总述" class="headerlink" title="2 Makefile 总述"></a>2 Makefile 总述</h2><h3 id="2-1-Makefile里有什么？"><a href="#2-1-Makefile里有什么？" class="headerlink" title="2.1 Makefile里有什么？"></a>2.1 Makefile里有什么？</h3><p>Makefile里主要包含了五个东西：显式规则、隐晦规则、变量定义、文件指示和注释。</p>
+<ol>
+<li>显式规则。显式规则说明了，如何生成一个或多的的目标文件。这是由Makefile的书写者明显指出，要生成的文件，文件的依赖文件，生成的命令。</li>
+<li>隐晦规则。由于我们的make有自动推导的功能，所以隐晦的规则可以让我们比较粗糙地简略地书写Makefile，这是由make所支持的。</li>
+<li>变量的定义。在Makefile中我们要定义一系列的变量，变量一般都是字符串，这个有点你C语言中的宏，当Makefile被执行时，其中的变量都会被扩展到相应的引用位置上。</li>
+<li>文件指示。其包括了三个部分，一个是在一个Makefile中引用另一个Makefile，就像C语言中的include一样；另一个是指根据某些情况指定Makefile中的有效部分，就像C语言中的预编译#if一样；还有就是定义一个多行的命令。有关这一部分的内容，我会在后续的部分中讲述。</li>
+<li>注释。Makefile中只有行注释，和UNIX的Shell脚本一样，其注释是用“#”字符，这个就像C/C++中的“//”一样。如果你要在你的Makefile中使用“#”字符，可以用反斜框进行转义，如：“#”。</li>
+</ol>
+<p>最后，还值得一提的是，在Makefile中的命令，必须要以[Tab]键开始。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/11/12/cpp/cpp-makefile-2/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://blog.rcant.com/2020/11/12/cpp/cpp-makefile-1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Chester.C">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chester.Cao Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/11/12/cpp/cpp-makefile-1/" class="post-title-link" itemprop="url">学习MakeFile(介绍)</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-11-12 11:39:17" itemprop="dateCreated datePublished" datetime="2020-11-12T11:39:17+08:00">2020-11-12</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-01-06 17:29:30" itemprop="dateModified" datetime="2023-01-06T17:29:30+08:00">2023-01-06</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/C/" itemprop="url" rel="index"><span itemprop="name">C</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2020/11/12/cpp/cpp-makefile-1/" class="post-meta-item leancloud_visitors" data-flag-title="学习MakeFile(介绍)" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2020/11/12/cpp/cpp-makefile-1/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/11/12/cpp/cpp-makefile-1/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h2><p>为了让逐个编译的过程变成一条命令</p>
+<h2 id="1、Makefile-介绍"><a href="#1、Makefile-介绍" class="headerlink" title="1、Makefile 介绍"></a>1、Makefile 介绍</h2><p>make命令执行时，需要一个 Makefile 文件，以告诉make命令需要怎么样的去编译和链接程序。</p>
+<p>首先，我们用一个示例来说明Makefile的书写规则。以便给大家一个感性认识。这个示例来源于GNU的make使用手册，在这个示例中，我们的工程有8个C文件，和3个头文件，我们要写一个Makefile来告诉make命令如何编译和链接这几个文件。我们的规则是：</p>
+<ol>
+<li>如果这个工程没有编译过，那么我们的所有C文件都要编译并被链接。</li>
+<li>如果这个工程的某几个C文件被修改，那么我们只编译被修改的C文件，并链接目标程序。</li>
+<li>如果这个工程的头文件被改变了，那么我们需要编译引用了这几个头文件的C文件，并链接目标程序。</li>
+</ol>
+<p>只要我们的Makefile写得够好，所有的这一切，我们只用一个make命令就可以完成，make命令会自动智能地根据当前的文件修改的情况来确定哪些文件需要重编译，从而自己编译所需要的文件和链接目标程序。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/11/12/cpp/cpp-makefile-1/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://blog.rcant.com/2020/11/12/cpp/cpp-makefile-simple/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Chester.C">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chester.Cao Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/11/12/cpp/cpp-makefile-simple/" class="post-title-link" itemprop="url">学习MakeFile</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-11-12 11:39:17" itemprop="dateCreated datePublished" datetime="2020-11-12T11:39:17+08:00">2020-11-12</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-01-06 17:30:03" itemprop="dateModified" datetime="2023-01-06T17:30:03+08:00">2023-01-06</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/C/" itemprop="url" rel="index"><span itemprop="name">C</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2020/11/12/cpp/cpp-makefile-simple/" class="post-meta-item leancloud_visitors" data-flag-title="学习MakeFile" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2020/11/12/cpp/cpp-makefile-simple/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/11/12/cpp/cpp-makefile-simple/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>Makefile其实不难学，对于一些基本概念百度上应该很多，这里分享一个循序渐进的学习方式，保证让你快速掌握Makefile的编写。本文首发于公众号：良许Linux，里面有一个 Makefile 系列，欢迎关注交流！</p>
+<h2 id="1-前言"><a href="#1-前言" class="headerlink" title="1. 前言"></a>1. 前言</h2><p>通过之前章节的学习，我们对Makefile有个基础的认识，现在开始自己动手写Makefile。目前网络上有不少可以自动生成Makefile的工具，但很多项目其实没必要那么复杂，完全可以自己动手写出来。而且对于初学者来说，自己动手写一遍Makefile可以顶看十遍高手写的Makefile，也可以加深对Makefile的理解，将来公司的Makefile有需要修改的时候自己就可以动手搞定，不需要依靠他人，何乐而不为？</p>
+<h2 id="2-源代码"><a href="#2-源代码" class="headerlink" title="2. 源代码"></a>2. 源代码</h2><p>介绍在本教程中用于示例的代码很简单，仅仅是在main函数中调用了fun1及fun2函数，而fun1及fun2独立写在fun1.c及fun2.c里。代码如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">//main.c  </span><br><span class="line">int main()  </span><br><span class="line">&#123;  </span><br><span class="line">    printf(&quot;hello world\n&quot;);  </span><br><span class="line">    fun1();  </span><br><span class="line">    fun2();  </span><br><span class="line">&#125;  </span><br><span class="line"></span><br><span class="line">//fun1.c  </span><br><span class="line">void fun1()  </span><br><span class="line">&#123;  </span><br><span class="line">    printf(&quot;this is fun1\n&quot;);  </span><br><span class="line">&#125;  </span><br><span class="line">//fun2.c  </span><br><span class="line">void fun2()  </span><br><span class="line">&#123;  </span><br><span class="line">    printf(&quot;this is fun2\n&quot;);  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/11/12/cpp/cpp-makefile-simple/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://blog.rcant.com/2020/10/24/mq/rabbitmq-model-publish-confirm/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Chester.C">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chester.Cao Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/10/24/mq/rabbitmq-model-publish-confirm/" class="post-title-link" itemprop="url">RabbitMQ 发布者确认</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-10-24 21:39:17" itemprop="dateCreated datePublished" datetime="2020-10-24T21:39:17+08:00">2020-10-24</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-01-06 17:39:25" itemprop="dateModified" datetime="2023-01-06T17:39:25+08:00">2023-01-06</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/MQ/" itemprop="url" rel="index"><span itemprop="name">MQ</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2020/10/24/mq/rabbitmq-model-publish-confirm/" class="post-meta-item leancloud_visitors" data-flag-title="RabbitMQ 发布者确认" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2020/10/24/mq/rabbitmq-model-publish-confirm/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/10/24/mq/rabbitmq-model-publish-confirm/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>发布者确认</p>
+<h2 id="发布者确认"><a href="#发布者确认" class="headerlink" title="发布者确认"></a>发布者确认</h2><p>发布者确认是RabbitMQ的扩展，可以实现可靠的发布。在channel上启用发布者确认后，代理将异步确认客户端发布的消息，这意味着他们已在服务器端处理。</p>
+<h2 id="在频道上启用发布者确认"><a href="#在频道上启用发布者确认" class="headerlink" title="在频道上启用发布者确认"></a>在频道上启用发布者确认</h2><p>发布者确认是AMQP 0.9.1协议的RabbitMQ扩展，因此默认情况下未启用它们。发布者确认是通过ConfirmSelect方法在通道级别启用的：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">var channel = connection.CreateModel();</span><br><span class="line">channel.ConfirmSelect();</span><br></pre></td></tr></table></figure>
+<p>必须在希望使用发布者确认的每个频道上调用此方法。确认仅应启用一次，而不是对每个已发布的消息都启用</p>
+<h3 id="策略1：Publishing-Messages-Individually"><a href="#策略1：Publishing-Messages-Individually" class="headerlink" title="策略1：Publishing Messages Individually"></a>策略1：Publishing Messages Individually</h3><p>每条消息发步后,等待确认<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">private static void PublishMessagesIndividually()</span><br><span class="line">&#123;</span><br><span class="line">    using (var connection = CreateConnection())</span><br><span class="line">    using (var channel = connection.CreateModel())</span><br><span class="line">    &#123;</span><br><span class="line">        var queueName = channel.QueueDeclare().QueueName;</span><br><span class="line">        channel.ConfirmSelect();</span><br><span class="line"></span><br><span class="line">        var timer = new Stopwatch();</span><br><span class="line">        timer.Start();</span><br><span class="line">        for (int i = 0; i &lt; MESSAGE_COUNT; i++)</span><br><span class="line">        &#123;</span><br><span class="line">            var body = Encoding.UTF8.GetBytes(i.ToString());</span><br><span class="line">            channel.BasicPublish(exchange: &quot;&quot;, routingKey: queueName, basicProperties: null, body: body);</span><br><span class="line">            channel.WaitForConfirmsOrDie(new TimeSpan(0, 0, 5));</span><br><span class="line">        &#125;</span><br><span class="line">        timer.Stop();</span><br><span class="line">        Console.WriteLine($&quot;Published &#123;MESSAGE_COUNT:N0&#125; messages individually in &#123;timer.ElapsedMilliseconds:N0&#125; ms&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>在前面的示例中，我们像往常一样发布一条消息，并等待通过Channel＃WaitForConfirmsOrDie(TimeSpan)方法进行确认。确认消息后，该方法立即返回。如果未在超时时间内确认该消息或该消息没有被确认(这意味着代理出于某种原因无法处理该消息)，则该方法将引发异常。异常的处理通常包括记录错误消息和/或重试发送消息。</p>
+<p>此方法非常简单，但也有一个主要缺点：由于消息的确认会阻止所有后续消息的发布，因此它会大大降低发布速度。这种方法不会提供每秒超过数百条已发布消息的吞吐量。但是，对于某些应用程序来说这可能已经足够了。</p>
+<p>发布者确认异步吗？</p>
+<p>我们在一开始提到代理程序以异步方式确认发布的消息，但是在第一个示例中，代码同步等待直到消息被确认。<br>客户端实际上异步接收确认，并相应地取消阻止对WaitForConfirmsOrDie的调用 。将WaitForConfirmsOrDie视为依赖于后台异步通知的同步。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/10/24/mq/rabbitmq-model-publish-confirm/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://blog.rcant.com/2020/10/24/mq/rabbitmq-model-routing/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Chester.C">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chester.Cao Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/10/24/mq/rabbitmq-model-routing/" class="post-title-link" itemprop="url">RabbitMQ 路由模式</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-10-24 21:39:17" itemprop="dateCreated datePublished" datetime="2020-10-24T21:39:17+08:00">2020-10-24</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-01-06 17:39:31" itemprop="dateModified" datetime="2023-01-06T17:39:31+08:00">2023-01-06</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/MQ/" itemprop="url" rel="index"><span itemprop="name">MQ</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2020/10/24/mq/rabbitmq-model-routing/" class="post-meta-item leancloud_visitors" data-flag-title="RabbitMQ 路由模式" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2020/10/24/mq/rabbitmq-model-routing/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/10/24/mq/rabbitmq-model-routing/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>路由模式</p>
+<h3 id="Routing-路由模式"><a href="#Routing-路由模式" class="headerlink" title="Routing 路由模式"></a>Routing 路由模式</h3><pre class="mermaid">graph LR;
+    id1([Product]);
+    id2([ExChange]);
+    id3([amq.gen-DjtYso1eaz52eM3mAJToaw])
+    id4([amq.gen-nLrD6gHpPBMY-oqM-tBVcQ])
+    id5([C1])
+    id6([C2])
+
+    style id1 fill:#0ff,stroke:#333;
+    style id2 fill:#33c,stroke:#333;
+    style id3 fill:#f00,stroke:#333;
+    style id4 fill:#f00,stroke:#333;
+    style id5 fill:#3cf,stroke:#333;
+    style id6 fill:#3cf,stroke:#333;
+
+    id1-->id2;
+
+    id2-->|error|id3;
+    id3-->id5;
+
+    id2-->|error|id4;
+    id2-->|info|id4;
+
+    id4-->id6;</pre>
+
+<p>注意</p>
+<ol>
+<li>生产者发送消息到交换机，要指定路由Key</li>
+<li>消费者将队列绑定到交换机时需要指定路由Key</li>
+</ol>
+<p>这个是一种 <strong>完全匹配</strong> 只有匹配到的消费者才能消费消息</p>
+<p>消息中的路由键值如果和Binding中的binding key 一致，交换机就将消息发送到对应的队列中。<br>路由键与队列名完全匹配，如果一个队列绑定到交换机要求路由键为”dog”,则只转发routingkey 标记为”dog”的消息,不会转发”dog.puppy”,也不会转发”dog.guard”等等。这个是时 <strong>完全匹配</strong>、单播的模式</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/10/24/mq/rabbitmq-model-routing/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://blog.rcant.com/2020/10/24/mq/rabbitmq-model-rpc/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Chester.C">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chester.Cao Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/10/24/mq/rabbitmq-model-rpc/" class="post-title-link" itemprop="url">RabbitMQ RPC Model</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-10-24 21:39:17" itemprop="dateCreated datePublished" datetime="2020-10-24T21:39:17+08:00">2020-10-24</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-01-06 17:39:38" itemprop="dateModified" datetime="2023-01-06T17:39:38+08:00">2023-01-06</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/MQ/" itemprop="url" rel="index"><span itemprop="name">MQ</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2020/10/24/mq/rabbitmq-model-rpc/" class="post-meta-item leancloud_visitors" data-flag-title="RabbitMQ RPC Model" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2020/10/24/mq/rabbitmq-model-rpc/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/10/24/mq/rabbitmq-model-rpc/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>RPC——Remote Procedure Call，远程过程调用。 那RabbitMQ如何进行远程调用呢？</p>
+<h2 id="示意图"><a href="#示意图" class="headerlink" title="示意图"></a>示意图</h2><p>如下：</p>
+<img src="/2020/10/24/mq/rabbitmq-model-rpc/rpc.png" class="" title="RPC"> 
+<pre class="mermaid">graph TB;
+    C([Client]);
+    mq1([rpc_queue])
+    mq2([reply_to=amq.gen-..])
+    S([Server])
+
+    style C fill:#3cf,stroke:#333;
+    style mq1 fill:#f00,stroke:#333;
+    style mq2 fill:#f00,stroke:#333;
+    style S fill:#3cf,stroke:#333;
+
+    C-->|Request reply_to=amq.gen-.. correlation_id=abc |mq1;
+    mq1-->S;
+
+    S-->mq2;
+    mq2-->|Reply correlation_id=abc|C;</pre>
+
+<h2 id="解释"><a href="#解释" class="headerlink" title="解释"></a>解释</h2><ul>
+<li>第一步，主要是进行远程调用的客户端需要指定接收远程回调的队列，并申明消费者监听此队列。 </li>
+<li>第二步，远程调用的服务端除了要申明消费端接收远程调用请求外，还要将结果发送到客户端用来监听回调结果的队列中去。</li>
+</ul>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/10/24/mq/rabbitmq-model-rpc/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+
+  
+  <nav class="pagination">
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/15/">15</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+  </nav>
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Chester.C</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">143</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">32</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">67</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Chester.C</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+if (document.querySelectorAll('pre.mermaid').length) {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mermaid@8/dist/mermaid.min.js', () => {
+    mermaid.initialize({
+      theme    : 'forest',
+      logLevel : 3,
+      flowchart: { curve     : 'linear' },
+      gantt    : { axisFormat: '%m/%d/%Y' },
+      sequence : { actorMargin: 50 }
+    });
+  }, window.mermaid);
+}
+</script>
+
+
+  
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'OQBlgU8H1seTDvVrgC3Dhni0-gzGzoHsz',
+      appKey     : 'wF7D3hVD9WjlV9V52bhlymHO',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : true,
+      lang       : 'zh-cn' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>

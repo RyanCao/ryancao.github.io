@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.2">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <link rel="amphtml" href="./amp/">
+  <meta name="baidu-site-verification" content="code-mUG0UNAPhR">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"blog.rcant.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="记录下平时使用VBox的一些事 VBox 网络设置VBox 一般可以使用三种网络访问  NAT 网络地址转换  桥接网络  仅主机网络   一、NAT模式特点：1、如果主机可以上网，虚拟机可以上网2、虚拟机之间不能ping通3、虚拟机可以ping通主机（此时ping虚拟机的网关，即是ping主机）4、主机不能ping通虚拟机 应用场景：虚拟机只要求可以上网，无其它特殊要求，满足最一般需求 配置方法">
+<meta property="og:type" content="article">
+<meta property="og:title" content="VirtualBox 记录">
+<meta property="og:url" content="http://blog.rcant.com/2017/05/17/others/virtualbox-sencond/index.html">
+<meta property="og:site_name" content="Chester.Cao Blog">
+<meta property="og:description" content="记录下平时使用VBox的一些事 VBox 网络设置VBox 一般可以使用三种网络访问  NAT 网络地址转换  桥接网络  仅主机网络   一、NAT模式特点：1、如果主机可以上网，虚拟机可以上网2、虚拟机之间不能ping通3、虚拟机可以ping通主机（此时ping虚拟机的网关，即是ping主机）4、主机不能ping通虚拟机 应用场景：虚拟机只要求可以上网，无其它特殊要求，满足最一般需求 配置方法">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2017-05-17T06:40:07.000Z">
+<meta property="article:modified_time" content="2023-01-06T09:40:58.941Z">
+<meta property="article:author" content="Chester.C">
+<meta property="article:tag" content="vbox">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://blog.rcant.com/2017/05/17/others/virtualbox-sencond/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>VirtualBox 记录 | Chester.Cao Blog</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?974592ac4c5733a52af2b871678a5334";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Chester.Cao Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Chester.Cao Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Devlopper in C#</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-topics">
+
+    <a href="/topics/" rel="section"><i class="fa fa-fw fa-pencil"></i>主题</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://blog.rcant.com/2017/05/17/others/virtualbox-sencond/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Chester.C">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chester.Cao Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          VirtualBox 记录
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2017-05-17 14:40:07" itemprop="dateCreated datePublished" datetime="2017-05-17T14:40:07+08:00">2017-05-17</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-01-06 17:40:58" itemprop="dateModified" datetime="2023-01-06T17:40:58+08:00">2023-01-06</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/vbox/" itemprop="url" rel="index"><span itemprop="name">vbox</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2017/05/17/others/virtualbox-sencond/" class="post-meta-item leancloud_visitors" data-flag-title="VirtualBox 记录" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2017/05/17/others/virtualbox-sencond/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2017/05/17/others/virtualbox-sencond/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>记录下平时使用VBox的一些事</p>
+<h2 id="VBox-网络设置"><a href="#VBox-网络设置" class="headerlink" title="VBox 网络设置"></a>VBox 网络设置</h2><p>VBox 一般可以使用三种网络访问</p>
+<ol>
+<li><p>NAT 网络地址转换</p>
+</li>
+<li><p>桥接网络</p>
+</li>
+<li><p>仅主机网络</p>
+</li>
+</ol>
+<h3 id="一、NAT模式"><a href="#一、NAT模式" class="headerlink" title="一、NAT模式"></a>一、NAT模式</h3><p>特点：<br>1、如果主机可以上网，虚拟机可以上网<br>2、虚拟机之间不能ping通<br>3、虚拟机可以ping通主机（此时ping虚拟机的网关，即是ping主机）<br>4、主机不能ping通虚拟机</p>
+<p>应用场景：<br>虚拟机只要求可以上网，无其它特殊要求，满足最一般需求</p>
+<p>配置方法：<br>连接方式 选择 网络地址转换（NAT）<br>高级-控制芯片 选择 PCnet-FAST III<br>高级-混杂模式 拒绝<br>高级-接入网线 √<br>（虚拟机ip自动获取）</p>
+<p>ip样式：<br>ip 10.0.2.15<br>网关 10.0.2.2<br>注意此处的网关在不同虚拟机中可能是同一个值，但是这归属于不同的NAT Engine，因此实际上各个虚拟机用的不是同一个网关</p>
+<p>原理：<br>虚拟机的请求传递给NAT Engine，由它来利用主机进行对外的网络访问，返回的数据包再由NAT Engine给虚拟机。</p>
+<span id="more"></span>
+<h3 id="二、Bridged-Adapter模式（桥接模式）"><a href="#二、Bridged-Adapter模式（桥接模式）" class="headerlink" title="二、Bridged Adapter模式（桥接模式）"></a>二、Bridged Adapter模式（桥接模式）</h3><p>特点：<br>1、如果主机可以上网，虚拟机可以上网<br>2、虚拟机之间可以ping通<br>3、虚拟机可以ping通主机<br>4、主机可以ping通虚拟机<br>以上各点基于一个前提：主机可以上网<br>5、如果主机不可以上网，所有1-4特点均无</p>
+<p>应用场景：<br>虚拟机要求可以上网，且虚拟机完全模拟一台实体机</p>
+<p>配置方法：<br>连接方式 选择 桥接网卡<br>界面名称 选择 （如果你的笔记本有无线网卡和有线网卡，需要根据现在的上网方式对应选择）<br>高级-控制芯片 选择 PCnet-FAST III<br>高级-混杂模式 拒绝<br>高级-接入网线 √<br>（虚拟机ip自动获取）</p>
+<p>ip样式：<br>ip 与本机ip在同一网段内<br>网关 与本机网关相同</p>
+<p>原理：<br>通过主机网卡，架设一条桥，直接连入到网络中。它使得虚拟机能被分配到一个网络中独立的IP，所有网络功能完全和<br>在网络中的真实机器一样。<br>（虚拟机是通过主机所在网络中的DHCP服务得到ip地址的，所以按理来说，两者是完全独立的，但事实却是虚拟机是没<br>有独立硬件的，它还是要依靠主机的网卡，因此，主机要断开网络，虚拟机也就没法拿到ip了，所以呵呵~~所有特点全<br>消失咯）</p>
+<p>需要注意的是，域网络服务商有些设定会导致，主机和虚拟机只能存在一个联网通道</p>
+<h3 id="三、Host-only-Adapter模式"><a href="#三、Host-only-Adapter模式" class="headerlink" title="三、Host-only Adapter模式"></a>三、Host-only Adapter模式</h3><p>特点：<br>1、虚拟机不可以上网<br>2、虚拟机之间可以ping通<br>3、虚拟机可以ping通主机（注意虚拟机与主机通信是通过主机的名为VirtualBox Host-Only Network的网卡，因此ip<br>是该网卡ip 192.168.56.1，而不是你现在正在上网所用的ip）<br>4、主机可以ping通虚拟机</p>
+<p>应用场景：<br>在主机无法上网的情况下（主机可以上网的情况下可以用host-only，也可以用桥接），需要搭建一个模拟局域网，所有机器可以互访</p>
+<p>配置方法：<br>连接方式 选择 仅主机（Host-Only）适配器<br>界面名称 选择 VirtualBox Host-Only Ethernet Adapter<br>高级-控制芯片 选择 PCnet-FAST III<br>高级-混杂模式 拒绝<br>高级-接入网线 √<br>（虚拟机ip自动获取，也可以自己进行配置，网关配置为主机中虚拟网卡的地址【默认为192.168.56.1】，ip配置为与虚拟网卡地址同网段地址）</p>
+<p>ip样式：<br>ip 与本机VirtualBox Host-Only Network的网卡ip在同一网段内（默认192.168.56.*）<br>网关 本机VirtualBox Host-Only Network的网卡ip（默认192.168.56.1）</p>
+<p>原理：<br>通过VirtualBox Host-Only Network网卡进行通信，虚拟机以此ip作为网关，因此模拟了一个本机与各个虚拟机的局域网，如名称所指，<br>应该是无法上网的（但是有人说可以通过对VirtualBox Host-Only Network网卡进行桥接等操作使虚拟机可以上网，但如此就不如直接<br>采用桥接来的容易了，而且，呵呵，我没试成功，有的人也说不可以，因为主机不提供路由服务，我也不好乱说到底行不行，你自己试吧~~）</p>
+<h3 id="四-可以使用双网卡"><a href="#四-可以使用双网卡" class="headerlink" title="四 可以使用双网卡"></a>四 可以使用双网卡</h3><p>NAT + Host-Only </p>
+
+    </div>
+
+    
+    
+    
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/vbox/" rel="tag"># vbox</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2017/05/17/git/gitlab-secord-time/" rel="prev" title="Gitlab 配置文件说明">
+      <i class="fa fa-chevron-left"></i> Gitlab 配置文件说明
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2017/05/17/others/virtualbox-first/" rel="next" title="VirtualBox 使用">
+      VirtualBox 使用 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#VBox-%E7%BD%91%E7%BB%9C%E8%AE%BE%E7%BD%AE"><span class="nav-number">1.</span> <span class="nav-text">VBox 网络设置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%80%E3%80%81NAT%E6%A8%A1%E5%BC%8F"><span class="nav-number">1.1.</span> <span class="nav-text">一、NAT模式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%8C%E3%80%81Bridged-Adapter%E6%A8%A1%E5%BC%8F%EF%BC%88%E6%A1%A5%E6%8E%A5%E6%A8%A1%E5%BC%8F%EF%BC%89"><span class="nav-number">1.2.</span> <span class="nav-text">二、Bridged Adapter模式（桥接模式）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%89%E3%80%81Host-only-Adapter%E6%A8%A1%E5%BC%8F"><span class="nav-number">1.3.</span> <span class="nav-text">三、Host-only Adapter模式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9B%9B-%E5%8F%AF%E4%BB%A5%E4%BD%BF%E7%94%A8%E5%8F%8C%E7%BD%91%E5%8D%A1"><span class="nav-number">1.4.</span> <span class="nav-text">四 可以使用双网卡</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Chester.C</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">143</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">32</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">67</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Chester.C</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+if (document.querySelectorAll('pre.mermaid').length) {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mermaid@8/dist/mermaid.min.js', () => {
+    mermaid.initialize({
+      theme    : 'forest',
+      logLevel : 3,
+      flowchart: { curve     : 'linear' },
+      gantt    : { axisFormat: '%m/%d/%Y' },
+      sequence : { actorMargin: 50 }
+    });
+  }, window.mermaid);
+}
+</script>
+
+
+  
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'OQBlgU8H1seTDvVrgC3Dhni0-gzGzoHsz',
+      appKey     : 'wF7D3hVD9WjlV9V52bhlymHO',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : true,
+      lang       : 'zh-cn' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>

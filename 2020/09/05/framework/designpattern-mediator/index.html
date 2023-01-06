@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.2">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <link rel="amphtml" href="./amp/">
+  <meta name="baidu-site-verification" content="code-mUG0UNAPhR">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"blog.rcant.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="引子在现实生活中，常常会出现好多对象之间存在复杂的交互关系，这种交互关系常常是“网状结构”，它要求每个对象都必须知道它需要交互的对象。例如，每个人必须记住他（她）所有朋友的电话；而且，朋友中如果有人的电话修改了，他（她）必须让其他所有的朋友一起修改，这叫作“牵一发而动全身”，非常复杂。 如果把这种“网状结构”改为“星形结构”的话，将大大降低它们之间的“耦合性”，这时只要找一个“中介者”就可以了。如">
+<meta property="og:type" content="article">
+<meta property="og:title" content="中介者模式（Mediator）">
+<meta property="og:url" content="http://blog.rcant.com/2020/09/05/framework/designpattern-mediator/index.html">
+<meta property="og:site_name" content="Chester.Cao Blog">
+<meta property="og:description" content="引子在现实生活中，常常会出现好多对象之间存在复杂的交互关系，这种交互关系常常是“网状结构”，它要求每个对象都必须知道它需要交互的对象。例如，每个人必须记住他（她）所有朋友的电话；而且，朋友中如果有人的电话修改了，他（她）必须让其他所有的朋友一起修改，这叫作“牵一发而动全身”，非常复杂。 如果把这种“网状结构”改为“星形结构”的话，将大大降低它们之间的“耦合性”，这时只要找一个“中介者”就可以了。如">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-09-05T03:39:17.000Z">
+<meta property="article:modified_time" content="2023-01-06T09:35:06.235Z">
+<meta property="article:author" content="Chester.C">
+<meta property="article:tag" content="架构">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://blog.rcant.com/2020/09/05/framework/designpattern-mediator/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>中介者模式（Mediator） | Chester.Cao Blog</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?974592ac4c5733a52af2b871678a5334";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Chester.Cao Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Chester.Cao Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Devlopper in C#</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-topics">
+
+    <a href="/topics/" rel="section"><i class="fa fa-fw fa-pencil"></i>主题</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://blog.rcant.com/2020/09/05/framework/designpattern-mediator/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Chester.C">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chester.Cao Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          中介者模式（Mediator）
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-09-05 11:39:17" itemprop="dateCreated datePublished" datetime="2020-09-05T11:39:17+08:00">2020-09-05</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-01-06 17:35:06" itemprop="dateModified" datetime="2023-01-06T17:35:06+08:00">2023-01-06</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%9E%B6%E6%9E%84/" itemprop="url" rel="index"><span itemprop="name">架构</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2020/09/05/framework/designpattern-mediator/" class="post-meta-item leancloud_visitors" data-flag-title="中介者模式（Mediator）" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2020/09/05/framework/designpattern-mediator/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/09/05/framework/designpattern-mediator/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h2><p>在现实生活中，常常会出现好多对象之间存在复杂的交互关系，这种交互关系常常是“网状结构”，它要求每个对象都必须知道它需要交互的对象。例如，每个人必须记住他（她）所有朋友的电话；而且，朋友中如果有人的电话修改了，他（她）必须让其他所有的朋友一起修改，这叫作“牵一发而动全身”，非常复杂。</p>
+<p>如果把这种“网状结构”改为“星形结构”的话，将大大降低它们之间的“耦合性”，这时只要找一个“中介者”就可以了。如前面所说的“每个人必须记住所有朋友电话”的问题，只要在网上建立一个每个朋友都可以访问的“通信录”就解决了。这样的例子还有很多，例如，你刚刚参加工作想租房，可以找“房屋中介”；或者，自己刚刚到一个陌生城市找工作，可以找“人才交流中心”帮忙。</p>
+<p>在软件的开发过程中，这样的例子也很多，例如，在 MVC 框架中，控制器（C）就是模型（M）和视图（V）的中介者；还有大家常用的 QQ 聊天程序的“中介者”是 QQ 服务器。所有这些，都可以采用“中介者模式”来实现，它将大大降低对象之间的耦合性，提高系统的灵活性。</p>
+<span id="more"></span>
+<h3 id="中介者模式（Mediator）"><a href="#中介者模式（Mediator）" class="headerlink" title="中介者模式（Mediator）"></a>中介者模式（Mediator）</h3><p>定义一个中介对象来简化原有对象之间的交互关系，降低系统中对象的耦合度，使原有对象之间不必户互了解。</p>
+<p>中介者模式（Mediator Pattern）是用来降低多个对象和类之间的通信复杂性。这种模式提供了一个中介类，该类通常处理不同类之间的通信，并支持松耦合，使代码易于维护。中介者模式属于行为型模式。</p>
+<p>意图：用一个中介对象来封装一系列的对象交互，中介者使各对象不需要显式地相互引用，从而使其耦合松散，而且可以独立地改变它们之间的交互。</p>
+<p>主要解决：对象与对象之间存在大量的关联关系，这样势必会导致系统的结构变得很复杂，同时若一个对象发生改变，我们也需要跟踪与之相关联的对象，同时做出相应的处理。</p>
+<p>何时使用：多个类相互耦合，形成了网状结构。</p>
+<p>如何解决：将上述网状结构分离为星型结构。</p>
+<p>关键代码：对象 Colleague 之间的通信封装到一个类中单独处理。</p>
+<h4 id="定义与特点"><a href="#定义与特点" class="headerlink" title="定义与特点"></a>定义与特点</h4><h5 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h5><p>定义一个中介对象来封装一系列对象之间的交互，使原有对象之间的耦合松散，且可以独立地改变它们之间的交互。中介者模式又叫调停模式，它是迪米特法则的典型应用。</p>
+<h5 id="主要优点"><a href="#主要优点" class="headerlink" title="主要优点"></a>主要优点</h5><ol>
+<li>类之间各司其职，符合迪米特法则。</li>
+<li>降低了对象之间的耦合性，使得对象易于独立地被复用。</li>
+<li>将对象间的一对多关联转变为一对一的关联，提高系统的灵活性，使得系统易于维护和扩展。</li>
+</ol>
+<h5 id="主要缺点"><a href="#主要缺点" class="headerlink" title="主要缺点"></a>主要缺点</h5><p>中介者会庞大，变得复杂难以维护。</p>
+<p>中介者模式将原本多个对象直接的相互依赖变成了中介者和多个同事类的依赖关系。当同事类越多时，中介者就会越臃肿，变得复杂且难以维护。</p>
+<h4 id="结构与实现"><a href="#结构与实现" class="headerlink" title="结构与实现"></a>结构与实现</h4><h5 id="结构"><a href="#结构" class="headerlink" title="结构"></a>结构</h5><p>中介者模式实现的关键是找出“中介者”，下面对它的结构和实现进行分析。</p>
+<p>中介者模式包含以下主要角色。</p>
+<ol>
+<li>抽象中介者（Mediator）角色：它是中介者的接口，提供了同事对象注册与转发同事对象信息的抽象方法。</li>
+<li>具体中介者（Concrete Mediator）角色：实现中介者接口，定义一个 List 来管理同事对象，协调各个同事角色之间的交互关系，因此它依赖于同事角色。</li>
+<li>抽象同事类（Colleague）角色：定义同事类的接口，保存中介者对象，提供同事对象交互的抽象方法，实现所有相互影响的同事类的公共功能。</li>
+<li>具体同事类（Concrete Colleague）角色：是抽象同事类的实现者，当需要与其他同事对象交互时，由中介者对象负责后续的交互。</li>
+</ol>
+<p>设计图</p>
+<h5 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h5><p>写实现代码<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br></pre></td><td class="code"><pre><span class="line">using System;</span><br><span class="line">using System.Collections.Generic;</span><br><span class="line"></span><br><span class="line">namespace MediatorPattern</span><br><span class="line">&#123;</span><br><span class="line">    /// &lt;summary&gt;</span><br><span class="line">    /// 抽象中介类</span><br><span class="line">    /// &lt;/summary&gt;</span><br><span class="line">    interface IMediator</span><br><span class="line">    &#123;</span><br><span class="line">        /// &lt;summary&gt;</span><br><span class="line">        /// 注册</span><br><span class="line">        /// &lt;/summary&gt;</span><br><span class="line">        /// &lt;param name=&quot;colleague&quot;&gt;&lt;/param&gt;</span><br><span class="line">        void Register(Colleague colleague);</span><br><span class="line">        /// &lt;summary&gt;</span><br><span class="line">        /// 转发</span><br><span class="line">        /// &lt;/summary&gt;</span><br><span class="line">        /// &lt;param name=&quot;colleague&quot;&gt;&lt;/param&gt;</span><br><span class="line">        void Relay(Colleague colleague);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    class ConcreteMediator : IMediator</span><br><span class="line">    &#123;</span><br><span class="line">        /// &lt;summary&gt;</span><br><span class="line">        /// 关联的同事信息</span><br><span class="line">        /// &lt;/summary&gt;</span><br><span class="line">        private List&lt;Colleague&gt; Colleagues = new List&lt;Colleague&gt;();</span><br><span class="line"></span><br><span class="line">        /// &lt;summary&gt;</span><br><span class="line">        /// 注册</span><br><span class="line">        /// &lt;/summary&gt;</span><br><span class="line">        /// &lt;param name=&quot;colleague&quot;&gt;&lt;/param&gt;</span><br><span class="line">        public void Register(Colleague colleague)</span><br><span class="line">        &#123;</span><br><span class="line">            if (!Colleagues.Contains(colleague))</span><br><span class="line">            &#123;</span><br><span class="line">                Colleagues.Add(colleague);</span><br><span class="line">                colleague.SetMedium(this);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        /// &lt;summary&gt;</span><br><span class="line">        /// 转发</span><br><span class="line">        /// &lt;/summary&gt;</span><br><span class="line">        /// &lt;param name=&quot;colleague&quot;&gt;&lt;/param&gt;</span><br><span class="line">        public void Relay(Colleague colleague)</span><br><span class="line">        &#123;</span><br><span class="line">            Colleagues.ForEach(c =&gt;</span><br><span class="line">            &#123;</span><br><span class="line">                if (c != colleague)</span><br><span class="line">                &#123;</span><br><span class="line">                    c.Receive();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    /// &lt;summary&gt;</span><br><span class="line">    /// 抽象同事类</span><br><span class="line">    /// &lt;/summary&gt;</span><br><span class="line">    abstract class Colleague</span><br><span class="line">    &#123;</span><br><span class="line">        protected IMediator mediator;</span><br><span class="line">        public void SetMedium(IMediator mediator)</span><br><span class="line">        &#123;</span><br><span class="line">            this.mediator = mediator;</span><br><span class="line">        &#125;</span><br><span class="line">        public abstract void Receive();</span><br><span class="line">        public abstract void Send();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    class ConcreteColleague1 : Colleague</span><br><span class="line">    &#123;</span><br><span class="line">        public override void Receive()</span><br><span class="line">        &#123;</span><br><span class="line">            Console.WriteLine(&quot;具体同事类1收到请求。&quot;);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        public override void Send()</span><br><span class="line">        &#123;</span><br><span class="line">            Console.WriteLine(&quot;具体同事类1发出请求。&quot;);</span><br><span class="line">            mediator.Relay(this); //请中介者转发</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    class ConcreteColleague2 : Colleague</span><br><span class="line">    &#123;</span><br><span class="line">        public override void Receive()</span><br><span class="line">        &#123;</span><br><span class="line">            Console.WriteLine(&quot;具体同事类2收到请求。&quot;);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        public override void Send()</span><br><span class="line">        &#123;</span><br><span class="line">            Console.WriteLine(&quot;具体同事类2发出请求。&quot;);</span><br><span class="line">            mediator.Relay(this); //请中介者转发</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">using System;</span><br><span class="line"></span><br><span class="line">namespace MediatorPattern</span><br><span class="line">&#123;</span><br><span class="line">    class Program</span><br><span class="line">    &#123;</span><br><span class="line">        static void Main(string[] args)</span><br><span class="line">        &#123;</span><br><span class="line">            IMediator md = new ConcreteMediator();</span><br><span class="line">            Colleague c1, c2;</span><br><span class="line">            c1 = new ConcreteColleague1();</span><br><span class="line">            c2 = new ConcreteColleague2();</span><br><span class="line">            md.Register(c1);</span><br><span class="line">            md.Register(c2);</span><br><span class="line">            c1.Send();</span><br><span class="line">            Console.WriteLine(&quot;-------------&quot;);</span><br><span class="line">            c2.Send();</span><br><span class="line"></span><br><span class="line">            Console.ReadLine();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h4 id="应用实例"><a href="#应用实例" class="headerlink" title="应用实例"></a>应用实例</h4><p>【例1】用中介者模式编写一个“韶关房地产交流平台”程序。</p>
+<p>说明：韶关房地产交流平台是“房地产中介公司”提供给“卖方客户”与“买方客户”进行信息交流的平台，比较适合用中介者模式来实现。</p>
+<p>首先，定义一个中介公司（Medium）接口，它是抽象中介者，它包含了客户注册方法 register(Customer member) 和信息转发方法 relay(String from,String ad)；再定义一个韶关房地产中介（EstateMedium）公司，它是具体中介者类，它包含了保存客户信息的 List 对象，并实现了中介公司中的抽象方法。</p>
+<p>然后，定义一个客户（Customer）类，它是抽象同事类，其中包含了中介者的对象，和发送信息的 send(String ad) 方法与接收信息的 receive(String from，String ad) 方法的接口，由于本程序是窗体程序，所以本类继承 JPmme 类，并实现动作事件的处理方法 actionPerformed(ActionEvent e)。</p>
+<p>最后，定义卖方（Seller）类和买方（Buyer）类，它们是具体同事类，是客户（Customer）类的子类，它们实现了父类中的抽象方法，通过中介者类进行信息交流，其结构图如图 2 所示。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line">using System.Collections.Generic;</span><br><span class="line"></span><br><span class="line">namespace MediatorPattern2</span><br><span class="line">&#123;</span><br><span class="line">    interface IMediator</span><br><span class="line">    &#123;</span><br><span class="line">        /// &lt;summary&gt;</span><br><span class="line">        /// 注册</span><br><span class="line">        /// &lt;/summary&gt;</span><br><span class="line">        /// &lt;param name=&quot;member&quot;&gt;&lt;/param&gt;</span><br><span class="line">        void Register(ICustomer member);</span><br><span class="line">        /// &lt;summary&gt;</span><br><span class="line">        /// 转发</span><br><span class="line">        /// &lt;/summary&gt;</span><br><span class="line">        /// &lt;param name=&quot;member&quot;&gt;&lt;/param&gt;</span><br><span class="line">        /// &lt;param name=&quot;ad&quot;&gt;&lt;/param&gt;</span><br><span class="line">        void Relay(ICustomer member, string ad);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    class EstateMedium : IMediator</span><br><span class="line">    &#123;</span><br><span class="line">        List&lt;ICustomer&gt; customers = new List&lt;ICustomer&gt;();</span><br><span class="line">        public void Register(ICustomer member)</span><br><span class="line">        &#123;</span><br><span class="line">            if (!customers.Contains(member))</span><br><span class="line">            &#123;</span><br><span class="line">                customers.Add(member);</span><br><span class="line">                member.Mediator = this;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        public void Relay(ICustomer member, string ad)</span><br><span class="line">        &#123;</span><br><span class="line">            customers.ForEach(customer =&gt;</span><br><span class="line">            &#123;</span><br><span class="line">                if (member != customer)</span><br><span class="line">                &#123;</span><br><span class="line">                    customer.Receive(member.NickName, ad);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">namespace MediatorPattern2</span><br><span class="line">&#123;</span><br><span class="line">    /// &lt;summary&gt;</span><br><span class="line">    /// 抽象客户构件</span><br><span class="line">    /// &lt;/summary&gt;</span><br><span class="line">    interface ICustomer</span><br><span class="line">    &#123;</span><br><span class="line">        IMediator Mediator &#123; get; set; &#125;</span><br><span class="line"></span><br><span class="line">        string NickName &#123; get; set; &#125;</span><br><span class="line"></span><br><span class="line">        void Send(string ad);</span><br><span class="line">        void Receive(string from, string ad);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br></pre></td><td class="code"><pre><span class="line">using System.Windows.Forms;</span><br><span class="line"></span><br><span class="line">namespace MediatorPattern2</span><br><span class="line">&#123;</span><br><span class="line">    abstract class Customer : Form, ICustomer</span><br><span class="line">    &#123;</span><br><span class="line">        private RichTextBox receiveTextBox;</span><br><span class="line">        private GroupBox groupBox2;</span><br><span class="line">        private RichTextBox sendTextBox;</span><br><span class="line">        private GroupBox groupBox1;</span><br><span class="line">        private string nickName;</span><br><span class="line"></span><br><span class="line">        public IMediator Mediator &#123; get; set; &#125;</span><br><span class="line">        public string NickName</span><br><span class="line">        &#123;</span><br><span class="line">            get</span><br><span class="line">            &#123;</span><br><span class="line">                return nickName;</span><br><span class="line">            &#125;</span><br><span class="line">            set</span><br><span class="line">            &#123;</span><br><span class="line">                if (nickName == value)</span><br><span class="line">                    return;</span><br><span class="line">                nickName = value;</span><br><span class="line">                this.Text = value;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        public abstract void Receive(string from, string ad);</span><br><span class="line"></span><br><span class="line">        public abstract void Send(string ad);</span><br><span class="line"></span><br><span class="line">        protected void AppendMsg(string msg)</span><br><span class="line">        &#123;</span><br><span class="line">            receiveTextBox.AppendText(msg);</span><br><span class="line">            //使滚动条滚动到最底端</span><br><span class="line">            receiveTextBox.ScrollToCaret();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        public Customer()</span><br><span class="line">        &#123;</span><br><span class="line">            InitializeComponent();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        private void InitializeComponent()</span><br><span class="line">        &#123;</span><br><span class="line">            this.groupBox1 = new System.Windows.Forms.GroupBox();</span><br><span class="line">            this.receiveTextBox = new System.Windows.Forms.RichTextBox();</span><br><span class="line">            this.groupBox2 = new System.Windows.Forms.GroupBox();</span><br><span class="line">            this.sendTextBox = new System.Windows.Forms.RichTextBox();</span><br><span class="line">            this.groupBox1.SuspendLayout();</span><br><span class="line">            this.groupBox2.SuspendLayout();</span><br><span class="line">            this.SuspendLayout();</span><br><span class="line">            // </span><br><span class="line">            // groupBox1</span><br><span class="line">            // </span><br><span class="line">            this.groupBox1.Controls.Add(this.receiveTextBox);</span><br><span class="line">            this.groupBox1.Location = new System.Drawing.Point(12, 12);</span><br><span class="line">            this.groupBox1.Name = &quot;groupBox1&quot;;</span><br><span class="line">            this.groupBox1.Size = new System.Drawing.Size(256, 334);</span><br><span class="line">            this.groupBox1.TabIndex = 0;</span><br><span class="line">            this.groupBox1.TabStop = false;</span><br><span class="line">            this.groupBox1.Text = &quot;接收内容&quot;;</span><br><span class="line">            // </span><br><span class="line">            // receiveTextBox</span><br><span class="line">            // </span><br><span class="line">            this.receiveTextBox.Enabled = false;</span><br><span class="line">            this.receiveTextBox.Location = new System.Drawing.Point(6, 20);</span><br><span class="line">            this.receiveTextBox.Name = &quot;receiveTextBox&quot;;</span><br><span class="line">            this.receiveTextBox.Size = new System.Drawing.Size(244, 308);</span><br><span class="line">            this.receiveTextBox.TabIndex = 0;</span><br><span class="line">            this.receiveTextBox.Text = &quot;&quot;;</span><br><span class="line">            // </span><br><span class="line">            // groupBox2</span><br><span class="line">            // </span><br><span class="line">            this.groupBox2.Controls.Add(this.sendTextBox);</span><br><span class="line">            this.groupBox2.Location = new System.Drawing.Point(12, 357);</span><br><span class="line">            this.groupBox2.Name = &quot;groupBox2&quot;;</span><br><span class="line">            this.groupBox2.Size = new System.Drawing.Size(256, 64);</span><br><span class="line">            this.groupBox2.TabIndex = 1;</span><br><span class="line">            this.groupBox2.TabStop = false;</span><br><span class="line">            this.groupBox2.Text = &quot;发送内容&quot;;</span><br><span class="line">            // </span><br><span class="line">            // sendTextBox</span><br><span class="line">            // </span><br><span class="line">            this.sendTextBox.Location = new System.Drawing.Point(6, 20);</span><br><span class="line">            this.sendTextBox.Name = &quot;sendTextBox&quot;;</span><br><span class="line">            this.sendTextBox.Size = new System.Drawing.Size(244, 34);</span><br><span class="line">            this.sendTextBox.TabIndex = 0;</span><br><span class="line">            this.sendTextBox.Text = &quot;&quot;;</span><br><span class="line">            this.sendTextBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.sendTextBox_KeyDown);</span><br><span class="line">            // </span><br><span class="line">            // Customer</span><br><span class="line">            // </span><br><span class="line">            this.ClientSize = new System.Drawing.Size(280, 433);</span><br><span class="line">            this.Controls.Add(this.groupBox2);</span><br><span class="line">            this.Controls.Add(this.groupBox1);</span><br><span class="line">            this.Location = new System.Drawing.Point(20, 20);</span><br><span class="line">            this.Name = &quot;Customer&quot;;</span><br><span class="line">            this.groupBox1.ResumeLayout(false);</span><br><span class="line">            this.groupBox2.ResumeLayout(false);</span><br><span class="line">            this.ResumeLayout(false);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        private void sendTextBox_KeyDown(object sender, KeyEventArgs e)</span><br><span class="line">        &#123;</span><br><span class="line">            if (e.KeyCode == Keys.Enter)</span><br><span class="line">            &#123;</span><br><span class="line">                string msg = sendTextBox.Text.Trim();</span><br><span class="line">                if (string.IsNullOrEmpty(msg))</span><br><span class="line">                    return;</span><br><span class="line">                Send(msg);</span><br><span class="line">                sendTextBox.Clear();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">namespace MediatorPattern2</span><br><span class="line">&#123;</span><br><span class="line">    class Seller : Customer</span><br><span class="line">    &#123;</span><br><span class="line">        public override void Receive(string from, string ad)</span><br><span class="line">        &#123;</span><br><span class="line">            string appendText = (from + &quot;说: &quot; + ad + &quot;\n&quot;);</span><br><span class="line">            AppendMsg(appendText);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        public override void Send(string ad)</span><br><span class="line">        &#123;</span><br><span class="line">            string appendText = &quot;我(卖方)说: &quot; + ad + &quot;\n&quot;;</span><br><span class="line">            AppendMsg(appendText);</span><br><span class="line"></span><br><span class="line">            Mediator.Relay(this, ad);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    class Buyer : Customer</span><br><span class="line">    &#123;</span><br><span class="line">        public override void Receive(string from, string ad)</span><br><span class="line">        &#123;</span><br><span class="line">            string appendText = (from + &quot;说: &quot; + ad + &quot;\n&quot;);</span><br><span class="line">            AppendMsg(appendText);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        public override void Send(string ad)</span><br><span class="line">        &#123;</span><br><span class="line">            string appendText = &quot;我(买方)说: &quot; + ad + &quot;\n&quot;;</span><br><span class="line">            AppendMsg(appendText);</span><br><span class="line"></span><br><span class="line">            Mediator.Relay(this, ad);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">using System;</span><br><span class="line">using System.Collections.Generic;</span><br><span class="line">using System.Windows.Forms;</span><br><span class="line"></span><br><span class="line">namespace MediatorPattern2</span><br><span class="line">&#123;</span><br><span class="line">    /// &lt;summary&gt;</span><br><span class="line">    /// Winform 多窗口启动</span><br><span class="line">    /// &lt;/summary&gt;</span><br><span class="line">    class MultiFormApplictionStart : ApplicationContext</span><br><span class="line">    &#123;</span><br><span class="line">        /*</span><br><span class="line">        private void onFormClosed(object sender, EventArgs e)</span><br><span class="line">        &#123;</span><br><span class="line">            if (Application.OpenForms.Count == 0)</span><br><span class="line">            &#123;</span><br><span class="line">                ExitThread();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;*/</span><br><span class="line">        /*</span><br><span class="line">        private void onFormClosed(object sender, EventArgs e)</span><br><span class="line">        &#123;</span><br><span class="line">            ExitThread();</span><br><span class="line">        &#125;*/</span><br><span class="line"></span><br><span class="line">        List&lt;Form&gt; formList = new List&lt;Form&gt;();</span><br><span class="line"></span><br><span class="line">        public void AddChildForm(Form form)</span><br><span class="line">        &#123;</span><br><span class="line">            if (formList.Contains(form))</span><br><span class="line">                return;</span><br><span class="line">            formList.Add(form);</span><br><span class="line">            form.FormClosed += OnMainFormClosed;</span><br><span class="line">            form.Show();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">using System;</span><br><span class="line">using System.Collections.Generic;</span><br><span class="line">using System.Linq;</span><br><span class="line">using System.Threading.Tasks;</span><br><span class="line">using System.Windows.Forms;</span><br><span class="line"></span><br><span class="line">namespace MediatorPattern2</span><br><span class="line">&#123;</span><br><span class="line">    static class Program</span><br><span class="line">    &#123;</span><br><span class="line">        /// &lt;summary&gt;</span><br><span class="line">        /// 应用程序的主入口点。</span><br><span class="line">        /// &lt;/summary&gt;</span><br><span class="line">        [STAThread]</span><br><span class="line">        static void Main()</span><br><span class="line">        &#123;</span><br><span class="line">            Application.EnableVisualStyles();</span><br><span class="line">            Application.SetCompatibleTextRenderingDefault(false);</span><br><span class="line"></span><br><span class="line">            </span><br><span class="line">            IMediator md = new EstateMedium();    //房产中介</span><br><span class="line">            Customer member1, member2;</span><br><span class="line">            member1 = new Seller();</span><br><span class="line">            member1.NickName = &quot;张三(卖方)&quot;;</span><br><span class="line">            member2 = new Buyer();</span><br><span class="line">            member2.NickName = &quot;李四(买方)&quot;;</span><br><span class="line">            md.Register(member1); //客户注册</span><br><span class="line">            md.Register(member2);</span><br><span class="line"></span><br><span class="line">            MultiFormApplictionStart multiFormApplictionStart = new MultiFormApplictionStart();</span><br><span class="line">            multiFormApplictionStart.AddChildForm(member1);</span><br><span class="line">            multiFormApplictionStart.AddChildForm(member2);</span><br><span class="line"></span><br><span class="line">            Application.Run(multiFormApplictionStart);</span><br><span class="line"></span><br><span class="line">           </span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="应用场景"><a href="#应用场景" class="headerlink" title="应用场景"></a>应用场景</h4><p> 1、系统中对象之间存在比较复杂的引用关系，导致它们之间的依赖关系结构混乱而且难以复用该对象。<br> 2、想通过一个中间类来封装多个类中的行为，而又不想生成太多的子类。</p>
+<p>注意事项：不应当在职责混乱的时候使用。</p>
+<h4 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h4><p><a target="_blank" rel="noopener" href="http://c.biancheng.net/view/1393.html">http://c.biancheng.net/view/1393.html</a></p>
+
+    </div>
+
+    
+    
+    
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%9E%B6%E6%9E%84/" rel="tag"># 架构</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/09/04/csharp/csharp-coroutine/" rel="prev" title="CSharp 协程处理">
+      <i class="fa fa-chevron-left"></i> CSharp 协程处理
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/09/05/framework/designpattern-2/" rel="next" title="23种设计模式——结构型设计模式">
+      23种设计模式——结构型设计模式 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%95%E5%AD%90"><span class="nav-number">1.</span> <span class="nav-text">引子</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%AD%E4%BB%8B%E8%80%85%E6%A8%A1%E5%BC%8F%EF%BC%88Mediator%EF%BC%89"><span class="nav-number">1.1.</span> <span class="nav-text">中介者模式（Mediator）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AE%9A%E4%B9%89%E4%B8%8E%E7%89%B9%E7%82%B9"><span class="nav-number">1.1.1.</span> <span class="nav-text">定义与特点</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%AE%9A%E4%B9%89"><span class="nav-number">1.1.1.1.</span> <span class="nav-text">定义</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%B8%BB%E8%A6%81%E4%BC%98%E7%82%B9"><span class="nav-number">1.1.1.2.</span> <span class="nav-text">主要优点</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%B8%BB%E8%A6%81%E7%BC%BA%E7%82%B9"><span class="nav-number">1.1.1.3.</span> <span class="nav-text">主要缺点</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BB%93%E6%9E%84%E4%B8%8E%E5%AE%9E%E7%8E%B0"><span class="nav-number">1.1.2.</span> <span class="nav-text">结构与实现</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%BB%93%E6%9E%84"><span class="nav-number">1.1.2.1.</span> <span class="nav-text">结构</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0"><span class="nav-number">1.1.2.2.</span> <span class="nav-text">实现</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BA%94%E7%94%A8%E5%AE%9E%E4%BE%8B"><span class="nav-number">1.1.3.</span> <span class="nav-text">应用实例</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="nav-number">1.1.4.</span> <span class="nav-text">应用场景</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%89%A9%E5%B1%95"><span class="nav-number">1.1.5.</span> <span class="nav-text">扩展</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Chester.C</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">143</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">32</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">67</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Chester.C</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+if (document.querySelectorAll('pre.mermaid').length) {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mermaid@8/dist/mermaid.min.js', () => {
+    mermaid.initialize({
+      theme    : 'forest',
+      logLevel : 3,
+      flowchart: { curve     : 'linear' },
+      gantt    : { axisFormat: '%m/%d/%Y' },
+      sequence : { actorMargin: 50 }
+    });
+  }, window.mermaid);
+}
+</script>
+
+
+  
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'OQBlgU8H1seTDvVrgC3Dhni0-gzGzoHsz',
+      appKey     : 'wF7D3hVD9WjlV9V52bhlymHO',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : true,
+      lang       : 'zh-cn' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>

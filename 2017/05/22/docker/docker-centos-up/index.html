@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.2">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <link rel="amphtml" href="./amp/">
+  <meta name="baidu-site-verification" content="code-mUG0UNAPhR">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"blog.rcant.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="引子如果有旧的Docker 先删除旧Docker版本上的如果有 Image 的东西，请先删除 旧Docker版本 现在：特指1.13 前的版本，这是Docker的一个重要改动 将这些镜像文件全部删除，否则升级以后旧的镜像将无法删除  123docker stop &#96;docker ps -a -q&#96;docker rm &#96;docker ps -a -q&#96;docker rmi -f &#96;docker im">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Docker 在 centos 7上升级">
+<meta property="og:url" content="http://blog.rcant.com/2017/05/22/docker/docker-centos-up/index.html">
+<meta property="og:site_name" content="Chester.Cao Blog">
+<meta property="og:description" content="引子如果有旧的Docker 先删除旧Docker版本上的如果有 Image 的东西，请先删除 旧Docker版本 现在：特指1.13 前的版本，这是Docker的一个重要改动 将这些镜像文件全部删除，否则升级以后旧的镜像将无法删除  123docker stop &#96;docker ps -a -q&#96;docker rm &#96;docker ps -a -q&#96;docker rmi -f &#96;docker im">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2017-05-22T06:40:07.000Z">
+<meta property="article:modified_time" content="2023-01-06T09:32:25.200Z">
+<meta property="article:author" content="Chester.C">
+<meta property="article:tag" content="docker">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://blog.rcant.com/2017/05/22/docker/docker-centos-up/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Docker 在 centos 7上升级 | Chester.Cao Blog</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?974592ac4c5733a52af2b871678a5334";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Chester.Cao Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Chester.Cao Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Devlopper in C#</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-topics">
+
+    <a href="/topics/" rel="section"><i class="fa fa-fw fa-pencil"></i>主题</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://blog.rcant.com/2017/05/22/docker/docker-centos-up/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Chester.C">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chester.Cao Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Docker 在 centos 7上升级
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2017-05-22 14:40:07" itemprop="dateCreated datePublished" datetime="2017-05-22T14:40:07+08:00">2017-05-22</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-01-06 17:32:25" itemprop="dateModified" datetime="2023-01-06T17:32:25+08:00">2023-01-06</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/docker/" itemprop="url" rel="index"><span itemprop="name">docker</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2017/05/22/docker/docker-centos-up/" class="post-meta-item leancloud_visitors" data-flag-title="Docker 在 centos 7上升级" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2017/05/22/docker/docker-centos-up/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2017/05/22/docker/docker-centos-up/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h2><h2 id="如果有旧的Docker-先删除"><a href="#如果有旧的Docker-先删除" class="headerlink" title="如果有旧的Docker 先删除"></a>如果有旧的Docker 先删除</h2><h3 id="旧Docker版本上的如果有-Image-的东西，请先删除"><a href="#旧Docker版本上的如果有-Image-的东西，请先删除" class="headerlink" title="旧Docker版本上的如果有 Image 的东西，请先删除"></a>旧Docker版本上的如果有 Image 的东西，请先删除</h3><ul>
+<li>旧Docker版本 现在：特指1.13 前的版本，这是Docker的一个重要改动</li>
+<li>将这些镜像文件全部删除，否则升级以后旧的镜像将无法删除</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">docker stop `docker ps -a -q`</span><br><span class="line">docker rm `docker ps -a -q`</span><br><span class="line">docker rmi -f `docker images -a -q` //这里将会强制删除</span><br></pre></td></tr></table></figure>
+<h3 id="移除旧版本的软件信息"><a href="#移除旧版本的软件信息" class="headerlink" title="移除旧版本的软件信息"></a>移除旧版本的软件信息</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum -y remove docker docker-common container-selinux</span><br></pre></td></tr></table></figure>
+<span id="more"></span>
+<h2 id="设置最新稳定版本的Docker仓库"><a href="#设置最新稳定版本的Docker仓库" class="headerlink" title="设置最新稳定版本的Docker仓库"></a>设置最新稳定版本的Docker仓库</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">yum-config-manager \</span><br><span class="line">    --add-repo \</span><br><span class="line">    https://docs.docker.com/v1.13/engine/installation/linux/repo_files/centos/docker.repo</span><br></pre></td></tr></table></figure>
+<p>如果未发现yum-config-manager命令,安装工具yum-utils<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum -y install yum-utils</span><br></pre></td></tr></table></figure></p>
+<h2 id="安装Docker"><a href="#安装Docker" class="headerlink" title="安装Docker"></a>安装Docker</h2><h3 id="更新yum源"><a href="#更新yum源" class="headerlink" title="更新yum源"></a>更新yum源</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum makecache fast</span><br></pre></td></tr></table></figure>
+<h3 id="安装最新的docker"><a href="#安装最新的docker" class="headerlink" title="安装最新的docker"></a>安装最新的docker</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum -y install docker-engine</span><br></pre></td></tr></table></figure>
+<h3 id="或者选择你要的Docker版本"><a href="#或者选择你要的Docker版本" class="headerlink" title="或者选择你要的Docker版本"></a>或者选择你要的Docker版本</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum list docker-engine.x86_64  --showduplicates |sort -r</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum -y install docker-engine-&lt;VERSION_STRING&gt;</span><br></pre></td></tr></table></figure>
+<h3 id="启动"><a href="#启动" class="headerlink" title="启动"></a>启动</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">systemctl start docker</span><br><span class="line">systemctl enable docker</span><br></pre></td></tr></table></figure>
+<h3 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run hello-world</span><br></pre></td></tr></table></figure>
+<h2 id="卸载Docker"><a href="#卸载Docker" class="headerlink" title="卸载Docker"></a>卸载Docker</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum -y remove docker-engine docker-engine-selinux</span><br></pre></td></tr></table></figure>
+<p>镜像, 容器, volumes, 配置文件 都不会自动删除. 需要手动删除</p>
+<h2 id="如果想回到-docker-1-13-前的版本"><a href="#如果想回到-docker-1-13-前的版本" class="headerlink" title="如果想回到 docker 1.13 前的版本"></a>如果想回到 docker 1.13 前的版本</h2><h3 id="卸载Docker【删除镜像等】"><a href="#卸载Docker【删除镜像等】" class="headerlink" title="卸载Docker【删除镜像等】"></a>卸载Docker【删除镜像等】</h3><h3 id="移除目标源"><a href="#移除目标源" class="headerlink" title="移除目标源"></a>移除目标源</h3><h3 id="安装旧版本的Docker"><a href="#安装旧版本的Docker" class="headerlink" title="安装旧版本的Docker"></a>安装旧版本的Docker</h3><h3 id="2019-1-29-更新"><a href="#2019-1-29-更新" class="headerlink" title="2019-1-29 更新"></a>2019-1-29 更新</h3><p>旧版本 docker or docker-engine<br>新版本 改为 docker-ce(社区版本) docker-ee(企业版本)</p>
+<p>卸载旧版本<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">yum remove docker \</span><br><span class="line">                  docker-client \</span><br><span class="line">                  docker-client-latest \</span><br><span class="line">                  docker-common \</span><br><span class="line">                  docker-latest \</span><br><span class="line">                  docker-latest-logrotate \</span><br><span class="line">                  docker-logrotate \</span><br><span class="line">                  docker-engine</span><br></pre></td></tr></table></figure></p>
+<p>安装工具<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">yum install -y yum-utils \</span><br><span class="line">  device-mapper-persistent-data \</span><br><span class="line">  lvm2</span><br></pre></td></tr></table></figure></p>
+<p>配置docker-ce软件仓库<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">yum-config-manager \</span><br><span class="line">    --add-repo \</span><br><span class="line">    https://download.docker.com/linux/centos/docker-ce.repo</span><br></pre></td></tr></table></figure></p>
+<p>更换阿里云 </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">cd /etc/yum.repos.d/</span><br><span class="line"></span><br><span class="line">vi docker-ce.repo </span><br><span class="line"># 按ecs进行非编辑模式</span><br><span class="line">:%s/https:\/\/download.docker.com/https:\/\/mirrors.aliyun.com\/docker-ce/g</span><br></pre></td></tr></table></figure>
+<p>安装<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install -y docker-ce docker-ce-cli containerd.io</span><br></pre></td></tr></table></figure></p>
+<p>启动服务<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl start docker</span><br></pre></td></tr></table></figure></p>
+<h3 id="配置Docker-镜像加速"><a href="#配置Docker-镜像加速" class="headerlink" title="配置Docker 镜像加速"></a>配置Docker 镜像加速</h3><h4 id="国内加速站点"><a href="#国内加速站点" class="headerlink" title="国内加速站点"></a>国内加速站点</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">https://registry.docker-cn.com</span><br><span class="line">http://hub-mirror.c.163.com</span><br><span class="line">https://3laho3y3.mirror.aliyuncs.com</span><br><span class="line">http://f1361db2.m.daocloud.io</span><br><span class="line">https://mirror.ccs.tencentyun.com</span><br></pre></td></tr></table></figure>
+<h4 id="使用命令来配置加速站点"><a href="#使用命令来配置加速站点" class="headerlink" title="使用命令来配置加速站点"></a>使用命令来配置加速站点</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">mkdir -p /etc/docker</span><br><span class="line">sudo tee /etc/docker/daemon.json &lt;&lt;-&#x27;EOF&#x27;</span><br><span class="line">&#123;</span><br><span class="line">  &quot;registry-mirrors&quot;: [&quot;&lt;your accelerate address&gt;&quot;]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="使用脚本来配置加速站点"><a href="#使用脚本来配置加速站点" class="headerlink" title="使用脚本来配置加速站点"></a>使用脚本来配置加速站点</h4><p>该脚本可以将 —registry-mirror 加入到你的 Docker 配置文件 /etc/docker/daemon.json 中。适用于 Ubuntu14.04、Debian、CentOS6 、CentOS7、Fedora、Arch Linux、openSUSE Leap 42.1，其他版本可能有细微不同。更多详情请访问文档。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -sSL https://raw.githubusercontent.com/wss434631143/xiaoshujiang/master/articles/Docker/shell/set_mirror.sh | sh -s &lt;your accelerate address&gt;</span><br></pre></td></tr></table></figure>
+<h4 id="通过修改启动脚本配置加速站点"><a href="#通过修改启动脚本配置加速站点" class="headerlink" title="通过修改启动脚本配置加速站点"></a>通过修改启动脚本配置加速站点</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># 直接修改 /usr/lib/systemd/system/docker.service 启动脚本</span><br><span class="line">vim /usr/lib/systemd/system/docker.service </span><br><span class="line"># 在dockerd后面加参数</span><br><span class="line">ExecStart=/usr/bin/dockerd --registry-mirror=&lt;your accelerate address&gt;</span><br></pre></td></tr></table></figure>
+<p>以上操作后重启一下 Docker</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl daemon-reload</span><br><span class="line">sudo systemctl restart docker</span><br></pre></td></tr></table></figure>
+<h2 id="Docker系列"><a href="#Docker系列" class="headerlink" title="Docker系列"></a>Docker系列</h2><ul>
+<li><a href="/2017/05/18/docker/docker-first/" title="Docker 安装">Docker 安装</a>  </li>
+<li><a href="/2017/05/18/docker/docker-gitlab/" title="Docker安装Gitlab">Docker安装Gitlab</a>  </li>
+<li><a href="/2018/05/08/docker/docker-images-none/" title="Docker删除 none Images">Docker删除 none Images</a>  </li>
+<li><a href="/2017/05/18/docker/docker-compose-first/" title="Docker-compose 学习">Docker-compose 学习</a>  </li>
+<li><a href="/2017/05/18/docker/docker-machine/" title="Docker Machine 介绍">Docker Machine 介绍</a>  </li>
+<li><a href="/2017/05/19/docker/docker-volume/" title="Docker Volume 介绍">Docker Volume 介绍</a>  </li>
+<li><a href="/2017/05/22/docker/docker-centos-up/" title="Docker在centos上升级">Docker在centos上升级</a>  </li>
+<li><a href="/2017/11/10/docker/docker-problems/" title="Docker 问题收集">Docker 问题收集</a>  
+</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/docker/" rel="tag"># docker</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2017/05/19/docker/docker-volume/" rel="prev" title="Docker Volume">
+      <i class="fa fa-chevron-left"></i> Docker Volume
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2017/05/24/git/git-first/" rel="next" title="Git 学习文档 [一]">
+      Git 学习文档 [一] <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%95%E5%AD%90"><span class="nav-number">1.</span> <span class="nav-text">引子</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A6%82%E6%9E%9C%E6%9C%89%E6%97%A7%E7%9A%84Docker-%E5%85%88%E5%88%A0%E9%99%A4"><span class="nav-number">2.</span> <span class="nav-text">如果有旧的Docker 先删除</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%97%A7Docker%E7%89%88%E6%9C%AC%E4%B8%8A%E7%9A%84%E5%A6%82%E6%9E%9C%E6%9C%89-Image-%E7%9A%84%E4%B8%9C%E8%A5%BF%EF%BC%8C%E8%AF%B7%E5%85%88%E5%88%A0%E9%99%A4"><span class="nav-number">2.1.</span> <span class="nav-text">旧Docker版本上的如果有 Image 的东西，请先删除</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A7%BB%E9%99%A4%E6%97%A7%E7%89%88%E6%9C%AC%E7%9A%84%E8%BD%AF%E4%BB%B6%E4%BF%A1%E6%81%AF"><span class="nav-number">2.2.</span> <span class="nav-text">移除旧版本的软件信息</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%BE%E7%BD%AE%E6%9C%80%E6%96%B0%E7%A8%B3%E5%AE%9A%E7%89%88%E6%9C%AC%E7%9A%84Docker%E4%BB%93%E5%BA%93"><span class="nav-number">3.</span> <span class="nav-text">设置最新稳定版本的Docker仓库</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85Docker"><span class="nav-number">4.</span> <span class="nav-text">安装Docker</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9B%B4%E6%96%B0yum%E6%BA%90"><span class="nav-number">4.1.</span> <span class="nav-text">更新yum源</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85%E6%9C%80%E6%96%B0%E7%9A%84docker"><span class="nav-number">4.2.</span> <span class="nav-text">安装最新的docker</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%88%96%E8%80%85%E9%80%89%E6%8B%A9%E4%BD%A0%E8%A6%81%E7%9A%84Docker%E7%89%88%E6%9C%AC"><span class="nav-number">4.3.</span> <span class="nav-text">或者选择你要的Docker版本</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%AF%E5%8A%A8"><span class="nav-number">4.4.</span> <span class="nav-text">启动</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B5%8B%E8%AF%95"><span class="nav-number">4.5.</span> <span class="nav-text">测试</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%B8%E8%BD%BDDocker"><span class="nav-number">5.</span> <span class="nav-text">卸载Docker</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A6%82%E6%9E%9C%E6%83%B3%E5%9B%9E%E5%88%B0-docker-1-13-%E5%89%8D%E7%9A%84%E7%89%88%E6%9C%AC"><span class="nav-number">6.</span> <span class="nav-text">如果想回到 docker 1.13 前的版本</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8D%B8%E8%BD%BDDocker%E3%80%90%E5%88%A0%E9%99%A4%E9%95%9C%E5%83%8F%E7%AD%89%E3%80%91"><span class="nav-number">6.1.</span> <span class="nav-text">卸载Docker【删除镜像等】</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A7%BB%E9%99%A4%E7%9B%AE%E6%A0%87%E6%BA%90"><span class="nav-number">6.2.</span> <span class="nav-text">移除目标源</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85%E6%97%A7%E7%89%88%E6%9C%AC%E7%9A%84Docker"><span class="nav-number">6.3.</span> <span class="nav-text">安装旧版本的Docker</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2019-1-29-%E6%9B%B4%E6%96%B0"><span class="nav-number">6.4.</span> <span class="nav-text">2019-1-29 更新</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%85%8D%E7%BD%AEDocker-%E9%95%9C%E5%83%8F%E5%8A%A0%E9%80%9F"><span class="nav-number">6.5.</span> <span class="nav-text">配置Docker 镜像加速</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9B%BD%E5%86%85%E5%8A%A0%E9%80%9F%E7%AB%99%E7%82%B9"><span class="nav-number">6.5.1.</span> <span class="nav-text">国内加速站点</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E5%91%BD%E4%BB%A4%E6%9D%A5%E9%85%8D%E7%BD%AE%E5%8A%A0%E9%80%9F%E7%AB%99%E7%82%B9"><span class="nav-number">6.5.2.</span> <span class="nav-text">使用命令来配置加速站点</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E8%84%9A%E6%9C%AC%E6%9D%A5%E9%85%8D%E7%BD%AE%E5%8A%A0%E9%80%9F%E7%AB%99%E7%82%B9"><span class="nav-number">6.5.3.</span> <span class="nav-text">使用脚本来配置加速站点</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%80%9A%E8%BF%87%E4%BF%AE%E6%94%B9%E5%90%AF%E5%8A%A8%E8%84%9A%E6%9C%AC%E9%85%8D%E7%BD%AE%E5%8A%A0%E9%80%9F%E7%AB%99%E7%82%B9"><span class="nav-number">6.5.4.</span> <span class="nav-text">通过修改启动脚本配置加速站点</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Docker%E7%B3%BB%E5%88%97"><span class="nav-number">7.</span> <span class="nav-text">Docker系列</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Chester.C</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">143</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">32</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">67</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Chester.C</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+if (document.querySelectorAll('pre.mermaid').length) {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mermaid@8/dist/mermaid.min.js', () => {
+    mermaid.initialize({
+      theme    : 'forest',
+      logLevel : 3,
+      flowchart: { curve     : 'linear' },
+      gantt    : { axisFormat: '%m/%d/%Y' },
+      sequence : { actorMargin: 50 }
+    });
+  }, window.mermaid);
+}
+</script>
+
+
+  
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'OQBlgU8H1seTDvVrgC3Dhni0-gzGzoHsz',
+      appKey     : 'wF7D3hVD9WjlV9V52bhlymHO',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : true,
+      lang       : 'zh-cn' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>

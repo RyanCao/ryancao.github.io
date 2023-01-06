@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.2">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <link rel="amphtml" href="./amp/">
+  <meta name="baidu-site-verification" content="code-mUG0UNAPhR">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"blog.rcant.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="起因电脑重装系统 重新装的新的Node，无法使用Hexo 配置环境 Node v12.18 Git  node 设置环境变量重装Node的时候最好卸载掉旧版本文件，防止冲突 npm更换淘宝镜像1npm config set registry https:&#x2F;&#x2F;registry.npm.taobao.org npm  安装 grunt-cli hexo安装 grunt-cli1npm install">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hexo 升级 Node 版本">
+<meta property="og:url" content="http://blog.rcant.com/2017/03/03/hexo/hexo-updatenode/index.html">
+<meta property="og:site_name" content="Chester.Cao Blog">
+<meta property="og:description" content="起因电脑重装系统 重新装的新的Node，无法使用Hexo 配置环境 Node v12.18 Git  node 设置环境变量重装Node的时候最好卸载掉旧版本文件，防止冲突 npm更换淘宝镜像1npm config set registry https:&#x2F;&#x2F;registry.npm.taobao.org npm  安装 grunt-cli hexo安装 grunt-cli1npm install">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2017-03-03T09:40:07.000Z">
+<meta property="article:modified_time" content="2023-01-06T09:38:22.590Z">
+<meta property="article:author" content="Chester.C">
+<meta property="article:tag" content="hexo">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://blog.rcant.com/2017/03/03/hexo/hexo-updatenode/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Hexo 升级 Node 版本 | Chester.Cao Blog</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?974592ac4c5733a52af2b871678a5334";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Chester.Cao Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Chester.Cao Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Devlopper in C#</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-topics">
+
+    <a href="/topics/" rel="section"><i class="fa fa-fw fa-pencil"></i>主题</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://blog.rcant.com/2017/03/03/hexo/hexo-updatenode/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Chester.C">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chester.Cao Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Hexo 升级 Node 版本
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2017-03-03 17:40:07" itemprop="dateCreated datePublished" datetime="2017-03-03T17:40:07+08:00">2017-03-03</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-01-06 17:38:22" itemprop="dateModified" datetime="2023-01-06T17:38:22+08:00">2023-01-06</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/hexo/" itemprop="url" rel="index"><span itemprop="name">hexo</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2017/03/03/hexo/hexo-updatenode/" class="post-meta-item leancloud_visitors" data-flag-title="Hexo 升级 Node 版本" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2017/03/03/hexo/hexo-updatenode/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2017/03/03/hexo/hexo-updatenode/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="起因"><a href="#起因" class="headerlink" title="起因"></a>起因</h2><p>电脑重装系统 重新装的新的Node，无法使用Hexo</p>
+<h2 id="配置环境"><a href="#配置环境" class="headerlink" title="配置环境"></a>配置环境</h2><ul>
+<li>Node v12.18</li>
+<li>Git</li>
+</ul>
+<h2 id="node-设置环境变量"><a href="#node-设置环境变量" class="headerlink" title="node 设置环境变量"></a>node 设置环境变量</h2><p>重装Node的时候最好卸载掉旧版本文件，防止冲突</p>
+<h2 id="npm更换淘宝镜像"><a href="#npm更换淘宝镜像" class="headerlink" title="npm更换淘宝镜像"></a>npm更换淘宝镜像</h2><figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm config set registry https://registry.npm.taobao.org</span><br></pre></td></tr></table></figure>
+<h2 id="npm-安装-grunt-cli-hexo"><a href="#npm-安装-grunt-cli-hexo" class="headerlink" title="npm  安装 grunt-cli hexo"></a>npm  安装 grunt-cli hexo</h2><h3 id="安装-grunt-cli"><a href="#安装-grunt-cli" class="headerlink" title="安装 grunt-cli"></a>安装 grunt-cli</h3><figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install -g grunt-cli</span><br></pre></td></tr></table></figure>
+<span id="more"></span>
+<h3 id="安装-hexo"><a href="#安装-hexo" class="headerlink" title="安装 hexo"></a>安装 hexo</h3><figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install -g hexo</span><br></pre></td></tr></table></figure>
+<p>查看信息</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">$ hexo -v</span><br><span class="line">hexo-cli: 3.1.0</span><br><span class="line">os: Windows<span class="emphasis">_NT 10.0.18363 win32 x64</span></span><br><span class="line"><span class="emphasis">node: 12.18.0</span></span><br><span class="line"><span class="emphasis">v8: 7.8.279.23-node.37</span></span><br><span class="line"><span class="emphasis">uv: 1.37.0</span></span><br><span class="line"><span class="emphasis">zlib: 1.2.11</span></span><br><span class="line"><span class="emphasis">brotli: 1.0.7</span></span><br><span class="line"><span class="emphasis">ares: 1.16.0</span></span><br><span class="line"><span class="emphasis">modules: 72</span></span><br><span class="line"><span class="emphasis">nghttp2: 1.41.0</span></span><br><span class="line"><span class="emphasis">napi: 6</span></span><br><span class="line"><span class="emphasis">llhttp: 2.0.4</span></span><br><span class="line"><span class="emphasis">http_</span>parser: 2.9.3</span><br><span class="line">openssl: 1.1.1g</span><br><span class="line">cldr: 37.0</span><br><span class="line">icu: 67.1</span><br><span class="line">tz: 2019c</span><br><span class="line">unicode: 13.0</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h2 id="升级错误记录"><a href="#升级错误记录" class="headerlink" title="升级错误记录"></a>升级错误记录</h2><h3 id="node-升级14-以后，hexo-部署失败了"><a href="#node-升级14-以后，hexo-部署失败了" class="headerlink" title="node 升级14 以后，hexo 部署失败了"></a>node 升级14 以后，hexo 部署失败了</h3><p>报错如下</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">$ hexo d</span><br><span class="line">INFO  Deploying: git</span><br><span class="line">INFO  Clearing .deploy<span class="emphasis">_git folder...</span></span><br><span class="line"><span class="emphasis">INFO  Copying files from public folder...</span></span><br><span class="line"><span class="emphasis">FATAL Something&#x27;s wrong. Maybe you can find the solution here: https://hexo.io/docs/troubleshooting.html</span></span><br><span class="line"><span class="emphasis">TypeError [ERR_</span>INVALID<span class="emphasis">_ARG_</span>TYPE]: The &quot;mode&quot; argument must be integer. Received an instance of Object</span><br><span class="line"><span class="code">    at copyFile (fs.js:1924:10)</span></span><br><span class="line"><span class="code">    at tryCatcher (E:\projects\hexo\rcantblog_hexo\blog\node_modules\hexo-fs\node_modules\bluebird\js\release\util.js:16:23)</span></span><br><span class="line"><span class="code">    at ret (eval at makeNodePromisifiedEval (C:\Users\cqs\AppData\Roaming\npm\node_modules\hexo\node_modules\bluebird\js\release\promisify.js:184:12), &lt;anonymous&gt;:13:39)</span></span><br><span class="line"><span class="code">    at E:\projects\hexo\rcantblog_hexo\blog\node_modules\hexo-fs\lib\fs.js:144:39</span></span><br><span class="line"><span class="code">    at tryCatcher (E:\projects\hexo\rcantblog_hexo\blog\node_modules\hexo-fs\node_modules\bluebird\js\release\util.js:16:23)</span></span><br><span class="line"><span class="code">    at Promise._settlePromiseFromHandler (E:\projects\hexo\rcantblog_hexo\blog\node_modules\hexo-fs\node_modules\bluebird\js\release\promise.js:517:31)</span></span><br><span class="line"><span class="code">    at Promise._settlePromise (E:\projects\hexo\rcantblog_hexo\blog\node_modules\hexo-fs\node_modules\bluebird\js\release\promise.js:574:18)</span></span><br></pre></td></tr></table></figure>
+<p>google了下发现是hexo不支持最新node14+，issue见此，解决方案两种：降低node版本或者升级最新hexo@4.2.1+。</p>
+<p>我尝试了升级hexo到4.2.1发现并没有什么卵用，照样报相同的错，所以选择了降低node版本到稳定版：</p>
+<p>直接到官网下载最新稳定版：<a target="_blank" rel="noopener" href="https://nodejs.org/en/download/">https://nodejs.org/en/download/</a></p>
+<p>然后重新执行 hexo clean &amp;&amp; hexo deploy 打包命令就好了。</p>
+<p>P.S. 如果打包成功后，最好验证下hexo下的分类和标签是否正常工作，我就遇到了点击自己博客首页的「分类」和「标签」后，跳转的页面报404，原因是打开的路由最后多了个空格：./categories/%20 。不知道啥原因，所以我把hexo版本退回到了3.8.0。这样路由就正确了。</p>
+<h2 id="Hexo-升级5-4-2021-3-20"><a href="#Hexo-升级5-4-2021-3-20" class="headerlink" title="Hexo 升级5.4 2021/3/20"></a>Hexo 升级5.4 2021/3/20</h2><h3 id="打开package-json-修改-dependencies-项："><a href="#打开package-json-修改-dependencies-项：" class="headerlink" title="打开package.json 修改 dependencies 项："></a>打开package.json 修改 dependencies 项：</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&quot;hexo&quot;: &quot;^5.4.0&quot;</span><br></pre></td></tr></table></figure>
+<h3 id="更新"><a href="#更新" class="headerlink" title="更新"></a>更新</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">$ npm update</span><br><span class="line">npm WARN optional SKIPPING OPTIONAL DEPENDENCY: fsevents@2.1.3 (node_modules\chokidar\node_modules\fsevents):</span><br><span class="line">npm WARN notsup SKIPPING OPTIONAL DEPENDENCY: Unsupported platform for fsevents@2.1.3: wanted &#123;&quot;os&quot;:&quot;darwin&quot;,&quot;arch&quot;:&quot;any&quot;&#125; (current: &#123;&quot;os&quot;:&quot;win32&quot;,&quot;arch&quot;:&quot;x64&quot;&#125;)</span><br><span class="line">npm WARN optional SKIPPING OPTIONAL DEPENDENCY: fsevents@1.2.9 (node_modules\fsevents):</span><br><span class="line">npm WARN notsup SKIPPING OPTIONAL DEPENDENCY: Unsupported platform for fsevents@1.2.9: wanted &#123;&quot;os&quot;:&quot;darwin&quot;,&quot;arch&quot;:&quot;any&quot;&#125; (current: &#123;&quot;os&quot;:&quot;win32&quot;,&quot;arch&quot;:&quot;x64&quot;&#125;)</span><br><span class="line"></span><br><span class="line">+ hexo@5.4.0</span><br><span class="line">added 7 packages from 12 contributors, removed 17 packages and updated 8 packages in 18.609s</span><br><span class="line"></span><br><span class="line">22 packages are looking for funding</span><br><span class="line">  run `npm fund` for details</span><br></pre></td></tr></table></figure>
+<h2 id="Hexo博客系列"><a href="#Hexo博客系列" class="headerlink" title="Hexo博客系列"></a>Hexo博客系列</h2><ul>
+<li><a href="/2017/03/01/hexo/hexo-firstblog/" title="Hexo博客搭建">Hexo博客搭建</a>  </li>
+<li><a href="/2017/03/01/hexo/hexo-secordblog/" title="Hexo更换博客样式">Hexo更换博客样式</a>  </li>
+<li><a href="/2017/03/03/hexo/hexo-updatenode/" title="Hexo升级Node版本">Hexo升级Node版本</a>  </li>
+<li><a href="/2017/03/04/hexo/hexo-amp-enable/" title="Hexo AMP 支持">Hexo AMP 支持</a>  </li>
+<li><a href="/2017/03/03/others/markdown-first/" title="MarkDown语法">MarkDown语法</a></li>
+<li><a href="/2017/03/06/hexo/hexo-markdown-extends/" title="Hexo-MarkDown扩展">Hexo-MarkDown扩展</a>  </li>
+<li><a href="/2017/03/07/hexo/hexo-flags/" title="Hexo 标签插件的使用">Hexo 标签插件的使用</a>  </li>
+<li><a href="/2017/03/10/hexo/hexo-mermaid/" title="Mermaid 使用指南">Mermaid 使用指南</a>  </li>
+<li><a href="/2017/03/11/hexo/hexo-plugins/" title="Hexo 插件添加">Hexo 插件添加</a> </li>
+</ul>
+
+    </div>
+
+    
+    
+    
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/hexo/" rel="tag"># hexo</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2017/03/03/others/markdown-first/" rel="prev" title="Markdown——入门指南">
+      <i class="fa fa-chevron-left"></i> Markdown——入门指南
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2017/03/04/hexo/hexo-amp-enable/" rel="next" title="Hexo Amp 支持">
+      Hexo Amp 支持 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B5%B7%E5%9B%A0"><span class="nav-number">1.</span> <span class="nav-text">起因</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E7%8E%AF%E5%A2%83"><span class="nav-number">2.</span> <span class="nav-text">配置环境</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#node-%E8%AE%BE%E7%BD%AE%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F"><span class="nav-number">3.</span> <span class="nav-text">node 设置环境变量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#npm%E6%9B%B4%E6%8D%A2%E6%B7%98%E5%AE%9D%E9%95%9C%E5%83%8F"><span class="nav-number">4.</span> <span class="nav-text">npm更换淘宝镜像</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#npm-%E5%AE%89%E8%A3%85-grunt-cli-hexo"><span class="nav-number">5.</span> <span class="nav-text">npm  安装 grunt-cli hexo</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85-grunt-cli"><span class="nav-number">5.1.</span> <span class="nav-text">安装 grunt-cli</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85-hexo"><span class="nav-number">5.2.</span> <span class="nav-text">安装 hexo</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%87%E7%BA%A7%E9%94%99%E8%AF%AF%E8%AE%B0%E5%BD%95"><span class="nav-number">6.</span> <span class="nav-text">升级错误记录</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#node-%E5%8D%87%E7%BA%A714-%E4%BB%A5%E5%90%8E%EF%BC%8Chexo-%E9%83%A8%E7%BD%B2%E5%A4%B1%E8%B4%A5%E4%BA%86"><span class="nav-number">6.1.</span> <span class="nav-text">node 升级14 以后，hexo 部署失败了</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Hexo-%E5%8D%87%E7%BA%A75-4-2021-3-20"><span class="nav-number">7.</span> <span class="nav-text">Hexo 升级5.4 2021&#x2F;3&#x2F;20</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%89%93%E5%BC%80package-json-%E4%BF%AE%E6%94%B9-dependencies-%E9%A1%B9%EF%BC%9A"><span class="nav-number">7.1.</span> <span class="nav-text">打开package.json 修改 dependencies 项：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9B%B4%E6%96%B0"><span class="nav-number">7.2.</span> <span class="nav-text">更新</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Hexo%E5%8D%9A%E5%AE%A2%E7%B3%BB%E5%88%97"><span class="nav-number">8.</span> <span class="nav-text">Hexo博客系列</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Chester.C</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">143</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">32</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">67</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Chester.C</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+if (document.querySelectorAll('pre.mermaid').length) {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mermaid@8/dist/mermaid.min.js', () => {
+    mermaid.initialize({
+      theme    : 'forest',
+      logLevel : 3,
+      flowchart: { curve     : 'linear' },
+      gantt    : { axisFormat: '%m/%d/%Y' },
+      sequence : { actorMargin: 50 }
+    });
+  }, window.mermaid);
+}
+</script>
+
+
+  
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'OQBlgU8H1seTDvVrgC3Dhni0-gzGzoHsz',
+      appKey     : 'wF7D3hVD9WjlV9V52bhlymHO',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : true,
+      lang       : 'zh-cn' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>

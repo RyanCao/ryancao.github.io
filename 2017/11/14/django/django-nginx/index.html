@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.2">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <link rel="amphtml" href="./amp/">
+  <meta name="baidu-site-verification" content="code-mUG0UNAPhR">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"blog.rcant.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="引子Nginx足够优秀【Web服务上】Django也足够优秀【web框架上】 环境 centos7 docker 17 docker-compose 1.17 Django 1.11 nginx 1.11  目的想搭建一个环境，让自己的web程序可以很方便的移植到服务器上所以要用到Docker 艰难的配置">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Django 使用 Nginx 作为web服务器">
+<meta property="og:url" content="http://blog.rcant.com/2017/11/14/django/django-nginx/index.html">
+<meta property="og:site_name" content="Chester.Cao Blog">
+<meta property="og:description" content="引子Nginx足够优秀【Web服务上】Django也足够优秀【web框架上】 环境 centos7 docker 17 docker-compose 1.17 Django 1.11 nginx 1.11  目的想搭建一个环境，让自己的web程序可以很方便的移植到服务器上所以要用到Docker 艰难的配置">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2017-11-14T03:39:17.000Z">
+<meta property="article:modified_time" content="2023-01-06T09:32:13.592Z">
+<meta property="article:author" content="Chester.C">
+<meta property="article:tag" content="django">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://blog.rcant.com/2017/11/14/django/django-nginx/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Django 使用 Nginx 作为web服务器 | Chester.Cao Blog</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?974592ac4c5733a52af2b871678a5334";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Chester.Cao Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Chester.Cao Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Devlopper in C#</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-topics">
+
+    <a href="/topics/" rel="section"><i class="fa fa-fw fa-pencil"></i>主题</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://blog.rcant.com/2017/11/14/django/django-nginx/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Chester.C">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chester.Cao Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Django 使用 Nginx 作为web服务器
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2017-11-14 11:39:17" itemprop="dateCreated datePublished" datetime="2017-11-14T11:39:17+08:00">2017-11-14</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-01-06 17:32:13" itemprop="dateModified" datetime="2023-01-06T17:32:13+08:00">2023-01-06</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/django/" itemprop="url" rel="index"><span itemprop="name">django</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2017/11/14/django/django-nginx/" class="post-meta-item leancloud_visitors" data-flag-title="Django 使用 Nginx 作为web服务器" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2017/11/14/django/django-nginx/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2017/11/14/django/django-nginx/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h2><p>Nginx足够优秀【Web服务上】<br>Django也足够优秀【web框架上】</p>
+<h2 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h2><ul>
+<li>centos7</li>
+<li>docker 17</li>
+<li>docker-compose 1.17</li>
+<li>Django 1.11</li>
+<li>nginx 1.11</li>
+</ul>
+<h2 id="目的"><a href="#目的" class="headerlink" title="目的"></a>目的</h2><p>想搭建一个环境，让自己的web程序可以很方便的移植到服务器上<br>所以要用到Docker</p>
+<h2 id="艰难的配置"><a href="#艰难的配置" class="headerlink" title="艰难的配置"></a>艰难的配置</h2><span id="more"></span>
+<h3 id="先给出架设最后的文件列表结构"><a href="#先给出架设最后的文件列表结构" class="headerlink" title="先给出架设最后的文件列表结构"></a>先给出架设最后的文件列表结构</h3><p>~/django-web 根目录<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">├── docker-compose.yml</span><br><span class="line">├── nginx</span><br><span class="line">│   ├── conf.d</span><br><span class="line">│   │   └── hProj.conf</span><br><span class="line">│   ├── Dockerfile</span><br><span class="line">│   ├── html</span><br><span class="line">│   │   └── index.htm</span><br><span class="line">│   └── log</span><br><span class="line">│       ├── access.log</span><br><span class="line">│       ├── error.log</span><br><span class="line">│       ├── hProj.access.log</span><br><span class="line">│       └── hProj.error.log</span><br><span class="line">├── production.yml</span><br><span class="line">├── README.md</span><br><span class="line">└── web</span><br><span class="line">    ├── db.sqlite3</span><br><span class="line">    ├── Dockerfile</span><br><span class="line">    ├── helloworld</span><br><span class="line">    │   ├── admin.py</span><br><span class="line">    │   ├── apps.py</span><br><span class="line">    │   ├── __init__.py</span><br><span class="line">    │   ├── migrations</span><br><span class="line">    │   ├── models.py</span><br><span class="line">    │   ├── __pycache__</span><br><span class="line">    │   ├── tests.py</span><br><span class="line">    │   └── views.py</span><br><span class="line">    ├── hProj</span><br><span class="line">    │   ├── __init__.py</span><br><span class="line">    │   ├── __pycache__</span><br><span class="line">    │   ├── settings.py</span><br><span class="line">    │   ├── urls.py</span><br><span class="line">    │   └── wsgi.py</span><br><span class="line">    ├── manage.py</span><br><span class="line">    └── requirements.txt</span><br></pre></td></tr></table></figure></p>
+<h3 id="用的是Django"><a href="#用的是Django" class="headerlink" title="用的是Django"></a>用的是Django</h3><p>所以先创建一个 Django 的 Dockerfile</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"># 基于Python 版本</span><br><span class="line">FROM python:3</span><br><span class="line"># 设置Python环境</span><br><span class="line">ENV PYTHONUNBUFFERED 1</span><br><span class="line"></span><br><span class="line"># 创建一个Code文件夹作为工作目录，将python库的需求文件拷贝进来</span><br><span class="line">RUN mkdir /code</span><br><span class="line">ADD requirements.txt /code/</span><br><span class="line"></span><br><span class="line">#以/code文件夹作为工作目录</span><br><span class="line">WORKDIR /code</span><br><span class="line"></span><br><span class="line">#执行安装库的脚本，这里考虑到默认库下载很慢，使用阿里云的镜像安装</span><br><span class="line">RUN pip install --trusted-host mirrors.aliyun.com -i http://mirrors.aliyun.com/pypi/simple -r requirements.txt</span><br></pre></td></tr></table></figure>
+<p>requirements.txt【库信息】</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Django&gt;=1.8,&lt;2.0</span><br><span class="line">gunicorn&gt;=19,&lt;21</span><br><span class="line">uwsgi</span><br><span class="line">psycopg2</span><br></pre></td></tr></table></figure>
+<h3 id="接下来需要使用Docker-compose"><a href="#接下来需要使用Docker-compose" class="headerlink" title="接下来需要使用Docker-compose"></a>接下来需要使用Docker-compose</h3><p>这是一个管理多Docker容器的工具，可以很方便管理多容器<br>docker-compose.yml</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">version: &#x27;3&#x27;</span><br><span class="line"></span><br><span class="line">services:</span><br><span class="line">  nginx:</span><br><span class="line">    image: nginx:latest</span><br><span class="line">    ports:</span><br><span class="line">      - &quot;8000:80&quot;</span><br><span class="line">      - &quot;3000:443&quot;</span><br><span class="line">    volumes:</span><br><span class="line">      - ./nginx/conf.d:/etc/nginx/conf.d</span><br><span class="line">      - ./nginx/html:/usr/share/nginx/html</span><br><span class="line">      - ./nginx/log:/var/log/nginx</span><br><span class="line">    depends_on:</span><br><span class="line">      - web</span><br><span class="line">    links:</span><br><span class="line">      - web</span><br><span class="line">    container_name: ng01</span><br><span class="line"></span><br><span class="line">  db:</span><br><span class="line">    image: postgres</span><br><span class="line">    container_name: ps01</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">  web:</span><br><span class="line">    build: ./web</span><br><span class="line">    container_name: dg01</span><br><span class="line">    command: uwsgi -s :3031 -w hProj.wsgi -p 3</span><br><span class="line">    volumes:</span><br><span class="line">      - ./web:/code</span><br><span class="line">    expose:</span><br><span class="line">      - &quot;3031&quot;</span><br><span class="line">    depends_on:</span><br><span class="line">      - db</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>这个里面有太多东西了</p>
+<p>慢慢说：</p>
+<ol>
+<li><p>version: ‘3’<br>表示Docker-compose 文件的解析版本</p>
+</li>
+<li><p>services Docker服务节点</p>
+</li>
+<li><p>这里面创建了三个节点 </p>
+</li>
+</ol>
+<p>nginx : web服务用</p>
+<p>db： 数据库用</p>
+<p>web：web app处理逻辑</p>
+<ol>
+<li>对nginx </li>
+</ol>
+<p>image 表示选用什么镜像版本，这里是最新的Nginx</p>
+<p>ports 表示端口映射 暴露容器端口到主机的任意端口或指定端口，用法：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">ports:</span><br><span class="line">  - &quot;8000:80&quot;       # 绑定容器的80端口到主机的8000端口</span><br><span class="line">  - &quot;3000:1001&quot;     # 绑定容器的1001端口到主机的3000端口</span><br><span class="line">  - &quot;443&quot;           # 绑定容器的443端口到主机的任意端口，容器启动时随机分配绑定的主机端口号</span><br></pre></td></tr></table></figure>
+<p>这里需要 注意 ports 和 expose 区别</p>
+<p>expose暴露容器给link到当前容器的容器，用法：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">expose:</span><br><span class="line">  - &quot;3000&quot;</span><br><span class="line">  - &quot;8000&quot;</span><br></pre></td></tr></table></figure>
+<p>以上指令将当前容器的端口3000和8000暴露给link到本容器的容器。<br>和ports的区别是，expose不会将端口暴露给主机。</p>
+<p>expose 一般可与 link 一起使用</p>
+<p>link ：<br>在消费和服务容器之间创建链接<br>这会创建一系列环境变量，并且在/etc/hosts 文件中添加入口项</p>
+<p>volumes 是什么？</p>
+<p>相当于U盘，可以挂载数据，让主机数据挂载到容器上</p>
+<p>depends_on 标签表示依赖，决定容器创建启动的先后顺序,决的是启动顺序问题</p>
+<p>例如下面容器会先启动 redis 和 db 两个服务，最后才启动 web 服务：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">version: &#x27;2&#x27;</span><br><span class="line">services:</span><br><span class="line">  web:</span><br><span class="line">    build: .</span><br><span class="line">    depends_on:</span><br><span class="line">      - db</span><br><span class="line">      - redis</span><br><span class="line">  redis:</span><br><span class="line">    image: redis</span><br><span class="line">  db:</span><br><span class="line">    image: postgres</span><br></pre></td></tr></table></figure>
+<p>注意的是，默认情况下使用 docker-compose up web 这样的方式启动 web 服务时，也会启动 redis 和 db 两个服务，因为在配置文件中定义了依赖关系。</p>
+<p>links: 这个标签解决的是容器连接问题，会连接到其它服务中的容器。<br>格式如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">links:</span><br><span class="line"> - db</span><br><span class="line"> - db:database</span><br><span class="line"> - redis</span><br></pre></td></tr></table></figure>
+<p>使用的别名将会自动在服务容器中的/etc/hosts里创建。例如：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">172.12.2.186  db</span><br><span class="line">172.12.2.186  database</span><br><span class="line">172.12.2.187  redis</span><br></pre></td></tr></table></figure>
+<p>最后一项比较容易，是指命名容器</p>
+<p>这个时候最好先测试下</p>
+<p>docker-compose.yml</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">version: &#x27;3&#x27;</span><br><span class="line"></span><br><span class="line">services:</span><br><span class="line">  nginx:</span><br><span class="line">    image: nginx:latest</span><br><span class="line">    ports:</span><br><span class="line">      - &quot;8000:80&quot;</span><br><span class="line">      - &quot;3000:443&quot;</span><br><span class="line">    volumes:</span><br><span class="line">      - ./nginx/conf.d:/etc/nginx/conf.d</span><br><span class="line">      - ./nginx/html:/usr/share/nginx/html</span><br><span class="line">      - ./nginx/log:/var/log/nginx</span><br><span class="line">    container_name: ng01</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>使用</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker-compose up -d</span><br></pre></td></tr></table></figure>
+<p>然后访问 </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost django_web]# curl 127.0.0.1:8000</span><br><span class="line">curl: (56) Recv failure: Connection reset by peer</span><br></pre></td></tr></table></figure>
+<p>Why？</p>
+<p>百度了一下没找到原因</p>
+<p>没办法直接进容器去看</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker exec -it ng01 bash</span><br><span class="line">cat /etc/nginx/nginx.conf</span><br></pre></td></tr></table></figure>
+<p>应该是没有配置默认网站信息</p>
+<p>退出容器，添加网站配置<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">echo &quot;hello&quot;&gt;nginx/html/index.htm</span><br><span class="line"></span><br><span class="line">vi nginx/conf.d/hProj.conf</span><br><span class="line"></span><br></pre></td></tr></table></figure></p>
+<p>nginx/conf.d/hProj.conf<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">        listen       80;</span><br><span class="line">        server_name  172.20.1.7;</span><br><span class="line">        #server_name localhost;</span><br><span class="line"></span><br><span class="line">        access_log /var/log/nginx/hProj.access.log;</span><br><span class="line">        error_log /var/log/nginx/hProj.error.log;</span><br><span class="line"></span><br><span class="line">        location / &#123;</span><br><span class="line">                root   /usr/share/nginx/html;</span><br><span class="line">                index  index.html index.htm;</span><br><span class="line">        &#125;</span><br><span class="line">        access_log off;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></p>
+<p>然后访问 </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost django_web]# curl 127.0.0.1:8000</span><br><span class="line">hello</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>测试通过</p>
+<h3 id="接下来说Django"><a href="#接下来说Django" class="headerlink" title="接下来说Django"></a>接下来说Django</h3><p>build: 标签标识使用 Dockerfile 建立容器</p>
+<p>接下来</p>
+<p>测试django 项目创建是否有问题</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">version: &#x27;3&#x27;</span><br><span class="line"></span><br><span class="line">services:</span><br><span class="line">  web:</span><br><span class="line">    build: ./web</span><br><span class="line">    container_name: dg01</span><br><span class="line">    command: python3 manage.py runserver 0.0.0.0:8000</span><br><span class="line">    volumes:</span><br><span class="line">      - ./web:/code</span><br><span class="line">    ports:</span><br><span class="line">      - &quot;8000:8000&quot;</span><br></pre></td></tr></table></figure>
+<p>创建项目</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker-compose run web django-admin.py startproject django_example .</span><br></pre></td></tr></table></figure>
+<p>如果不Ok，请检查Dockerfile</p>
+<p>接下来启动web服务<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">docker-compose stop </span><br><span class="line">docker-compose rm</span><br><span class="line">docker-compose up -d</span><br></pre></td></tr></table></figure></p>
+<p>然后访问 </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost django_web]# curl 127.0.0.1:8000</span><br></pre></td></tr></table></figure>
+<p>如果被拒绝请对应找原因，这里我没有被卡住</p>
+<h3 id="最重要的怎么将Django项目和-Nginx结合起来"><a href="#最重要的怎么将Django项目和-Nginx结合起来" class="headerlink" title="最重要的怎么将Django项目和 Nginx结合起来"></a>最重要的怎么将Django项目和 Nginx结合起来</h3><p>这里使用 gunicorn 或者 uwsgi</p>
+<p>简单说，这两个东西相当于在 web 和 nginx中间加了一层，所以一定会有数据传输，为什么要用这里不讨论</p>
+<p>数据传输最简单就是 Socket，就会有 IP:PORT </p>
+<p>修改 docker-compose.yml</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">version: &#x27;3&#x27;</span><br><span class="line">services:</span><br><span class="line">  nginx:</span><br><span class="line">    image: nginx:latest</span><br><span class="line">    ports:</span><br><span class="line">      - &quot;8000:80&quot;</span><br><span class="line">      - &quot;3000:443&quot;</span><br><span class="line">    volumes:</span><br><span class="line">      - ./nginx/conf.d:/etc/nginx/conf.d</span><br><span class="line">      - ./nginx/html:/usr/share/nginx/html</span><br><span class="line">      - ./nginx/log:/var/log/nginx</span><br><span class="line">    depends_on:</span><br><span class="line">      - web</span><br><span class="line">    links:</span><br><span class="line">      - web</span><br><span class="line">    container_name: ng01</span><br><span class="line"></span><br><span class="line">  web:</span><br><span class="line">    build: ./web</span><br><span class="line">    container_name: dg01</span><br><span class="line">    command: uwsgi -s :3031 -w hProj.wsgi -p 3</span><br><span class="line">    volumes:</span><br><span class="line">      - ./web:/code</span><br><span class="line">    expose:</span><br><span class="line">      - &quot;3031&quot;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>这里主要做 两件事</p>
+<ol>
+<li><p>将命令换成 uwsgi ，换成这个命令以后，无法使用Web访问，所以这里无法测试</p>
+</li>
+<li><p>将端口从暴露给主机到不暴露给主机</p>
+</li>
+</ol>
+<p>将ports 写法改成 expose </p>
+<p>需要注意在nginx 容器里面需要加上 links 属性，这里要特别注意</p>
+<p>接下来需要修改 nginx的配置</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">upstream uwsgicluster &#123;</span><br><span class="line">    server web:3031;</span><br><span class="line">&#125;</span><br><span class="line">server &#123;</span><br><span class="line">        listen       80;</span><br><span class="line">        server_name  localhost;</span><br><span class="line"></span><br><span class="line">        access_log /var/log/nginx/hProj.access.log;</span><br><span class="line">        error_log /var/log/nginx/hProj.error.log;</span><br><span class="line"></span><br><span class="line">        location / &#123;</span><br><span class="line">                uwsgi_pass uwsgicluster;</span><br><span class="line">                include /etc/nginx/uwsgi_params;</span><br><span class="line">        &#125;</span><br><span class="line">        access_log off;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>重新启动</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">docker-compose stop </span><br><span class="line">docker-compose rm</span><br><span class="line">docker-compose up -d</span><br></pre></td></tr></table></figure>
+<p>测试访问</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost django_web]# curl 127.0.0.1:8000</span><br></pre></td></tr></table></figure>
+<p>这里Ok 就结束了，如果有问题，检查下是否那一步不对</p>
+<h3 id="关于使用Nginx处理Django静态文件的问题"><a href="#关于使用Nginx处理Django静态文件的问题" class="headerlink" title="关于使用Nginx处理Django静态文件的问题"></a>关于使用Nginx处理Django静态文件的问题</h3><p>上述一通操作以后，发现无法使用静态文件了，原因是没有配置~~~</p>
+<p>方法太多，这里 我只会一种</p>
+<p>由于Django 里面有很多App，可能都用到静态文件了，这样如果每个app下都有一个static，冗余就多了</p>
+<p>这里Django 可以收集静态文件，统一放到一个文件下</p>
+<p>先设置 settings.py</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">STATIC_URL = &#x27;/static/&#x27;</span><br><span class="line"></span><br><span class="line"># 新加</span><br><span class="line">STATIC_ROOT = os.path.join(BASE_DIR, &#x27;static&#x27;) </span><br></pre></td></tr></table></figure>
+<p>然后收集 静态文件</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python manage.py collectstatic</span><br></pre></td></tr></table></figure>
+<p>收集前结构<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">[web@localhost web]$ tree -L 2</span><br><span class="line">.</span><br><span class="line">├── db.sqlite3</span><br><span class="line">├── Dockerfile</span><br><span class="line">├── helloworld</span><br><span class="line">│   ├── admin.py</span><br><span class="line">│   ├── apps.py</span><br><span class="line">│   ├── __init__.py</span><br><span class="line">│   ├── migrations</span><br><span class="line">│   ├── models.py</span><br><span class="line">│   ├── __pycache__</span><br><span class="line">│   ├── serializers.py</span><br><span class="line">│   ├── templates</span><br><span class="line">│   ├── tests.py</span><br><span class="line">│   └── views.py</span><br><span class="line">├── hProj</span><br><span class="line">│   ├── __init__.py</span><br><span class="line">│   ├── __pycache__</span><br><span class="line">│   ├── settings.py</span><br><span class="line">│   ├── urls.py</span><br><span class="line">│   └── wsgi.py</span><br><span class="line">├── manage.py</span><br><span class="line">└── requirements.txt</span><br></pre></td></tr></table></figure></p>
+<p>收集后结构<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">[web@localhost web]$ tree -L 2</span><br><span class="line">.</span><br><span class="line">├── db.sqlite3</span><br><span class="line">├── Dockerfile</span><br><span class="line">├── helloworld</span><br><span class="line">│   ├── admin.py</span><br><span class="line">│   ├── apps.py</span><br><span class="line">│   ├── __init__.py</span><br><span class="line">│   ├── migrations</span><br><span class="line">│   ├── models.py</span><br><span class="line">│   ├── __pycache__</span><br><span class="line">│   ├── serializers.py</span><br><span class="line">│   ├── templates</span><br><span class="line">│   ├── tests.py</span><br><span class="line">│   └── views.py</span><br><span class="line">├── hProj</span><br><span class="line">│   ├── __init__.py</span><br><span class="line">│   ├── __pycache__</span><br><span class="line">│   ├── settings.py</span><br><span class="line">│   ├── urls.py</span><br><span class="line">│   └── wsgi.py</span><br><span class="line">├── manage.py</span><br><span class="line">├── requirements.txt</span><br><span class="line">└── static</span><br><span class="line">    ├── admin</span><br><span class="line">    └── rest_framework</span><br></pre></td></tr></table></figure></p>
+<h4 id="设置修改-Docker-compose-Nginx选项"><a href="#设置修改-Docker-compose-Nginx选项" class="headerlink" title="设置修改 Docker-compose Nginx选项"></a>设置修改 Docker-compose Nginx选项</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">nginx:</span><br><span class="line">   image: nginx:latest</span><br><span class="line">   ports:</span><br><span class="line">     - &quot;80:80&quot;</span><br><span class="line">     - &quot;8001:8001&quot;</span><br><span class="line">     - &quot;443:443&quot;</span><br><span class="line">   volumes:</span><br><span class="line">     - ./web:/usr/share/nginx/web</span><br><span class="line">     - ./nginx/conf.d:/etc/nginx/conf.d</span><br><span class="line">     - ./nginx/html:/usr/share/nginx/html</span><br><span class="line">     - ./nginx/log:/var/log/nginx</span><br><span class="line">   depends_on:</span><br><span class="line">     - web</span><br><span class="line">   links:</span><br><span class="line">     - web</span><br><span class="line">   container_name: ng01</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h4 id="修改-nginx-配置-hProj-conf"><a href="#修改-nginx-配置-hProj-conf" class="headerlink" title="修改 nginx 配置 hProj.conf"></a>修改 nginx 配置 hProj.conf</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">upstream uwsgicluster &#123;</span><br><span class="line">    #server unix:///tmp/uwsgi.sock;</span><br><span class="line">    server web:3031;</span><br><span class="line">&#125;</span><br><span class="line">server &#123;</span><br><span class="line">        listen       80;</span><br><span class="line">        server_name localhost;</span><br><span class="line"></span><br><span class="line">        access_log /var/log/nginx/hProj.access.log;</span><br><span class="line">        error_log /var/log/nginx/hProj.error.log;</span><br><span class="line">        location /static &#123;</span><br><span class="line">                alias /usr/share/nginx/web/static;</span><br><span class="line">        &#125;</span><br><span class="line">        location / &#123;</span><br><span class="line">                #root   /usr/share/nginx/html;</span><br><span class="line">                #index  index.html index.htm;</span><br><span class="line">                uwsgi_pass uwsgicluster;</span><br><span class="line">                include /etc/nginx/uwsgi_params;</span><br><span class="line">                #uwsgi_pass 127.0.0.1:8077;</span><br><span class="line">                #uwsgi_param UWSGI_SCRIPT index;</span><br><span class="line">                #uwsgi_param UWSGI_PYHOME $document_root;</span><br><span class="line">                #uwsgi_param UWSGI_CHDIR  $document_root;</span><br><span class="line">        &#125;</span><br><span class="line">        access_log off;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>测试下就OK</p>
+
+    </div>
+
+    
+    
+    
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/django/" rel="tag"># django</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2017/11/11/django/django-first/" rel="prev" title="Django 首接触">
+      <i class="fa fa-chevron-left"></i> Django 首接触
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2017/11/16/others/svn-command/" rel="next" title="Svn 命令记录">
+      Svn 命令记录 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%95%E5%AD%90"><span class="nav-number">1.</span> <span class="nav-text">引子</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%8E%AF%E5%A2%83"><span class="nav-number">2.</span> <span class="nav-text">环境</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9B%AE%E7%9A%84"><span class="nav-number">3.</span> <span class="nav-text">目的</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%89%B0%E9%9A%BE%E7%9A%84%E9%85%8D%E7%BD%AE"><span class="nav-number">4.</span> <span class="nav-text">艰难的配置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%88%E7%BB%99%E5%87%BA%E6%9E%B6%E8%AE%BE%E6%9C%80%E5%90%8E%E7%9A%84%E6%96%87%E4%BB%B6%E5%88%97%E8%A1%A8%E7%BB%93%E6%9E%84"><span class="nav-number">4.1.</span> <span class="nav-text">先给出架设最后的文件列表结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%94%A8%E7%9A%84%E6%98%AFDjango"><span class="nav-number">4.2.</span> <span class="nav-text">用的是Django</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8E%A5%E4%B8%8B%E6%9D%A5%E9%9C%80%E8%A6%81%E4%BD%BF%E7%94%A8Docker-compose"><span class="nav-number">4.3.</span> <span class="nav-text">接下来需要使用Docker-compose</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8E%A5%E4%B8%8B%E6%9D%A5%E8%AF%B4Django"><span class="nav-number">4.4.</span> <span class="nav-text">接下来说Django</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%80%E9%87%8D%E8%A6%81%E7%9A%84%E6%80%8E%E4%B9%88%E5%B0%86Django%E9%A1%B9%E7%9B%AE%E5%92%8C-Nginx%E7%BB%93%E5%90%88%E8%B5%B7%E6%9D%A5"><span class="nav-number">4.5.</span> <span class="nav-text">最重要的怎么将Django项目和 Nginx结合起来</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B3%E4%BA%8E%E4%BD%BF%E7%94%A8Nginx%E5%A4%84%E7%90%86Django%E9%9D%99%E6%80%81%E6%96%87%E4%BB%B6%E7%9A%84%E9%97%AE%E9%A2%98"><span class="nav-number">4.6.</span> <span class="nav-text">关于使用Nginx处理Django静态文件的问题</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%AE%BE%E7%BD%AE%E4%BF%AE%E6%94%B9-Docker-compose-Nginx%E9%80%89%E9%A1%B9"><span class="nav-number">4.6.1.</span> <span class="nav-text">设置修改 Docker-compose Nginx选项</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BF%AE%E6%94%B9-nginx-%E9%85%8D%E7%BD%AE-hProj-conf"><span class="nav-number">4.6.2.</span> <span class="nav-text">修改 nginx 配置 hProj.conf</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Chester.C</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">143</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">32</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">67</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Chester.C</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+if (document.querySelectorAll('pre.mermaid').length) {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mermaid@8/dist/mermaid.min.js', () => {
+    mermaid.initialize({
+      theme    : 'forest',
+      logLevel : 3,
+      flowchart: { curve     : 'linear' },
+      gantt    : { axisFormat: '%m/%d/%Y' },
+      sequence : { actorMargin: 50 }
+    });
+  }, window.mermaid);
+}
+</script>
+
+
+  
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'OQBlgU8H1seTDvVrgC3Dhni0-gzGzoHsz',
+      appKey     : 'wF7D3hVD9WjlV9V52bhlymHO',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : true,
+      lang       : 'zh-cn' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>
